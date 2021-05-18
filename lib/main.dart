@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xffE67925),
         accentColor: Color(0xffFFF4EB)
       ),
-      initialRoute: "/auth",
+      initialRoute: "/intro",
       routes: routes,
       navigatorKey: navigatorKey,
     );
