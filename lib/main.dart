@@ -17,7 +17,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Theme.of(context).primaryColor,
         primaryColor: Color(0xffE67925),
-        accentColor: Color(0xffFFF4EB)
+        accentColor: Color(0xffFFF4EB),
+        textTheme: TextTheme(
+            headline1: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Color(0xff7C7D7E),
+              fontSize: 12.0
+            )
+        )
       ),
       initialRoute: "/intro",
       routes: routes,

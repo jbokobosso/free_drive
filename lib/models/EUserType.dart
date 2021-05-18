@@ -1,0 +1,4 @@
+enum EUserType {
+  client,
+  chauffeur
+}

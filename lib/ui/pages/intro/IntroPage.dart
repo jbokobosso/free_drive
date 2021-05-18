@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/IntroContentModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:lottie/lottie.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:introduction_screen/introduction_screen.dart';
@@ -39,28 +40,7 @@ class IntroPage extends StatelessWidget {
               color: Theme.of(context).accentColor,
               child: Column(
                 children: [
-                  Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.only(top: 100.0),
-                    width: model.deviceWidth*0.2,
-                    height: model.deviceWidth*0.2,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                        image: AssetImage("assets/icons/logo.png"),
-                        fit: BoxFit.contain
-                      ),
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.1),
-                          blurRadius: 10.0,
-                          spreadRadius: 5.0
-                        )
-                      ]
-                      // border: Border.all(color: Theme.of(context).primaryColor)
-                    ),
-                  ),
+                  Logo(),
                   SizedBox(height: 10.0),
                   Expanded(
                     child: IntroductionScreen(
