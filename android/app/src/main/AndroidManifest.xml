@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.updateconcept.free_drive">
    <application
-        android:label="free_drive"
+        android:label="Free Drive"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"

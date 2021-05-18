@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/constants/routes.dart';
+
+
+final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 void main() {
   runApp(MyApp());
@@ -11,13 +15,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Free Drive',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Theme.of(context).primaryColor,
+        primaryColor: Color(0xffE67925),
+        accentColor: Color(0xffFFF4EB)
       ),
-      home: Container(
-        child: Center(
-          child: Text('Welcome !!!')
-        )
-      ),
+      initialRoute: "/auth",
+      routes: routes,
+      navigatorKey: navigatorKey,
     );
   }
 }
