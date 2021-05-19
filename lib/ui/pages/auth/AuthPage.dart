@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
@@ -9,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class AuthPage extends StatelessWidget {
   bool isObscure = true;
   double inputSpacingScale = 0.02;
-  double inputHeightScale = 0.05;
+  double inputHeightScale = 0.06;
   double radioFontSize = 10.0;
   EUserType _userType;
   @override
@@ -17,7 +18,11 @@ class AuthPage extends StatelessWidget {
     return ViewModelBuilder<AppViewModel>.reactive(
       builder: (context, model, child) => Scaffold(
         body: Container(
-          padding: EdgeInsets.symmetric(horizontal: model.deviceWidth*0.1),
+          padding: EdgeInsets.only(
+            top: model.deviceHeight*0.1,
+            left: model.deviceWidth*0.07,
+            right: model.deviceWidth*0.07
+          ),
           width: model.deviceWidth,
           color: Theme.of(context).accentColor,
           child: ListView(
@@ -148,6 +153,7 @@ class AuthPage extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: ListTile(
+                            horizontalTitleGap: 0,
                             title: const Text('Client', style: TextStyle(fontSize: 12.0)),
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
@@ -162,6 +168,7 @@ class AuthPage extends StatelessWidget {
                         ),
                         Expanded(
                           child: ListTile(
+                            horizontalTitleGap: 0,
                             title: const Text('Chauffeur', style: TextStyle(fontSize: 12.0)),
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
@@ -183,7 +190,7 @@ class AuthPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30.0)
                         )
                       ),
-                      onPressed: () => print('Next !!!'),
+                      onPressed: () => navigatorKey.currentState.pushNamed('/validation'),
                       child: Text('Suivant')
                     )
                   ],

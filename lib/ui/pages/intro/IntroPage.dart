@@ -40,10 +40,12 @@ class IntroPage extends StatelessWidget {
               color: Theme.of(context).accentColor,
               child: Column(
                 children: [
+                  SizedBox(height: model.deviceHeight*0.1),
                   Logo(),
                   SizedBox(height: 10.0),
                   Expanded(
                     child: IntroductionScreen(
+                      isTopSafeArea: false,
                       globalBackgroundColor: Theme.of(context).accentColor,
                       doneColor: Colors.black,
                       skipColor: Colors.black,
@@ -51,7 +53,7 @@ class IntroPage extends StatelessWidget {
                       pages: introList.map((e) => PageViewModel(
                           title: e.title,
                           body: e.description,
-                          image: Lottie.asset(e.imageAsset, width: this.deviceWidth*0.5,),
+                          image: Lottie.asset(e.imageAsset, width: this.deviceWidth*0.5),
                           decoration: PageDecoration(
                               titleTextStyle: TextStyle(
                                 color: Theme.of(context).primaryColor,

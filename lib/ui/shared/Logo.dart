@@ -10,7 +10,6 @@ class Logo extends StatelessWidget {
     var deviceHeight = MediaQuery.of(context).size.height;
     return Container(
       padding: EdgeInsets.all(20),
-      margin: EdgeInsets.only(top: 100.0),
       width: deviceWidth*this.sizeScale,
       height: deviceWidth*this.sizeScale,
       decoration: BoxDecoration(
