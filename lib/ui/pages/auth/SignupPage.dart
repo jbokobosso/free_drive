@@ -7,7 +7,7 @@ import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:stacked/stacked.dart';
 
-class AuthPage extends StatelessWidget {
+class SignupPage extends StatelessWidget {
   bool isObscure = true;
   double inputSpacingScale = 0.02;
   double inputHeightScale = 0.06;
