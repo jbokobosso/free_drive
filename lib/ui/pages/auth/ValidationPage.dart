@@ -83,7 +83,7 @@ class ValidationPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(30.0)
                             )
                         ),
-                        onPressed: () => navigatorKey.currentState.pushNamed('/validation'),
+                        onPressed: () => navigatorKey.currentState.pushNamed('/dashboard'),
                         child: Text('Allez à votre tableau de bord', style: TextStyle(fontWeight: FontWeight.bold))
                     )
                   ],

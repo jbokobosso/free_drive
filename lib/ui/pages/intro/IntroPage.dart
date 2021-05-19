@@ -62,8 +62,8 @@ class IntroPage extends StatelessWidget {
                               )
                           )
                       )).toList(),
-                      onDone: () => navigatorKey.currentState.pushNamed('/auth'),
-                      onSkip: () => navigatorKey.currentState.pushNamed('/auth'),
+                      onDone: () => navigatorKey.currentState.pushNamed('/login'),
+                      onSkip: () => navigatorKey.currentState.pushNamed('/login'),
                       showSkipButton: true,
                       skip: const Icon(Icons.skip_next),
                       next: const Icon(Icons.navigate_next),
