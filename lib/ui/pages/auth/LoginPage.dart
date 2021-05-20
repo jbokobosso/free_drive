@@ -4,6 +4,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
+import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
 class LoginPage extends StatelessWidget {
@@ -15,6 +16,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
+      onModelReady: (model) => model.initRiveAnimation(),
       builder: (context, model, child) => Scaffold(
         body: Container(
           padding: EdgeInsets.only(
@@ -56,11 +58,18 @@ class LoginPage extends StatelessWidget {
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          labelText: 'Mmot de passe',
+                          labelText: 'Mot de passe',
                           suffixIcon: IconButton(
-                            icon: Icon(Icons.remove_red_eye),
+                            icon: model.riveArtboard == null
+                                ? Icon(Icons.remove_red_eye)
+                                : Container(
+                                    child: Rive(artboard: model.riveArtboard, fit: BoxFit.contain)
+                                  ),
                             onPressed: () {
                               this.isObscure = !this.isObscure;
+                              this.isObscure
+                                  ? model.riveArtboard.addController(model.riveAnimationController = SimpleAnimation("close"))
+                                  : model.riveArtboard.addController(model.riveAnimationController = SimpleAnimation("open"));
                               model.notifyListeners();
                             },
                           ),

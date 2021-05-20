@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   # Media
+  rive: ^0.7.10
   lottie: ^1.0.1
   file_picker: ^3.0.1
   flutter_svg: ^0.22.0
@@ -60,6 +61,7 @@ flutter:
   assets:
     - assets/icons/
     - assets/lottie/
+    - assets/rive/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
