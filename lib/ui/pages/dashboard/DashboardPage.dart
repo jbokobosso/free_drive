@@ -13,7 +13,7 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
-      onModelReady: (model) => model.initRiveAnimation(),
+      onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Tableau de bord'),
         extendBodyBehindAppBar: true,

@@ -16,7 +16,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
-      onModelReady: (model) => model.initRiveAnimation(),
+      onModelReady: (model) {
+        model.initEyeAnimation();
+        model.initTurnLogoAnimation();
+      },
       builder: (context, model, child) => Scaffold(
         body: Container(
           padding: EdgeInsets.only(
@@ -28,7 +31,12 @@ class LoginPage extends StatelessWidget {
           color: Theme.of(context).accentColor,
           child: ListView(
             children: [
-              Logo(sizeScale: 0.35),
+              model.logoArtboard == null
+                  ? Logo(sizeScale: 0.35)
+                  : Container(
+                      height: model.deviceHeight*0.20,
+                      child: Rive(artboard: model.logoArtboard, fit: BoxFit.contain)
+                    ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Form(
@@ -59,16 +67,16 @@ class LoginPage extends StatelessWidget {
                           fillColor: Colors.white,
                           labelText: 'Mot de passe',
                           suffixIcon: IconButton(
-                            icon: model.riveArtboard == null
+                            icon: model.eyeArtboard == null
                                 ? Icon(Icons.remove_red_eye)
                                 : Container(
-                                    child: Rive(artboard: model.riveArtboard, fit: BoxFit.contain)
+                                    child: Rive(artboard: model.eyeArtboard, fit: BoxFit.contain)
                                   ),
                             onPressed: () {
                               this.isObscure = !this.isObscure;
                               this.isObscure
-                                  ? model.riveArtboard.addController(model.riveAnimationController = SimpleAnimation("close"))
-                                  : model.riveArtboard.addController(model.riveAnimationController = SimpleAnimation("open"));
+                                  ? model.eyeArtboard.addController(model.eyeAnimationController = SimpleAnimation("close"))
+                                  : model.eyeArtboard.addController(model.eyeAnimationController = SimpleAnimation("open"));
                               model.notifyListeners();
                             },
                           ),
