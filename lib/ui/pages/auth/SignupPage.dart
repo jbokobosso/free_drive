@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
-import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -11,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class SignupPage extends StatelessWidget {
   bool isObscure = true;
   double inputSpacingScale = 0.02;
-  double inputHeightScale = 0.06;
+  double inputHeightScale = 0.07;
   double radioFontSize = 10.0;
   EUserType _userType;
   @override
@@ -21,16 +20,16 @@ class SignupPage extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         body: Container(
           padding: EdgeInsets.only(
-            top: model.deviceHeight*0.1,
-            left: model.deviceWidth*0.07,
-            right: model.deviceWidth*0.07
+            left: model.deviceWidth*0.1,
+            right: model.deviceWidth*0.1
           ),
           width: model.deviceWidth,
           color: Theme.of(context).accentColor,
           child: ListView(
             padding: EdgeInsets.all(0.0),
             children: [
-              Logo(sizeScale: 0.35),
+              SizedBox(height: model.deviceHeight*0.1),
+              Logo(sizeScale: 0.3),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Align(
                 alignment: Alignment.center,

@@ -8,6 +8,7 @@ import 'package:stacked/stacked.dart';
 class DashboardPage extends StatelessWidget {
   DashboardPage({Key key}) : super(key: key);
   int currentNavigationIndex = 1;
+  double cardTopSpacingScale = 0.2;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,11 @@ class DashboardPage extends StatelessWidget {
               width: model.deviceWidth,
               height: model.deviceHeight,
               color: Theme.of(context).accentColor,
-              child: Center(
-                  child: ElevatedButton(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(height: 0, width: 0,),
+                  ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
                           shape: RoundedRectangleBorder(
@@ -38,7 +42,8 @@ class DashboardPage extends StatelessWidget {
                       ),
                       onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
                       child: Text('Demander un chauffeur', style: TextStyle(fontWeight: FontWeight.bold))
-                  )
+                  ),
+                ],
               ),
             ),
             Container(
@@ -54,7 +59,7 @@ class DashboardPage extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 155,
+              top: model.deviceHeight*this.cardTopSpacingScale,
               child: Container(
                 width: model.deviceWidth*0.7,
                 decoration: BoxDecoration(

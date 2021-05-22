@@ -10,7 +10,7 @@ import 'package:stacked/stacked.dart';
 class LoginPage extends StatelessWidget {
   bool isObscure = true;
   double inputSpacingScale = 0.02;
-  double inputHeightScale = 0.06;
+  double inputHeightScale = 0.08;
   double radioFontSize = 10.0;
   EUserType _userType;
   @override
@@ -26,8 +26,7 @@ class LoginPage extends StatelessWidget {
           ),
           width: model.deviceWidth,
           color: Theme.of(context).accentColor,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          child: ListView(
             children: [
               Logo(sizeScale: 0.35),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),

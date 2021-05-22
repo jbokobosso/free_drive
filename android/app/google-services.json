@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "750924591358",
+    "project_id": "free-drive-3e4a1",
+    "storage_bucket": "free-drive-3e4a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:750924591358:android:a8e2642e71d350a0a775af",
+        "android_client_info": {
+          "package_name": "net.updateconcept.free_drive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "750924591358-0gvv9o1adma4mdnpcpqfhlipkgl4l9qf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.updateconcept.free_drive",
+            "certificate_hash": "2be1a7cfb0682c0f57f434f377eeb291a9c3da96"
+          }
+        },
+        {
+          "client_id": "750924591358-i2k116un5857k5gag7fmgm3vll7qnt77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzcT7VWReB2RgfOHDdOVU5Rp1qH4iW0zs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "750924591358-i2k116un5857k5gag7fmgm3vll7qnt77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

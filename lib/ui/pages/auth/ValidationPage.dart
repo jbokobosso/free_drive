@@ -7,6 +7,7 @@ import 'package:stacked/stacked.dart';
 class ValidationPage extends StatelessWidget {
   bool isValidated = false;
   double inputSpacingScale = 0.02;
+  double inputHeightScale = 0.08;
   ValidationPage({Key key}) : super(key: key);
 
   @override
@@ -35,6 +36,7 @@ class ValidationPage extends StatelessWidget {
                       child: Column(
                         children: [
                           SizedBox(
+                            height: model.deviceHeight*inputHeightScale,
                             child: TextFormField(
                               decoration: InputDecoration(
                                 filled: true,
