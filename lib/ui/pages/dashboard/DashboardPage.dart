@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
+import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -34,12 +35,7 @@ class DashboardPage extends StatelessWidget {
                 children: [
                   SizedBox(height: 0, width: 0,),
                   ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)
-                          )
-                      ),
+                      style: customButtonStyle(context),
                       onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
                       child: Text('Demander un chauffeur', style: TextStyle(fontWeight: FontWeight.bold))
                   ),
