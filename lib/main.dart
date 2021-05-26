@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
               color: Color(0xff7C7D7E),
               fontSize: 12.0
             )
-        )
+        ),
       ),
       initialRoute: "/dashboard",
       routes: routes,

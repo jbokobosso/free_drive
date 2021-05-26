@@ -11,9 +11,9 @@ customInputBorder(BuildContext context) {
   );
 }
 
-customButtonStyle(BuildContext context) {
+customButtonStyle(BuildContext context, {bool isBlack=false}) {
   return ElevatedButton.styleFrom(
-      primary: Theme.of(context).primaryColor,
+      primary: isBlack ? Color(0xff333333) : Theme.of(context).primaryColor,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0)
       )
