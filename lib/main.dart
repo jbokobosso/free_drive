@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/constants/routes.dart';
+import 'package:free_drive/services/GetIt.dart';
 
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupServiceLocator();
   runApp(MyApp());
 }
 

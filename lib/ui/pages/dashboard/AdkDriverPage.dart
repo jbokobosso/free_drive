@@ -138,7 +138,7 @@ class AskDriverPage extends StatelessWidget {
                                     currentDate: DateTime.now(),
                                   );
                                   this.departureDate = pickedDate;
-                                  this.departureDateController.text = new CoreService().formatDate(pickedDate);
+                                  this.departureDateController.text = model.coreService.formatDate(pickedDate);
                                 },
                                 child: TextFormField(
                                     controller: this.departureDateController,
@@ -164,7 +164,7 @@ class AskDriverPage extends StatelessWidget {
                                     currentDate: DateTime.now(),
                                   );
                                   this.returnDate = pickedDate;
-                                  this.returnDateController.text = new CoreService().formatDate(pickedDate);
+                                  this.returnDateController.text = model.coreService.formatDate(pickedDate);
                                   Duration rideDuration = this.returnDate.difference(this.departureDate);
                                   this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
                                 },
@@ -194,7 +194,7 @@ class AskDriverPage extends StatelessWidget {
                                   context: context
                                 );
                                 this.departureTime = pickedTime;
-                                this.departureTimeController.text = new CoreService().formatTime(pickedTime);
+                                this.departureTimeController.text = model.coreService.formatTime(pickedTime);
                               },
                               child: TextFormField(
                                   controller: this.departureTimeController,
@@ -218,7 +218,7 @@ class AskDriverPage extends StatelessWidget {
                                   cancelText: 'Annuler',
                                 );
                                 this.returnTime = pickedTime;
-                                this.returnTimeController.text = new CoreService().formatTime(pickedTime);
+                                this.returnTimeController.text = model.coreService.formatTime(pickedTime);
                                 var rideDuration = this.returnTime.hour - this.departureTime.hour;
                                 this.rideDurationController.text = "${rideDuration.toString()} Heures";
                               },

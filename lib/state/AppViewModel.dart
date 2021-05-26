@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/services/CoreService.dart';
+import 'package:free_drive/services/GetIt.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 import 'dart:io';
 
 class AppViewModel extends BaseViewModel {
 
+  CoreService coreService = getIt.get<CoreService>();
   double get deviceHeight => this._getDeviceHeight();
   double get deviceWidth => this._getDeviceWidth();
   Artboard eyeArtboard;

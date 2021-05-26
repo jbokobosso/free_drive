@@ -112,6 +112,11 @@ class ContactDriverPage extends StatelessWidget {
                         )
                       ),
                       child: Icon(Icons.message_rounded, size: model.deviceWidth*0.05)
+                  ),
+                  ElevatedButton(
+                      style: customButtonStyle(context),
+                      onPressed: () => navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false),
+                      child: Text('Poursuivre')
                   )
                 ],
               ),

@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
+import 'package:free_drive/ui/shared/DashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -54,43 +55,7 @@ class DashboardPage extends StatelessWidget {
                 ],
               ),
             ),
-            Positioned(
-              top: model.deviceHeight*this.cardTopSpacingScale,
-              child: Container(
-                width: model.deviceWidth*0.7,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(25.0),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color: Theme.of(context).primaryColor,
-                        spreadRadius: 0.1,
-                        blurRadius: 0.5
-                    )
-                  ]
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('00.000 FCFA', style: Theme.of(context).textTheme.headline6),
-                          IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
-                        ],
-                      ),
-                      Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
-                      Text('\nCourse en attente: 0'),
-                      Text('\nCourse en attente: 0'),
-                      Text('\nCourse en attente: 0'),
-                    ],
-                  ),
-                ),
-              ),
-            )
+            DashboardCard()
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
