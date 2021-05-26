@@ -3,6 +3,7 @@ import 'package:free_drive/ui/pages/auth/LoginPage.dart';
 import 'package:free_drive/ui/pages/auth/SignupPage.dart';
 import 'package:free_drive/ui/pages/auth/ValidationPage.dart';
 import 'package:free_drive/ui/pages/dashboard/AdkDriverPage.dart';
+import 'package:free_drive/ui/pages/dashboard/ContactDriverPage.dart';
 import 'package:free_drive/ui/pages/dashboard/DashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/YourDriverPage.dart';
 import 'package:free_drive/ui/pages/intro/IntroPage.dart';
@@ -15,4 +16,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/dashboard': (BuildContext context) => DashboardPage(),
   '/askDriver': (BuildContext context) => AskDriverPage(),
   '/yourDriver': (BuildContext context) => YourDriverPage(),
+  '/contactDriver': (BuildContext context) => ContactDriverPage(),
 };
