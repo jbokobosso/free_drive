@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/DashboardCard.dart';
-import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
 class ContactDriverPage extends StatelessWidget {
   ContactDriverPage({Key key}) : super(key: key);
   int currentNavigationIndex = 1;
+
+  Future<bool> _callNumber() {
+    const number = '+22899885825'; //set the number here
+    Future<bool> callResult = FlutterPhoneDirectCaller.callNumber(number);
+    return callResult;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,11 @@ class ContactDriverPage extends StatelessWidget {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(15.0)
                       ),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
+                      onPressed: () async {
+                        var result = await _callNumber();
+                        if(result) print("call success");
+                        else print("error calling");
+                      },
                       child: Icon(Icons.phone, size: model.deviceWidth*0.1)
                   ),
                   ElevatedButton(

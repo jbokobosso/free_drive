@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  # Utililties
+  flutter_phone_direct_caller: ^2.0.0
   # Media
   rive: ^0.7.10
   lottie: ^1.0.1
