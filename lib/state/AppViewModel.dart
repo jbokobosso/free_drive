@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
-import 'dart:io';
 
 class AppViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
+  ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
   double get deviceHeight => this._getDeviceHeight();
   double get deviceWidth => this._getDeviceWidth();
+  bool get activeRideExists => this.coreService.dashboardState.activeRideExists;
   Artboard eyeArtboard;
   Artboard logoArtboard;
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
+
+  // Contact driver page
+  bool contactedDriver = false;
+
+  callDriver() async {
+    var callSucceded = await this.contactDriverService.callDriver();
+    if(callSucceded) contactedDriver = true;
+    notifyListeners();
+  }
+
+  textDriver() {
+    var textSucceded = this.contactDriverService.textDriver();
+    if(textSucceded) this.contactedDriver = true;
+    notifyListeners();
+  }
 
   double _getDeviceWidth() {
     return MediaQuery.of(navigatorKey.currentState.context).size.width;

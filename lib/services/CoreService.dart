@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/models/DashboardModel.dart';
 
 class CoreService {
 
+  DashboardModel dashboardState = new DashboardModel(
+    balance: 25000,
+    activeRideExists: false,
+    pendingRideExists: false,
+    completedRidesCount: 0
+  );
 
   formatDate(DateTime datetime) {
     String result;
@@ -30,7 +37,7 @@ class CoreService {
       case 11: yearmonth = "Novembre";break;
       case 12: yearmonth = "Decembre";break;
     }
-    result = "${weekday} ${datetime.day.toString()} ${yearmonth} ${datetime.year.toString()}";
+    result = "$weekday ${datetime.day.toString()} $yearmonth ${datetime.year.toString()}";
     return result;
   }
 

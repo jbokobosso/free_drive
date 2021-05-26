@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/ERideType.dart';
-import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
@@ -11,7 +10,9 @@ import 'package:stacked/stacked.dart';
 class AskDriverPage extends StatelessWidget {
   AskDriverPage({Key key}) : super(key: key);
   int currentNavigationIndex = 1;
-  double cardTopSpacingScale = 0.2;
+  final double cardTopSpacingScale = 0.2;
+  final double contentPaddingScale = 0.07;
+  final double cardWidthScale = 0.8;
   ERideType chosenRide = ERideType.hint;
   var _askDriverFormKey = GlobalKey<FormState>();
   TextEditingController rideDurationController = new TextEditingController();
@@ -63,7 +64,7 @@ class AskDriverPage extends StatelessWidget {
             Positioned(
               top: model.deviceHeight*this.cardTopSpacingScale,
               child: Container(
-                width: model.deviceWidth*0.7,
+                width: model.deviceWidth*this.cardWidthScale,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,

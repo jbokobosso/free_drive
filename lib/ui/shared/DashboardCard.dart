@@ -3,7 +3,8 @@ import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class DashboardCard extends StatelessWidget {
-  double cardTopSpacingScale = 0.2;
+  final double cardTopSpacingScale = 0.2;
+  final double pageWidth = 0.8;
   DashboardCard({Key key}) : super(key: key);
 
   @override
@@ -12,7 +13,7 @@ class DashboardCard extends StatelessWidget {
       builder: (context, model, child) => Positioned(
             top: model.deviceHeight*this.cardTopSpacingScale,
             child: Container(
-              width: model.deviceWidth*0.7,
+              width: model.deviceWidth*this.pageWidth,
               height: model.deviceHeight*0.3,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -34,14 +35,14 @@ class DashboardCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('00.000 FCFA', style: Theme.of(context).textTheme.headline6),
+                        Text("${model.coreService.dashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
                         IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
                       ],
                     ),
                     Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    Text('\nCourse en attente: 0'),
-                    Text('\nCourse en attente: 0'),
-                    Text('\nCourse en attente: 0'),
+                    Text('\nCourse en attente: ${model.coreService.dashboardState.pendingRideExists ? 1 : 0}'),
+                    Text('\nCourse en cours: ${model.coreService.dashboardState.activeRideExists ? 1 : 0}'),
+                    Text('\nCourse en terminée: ${model.coreService.dashboardState.completedRidesCount}'),
                   ],
                 ),
               ),

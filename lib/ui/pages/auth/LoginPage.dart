@@ -9,10 +9,9 @@ import 'package:stacked/stacked.dart';
 
 class LoginPage extends StatelessWidget {
   bool isObscure = true;
-  double inputSpacingScale = 0.02;
-  double inputHeightScale = 0.08;
-  double radioFontSize = 10.0;
-  EUserType _userType;
+  final double inputSpacingScale = 0.02;
+  final double inputHeightScale = 0.08;
+  final double radioFontSize = 10.0;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
