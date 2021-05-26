@@ -5,9 +5,12 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/DashboardCard.dart';
+import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
 class ContactDriverPage extends StatelessWidget {
+  double inputSpacingScale = 0.02;
+  double inputHeightScale = 0.08;
   ContactDriverPage({Key key}) : super(key: key);
   int currentNavigationIndex = 1;
 
@@ -60,7 +63,54 @@ class ContactDriverPage extends StatelessWidget {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(15.0)
                       ),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: Text('SMS'),
+                          content: SizedBox(
+                            height: model.deviceHeight*0.35,
+                            child: Form(
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    keyboardType: TextInputType.phone,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      labelText: 'chauffeur',
+                                      enabledBorder: customInputBorder(context),
+                                      border: customInputBorder(context),
+                                    ),
+                                  ),
+                                  SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                                  TextFormField(
+                                    minLines: 3,
+                                    maxLines: 5,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                      labelText: 'message',
+                                      enabledBorder: customInputBorder(context),
+                                      border: customInputBorder(context),
+                                    ),
+                                  ),
+                                  SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Theme.of(context).primaryColor,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(30.0)
+                                          )
+                                      ),
+                                      onPressed: () => navigatorKey.currentState.pushNamed('/afterContact'),
+                                      child: Icon(Icons.send)
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        )
+                      ),
                       child: Icon(Icons.message_rounded, size: model.deviceWidth*0.05)
                   )
                 ],
