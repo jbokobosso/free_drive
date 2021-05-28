@@ -1,0 +1,4 @@
+enum ELicencePictureFace {
+  recto,
+  verso
+}

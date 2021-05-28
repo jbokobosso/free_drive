@@ -12,7 +12,7 @@ class SignupPage extends StatelessWidget {
   double inputSpacingScale = 0.02;
   double inputHeightScale = 0.07;
   double radioFontSize = 10.0;
-  EUserType _userType;
+  EUserType _userTypeChosen;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
@@ -173,9 +173,9 @@ class SignupPage extends StatelessWidget {
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
                               value: EUserType.client,
-                              groupValue: _userType,
+                              groupValue: _userTypeChosen,
                               onChanged: (EUserType value) {
-                                _userType = value;
+                                _userTypeChosen = value;
                                 model.notifyListeners();
                               },
                             ),
@@ -187,10 +187,10 @@ class SignupPage extends StatelessWidget {
                             title: const Text('Chauffeur', style: TextStyle(fontSize: 12.0)),
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
-                              value: EUserType.chauffeur,
-                              groupValue: _userType,
+                              value: EUserType.driver,
+                              groupValue: _userTypeChosen,
                               onChanged: (EUserType value) {
-                                _userType = value;
+                                _userTypeChosen = value;
                                 model.notifyListeners();
                               },
                             ),
@@ -205,8 +205,15 @@ class SignupPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30.0)
                         )
                       ),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/validation'),
+                      onPressed: () => model.registerUser(this._userTypeChosen),
                       child: Text('Suivant')
+                    ),
+                    SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                    Text('ou'),
+                    SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                    TextButton(
+                      child: Text('Se connecter'),
+                      onPressed: () => navigatorKey.currentState.pushNamedAndRemoveUntil("/login", (route) => false),
                     )
                   ],
                 ),

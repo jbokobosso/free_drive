@@ -12,7 +12,7 @@ import 'package:stacked/stacked.dart';
 class NavigationStarter extends StatelessWidget {
   NavigationStarter({Key key}) : super(key: key);
   double cancelRideAlertTopRadius = 20.0;
-  int currentNavigationIndex = 1;
+  int currentNavigationIndex = 0;
   double cardTopSpacingScale = 0.2;
 
   @override

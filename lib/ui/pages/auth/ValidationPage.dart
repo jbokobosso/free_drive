@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:stacked/stacked.dart';
@@ -85,7 +87,14 @@ class ValidationPage extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(30.0)
                             )
                         ),
-                        onPressed: () => navigatorKey.currentState.pushNamed('/dashboard'),
+                        onPressed: () {
+                          if(model.userType == EUserType.client)
+                            navigatorKey.currentState.pushNamed('/dashboard');
+                          else if(model.userType == EUserType.driver)
+                            navigatorKey.currentState.pushNamed('/driverDashboard');
+                          else
+                            print("Nothing to do");
+                        },
                         child: Text('Allez à votre tableau de bord', style: TextStyle(fontWeight: FontWeight.bold))
                     )
                   ],

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
@@ -9,8 +8,8 @@ import 'package:free_drive/ui/shared/DashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
-class DashboardPage extends StatelessWidget {
-  DashboardPage({Key key}) : super(key: key);
+class UserDashboardPage extends StatelessWidget {
+  UserDashboardPage({Key key}) : super(key: key);
   double cancelRideAlertTopRadius = 20.0;
   int currentNavigationIndex = 1;
   double cardTopSpacingScale = 0.2;
@@ -20,7 +19,7 @@ class DashboardPage extends StatelessWidget {
     return ViewModelBuilder<AppViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: 'Tableau de bord'),
+        appBar: CustomAppBar(title: 'Tableau de bord\nCLIENT'),
         extendBodyBehindAppBar: true,
         body: Stack(
           alignment: Alignment.topCenter,

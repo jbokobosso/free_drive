@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/ELicencePictureFace.dart';
+import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
@@ -11,6 +13,22 @@ class AppViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
+
+  // Auth
+  EUserType get userType => coreService.userType;
+  chooseUserType(EUserType newValue) {
+    coreService.userType = newValue;
+    notifyListeners();
+  }
+  registerUser(EUserType chosenUserType) {
+    coreService.userType = chosenUserType;
+    navigatorKey.currentState.pushNamed('/validation');
+  }
+
+  // Driver
+  pickLicencePicture(ELicencePictureFace licencePictureFace) {
+
+  }
 
 
   // Dashboard

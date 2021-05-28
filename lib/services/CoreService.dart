@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/models/DashboardModel.dart';
-import 'package:free_drive/ui/pages/dashboard/DashboardPage.dart';
-import 'package:free_drive/ui/pages/driver/LicenceUploadPage.dart';
+import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
+import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 
 class CoreService {
+
+  EUserType userType = EUserType.hint;
 
   DashboardModel dashboardState = new DashboardModel(
     balance: 25000,
@@ -13,9 +16,9 @@ class CoreService {
   );
 
   List<Widget> navigationPages = [
-    new LicenceUploadPage(),
-    new DashboardPage(),
-    new DashboardPage(),
+    new DriverDashboardPage(),
+    new UserDashboardPage(),
+    new DriverDashboardPage(),
   ];
 
   formatDate(DateTime datetime) {

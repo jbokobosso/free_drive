@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             )
         ),
       ),
-      initialRoute: "/navigationStarter",
+      initialRoute: "/intro",
       routes: routes,
       navigatorKey: navigatorKey,
     );
