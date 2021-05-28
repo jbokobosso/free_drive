@@ -12,6 +12,8 @@ class YourDriverPage extends StatelessWidget {
   YourDriverPage({Key key}) : super(key: key);
   int currentNavigationIndex = 1;
   double cardTopSpacingScale = 0.2;
+  double cardWidthScale = 0.8;
+  double cardHeightScale = 0.3;
   ERideType chosenRide = ERideType.hint;
   var _askDriverFormKey = GlobalKey<FormState>();
   TextEditingController rideDurationController = new TextEditingController();
@@ -74,8 +76,8 @@ class YourDriverPage extends StatelessWidget {
             Positioned(
               top: model.deviceHeight*this.cardTopSpacingScale,
               child: Container(
-                width: model.deviceWidth*0.7,
-                height: model.deviceHeight*0.3,
+                width: model.deviceWidth*this.cardWidthScale,
+                height: model.deviceHeight*this.cardHeightScale,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,

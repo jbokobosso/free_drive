@@ -4,7 +4,8 @@ import 'package:stacked/stacked.dart';
 
 class DashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
-  final double pageWidth = 0.8;
+  final double cardWidth = 0.8;
+  final double cardHeight = 0.35;
   DashboardCard({Key key}) : super(key: key);
 
   @override
@@ -13,8 +14,8 @@ class DashboardCard extends StatelessWidget {
       builder: (context, model, child) => Positioned(
             top: model.deviceHeight*this.cardTopSpacingScale,
             child: Container(
-              width: model.deviceWidth*this.pageWidth,
-              height: model.deviceHeight*0.3,
+              width: model.deviceWidth*this.cardWidth,
+              height: model.deviceHeight*cardHeight,
               decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.rectangle,

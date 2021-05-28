@@ -42,7 +42,7 @@ class ContactDriverPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                           primary: Theme.of(context).primaryColor,
                           shape: CircleBorder(),
-                          padding: EdgeInsets.all(15.0)
+                          padding: EdgeInsets.all(10.0)
                       ),
                       onPressed: () => model.callDriver(),
                       child: Icon(Icons.phone, size: model.deviceWidth*0.1)
@@ -51,7 +51,7 @@ class ContactDriverPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                           primary: Color(0xff333333),
                           shape: CircleBorder(),
-                          padding: EdgeInsets.all(15.0)
+                          padding: EdgeInsets.all(5.0)
                       ),
                       onPressed: () => showDialog(
                         context: context,
