@@ -19,6 +19,16 @@ class AppViewModel extends BaseViewModel {
     navigatorKey.currentState.pop();
     notifyListeners();
   }
+  extendRide(extendRideFormKey, extendRideDaysCountController) {
+    bool isValid = extendRideFormKey.currentState.validate();
+    if(isValid) {
+      navigatorKey.currentState.pop();
+      ScaffoldMessenger.of(navigatorKey.currentContext).showSnackBar(SnackBar(
+          duration: Duration(seconds: 3),
+          content: Text("Course prolongée de ${extendRideDaysCountController.text} jours")
+      ));
+    } else debugPrint("Form data invalid");
+  }
 
 
   // Contact driver page
