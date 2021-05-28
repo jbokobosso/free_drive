@@ -6,7 +6,7 @@ import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
-class LoginPage extends StatelessWidget {
+class LicenceUploadPage extends StatelessWidget {
   bool isObscure = true;
   final double inputSpacingScale = 0.02;
   final double inputHeightScale = 0.08;
@@ -32,9 +32,9 @@ class LoginPage extends StatelessWidget {
               model.logoArtboard == null
                   ? Logo(sizeScale: 0.35)
                   : Container(
-                      height: model.deviceHeight*0.20,
-                      child: Rive(artboard: model.logoArtboard, fit: BoxFit.contain)
-                    ),
+                  height: model.deviceHeight*0.20,
+                  child: Rive(artboard: model.logoArtboard, fit: BoxFit.contain)
+              ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Form(
@@ -68,8 +68,8 @@ class LoginPage extends StatelessWidget {
                             icon: model.eyeArtboard == null
                                 ? Icon(Icons.remove_red_eye)
                                 : Container(
-                                    child: Rive(artboard: model.eyeArtboard, fit: BoxFit.contain)
-                                  ),
+                                child: Rive(artboard: model.eyeArtboard, fit: BoxFit.contain)
+                            ),
                             onPressed: () {
                               this.isObscure = !this.isObscure;
                               this.isObscure

@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             )
         ),
       ),
-      initialRoute: "/dashboard",
+      initialRoute: "/navigationStarter",
       routes: routes,
       navigatorKey: navigatorKey,
     );

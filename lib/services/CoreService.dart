@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/models/DashboardModel.dart';
+import 'package:free_drive/ui/pages/dashboard/DashboardPage.dart';
+import 'package:free_drive/ui/pages/driver/LicenceUploadPage.dart';
 
 class CoreService {
 
@@ -9,6 +11,12 @@ class CoreService {
     pendingRideExists: false,
     completedRidesCount: 0
   );
+
+  List<Widget> navigationPages = [
+    new LicenceUploadPage(),
+    new DashboardPage(),
+    new DashboardPage(),
+  ];
 
   formatDate(DateTime datetime) {
     String result;

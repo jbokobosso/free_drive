@@ -101,22 +101,6 @@ class DashboardPage extends StatelessWidget {
             DashboardCard()
           ],
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: this.currentNavigationIndex,
-          onTap: (newIndex) {
-            this.currentNavigationIndex = newIndex;
-            model.notifyListeners();
-          },
-          elevation: 0.0,
-          backgroundColor: Theme.of(context).accentColor,
-          showUnselectedLabels: false,
-          selectedItemColor: Colors.black,
-          items: [
-            BottomNavigationBarItem(icon: SvgPicture.asset("assets/icons/menu.svg"), activeIcon: SvgPicture.asset("assets/icons/menu.svg", color: Colors.black,) ,label: 'Menu'),
-            BottomNavigationBarItem(icon: SvgPicture.asset("assets/icons/home.svg"), activeIcon: SvgPicture.asset("assets/icons/home.svg", color: Colors.black,), label: 'Accueil'),
-            BottomNavigationBarItem(icon: SvgPicture.asset("assets/icons/plus.svg"), activeIcon: SvgPicture.asset("assets/icons/plus.svg", color: Colors.black,), label: 'Plus'),
-          ],
-        ),
       ),
       viewModelBuilder: () => AppViewModel(),
     );

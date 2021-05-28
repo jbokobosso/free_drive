@@ -107,7 +107,7 @@ class ContactDriverPage extends StatelessWidget {
                       style: customButtonStyle(context),
                       onPressed: () {
                         model.contactDriverService.newRide();
-                        navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false);
+                        navigatorKey.currentState.pushNamedAndRemoveUntil("/navigationStarter", (Route<dynamic> route) => false);
                       },
                       child: Text('Poursuivre')
                   )
