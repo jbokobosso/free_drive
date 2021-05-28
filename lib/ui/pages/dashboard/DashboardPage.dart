@@ -35,7 +35,13 @@ class DashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(height: 0, width: 0,),
-                  ElevatedButton(
+                  model.coreService.dashboardState.activeRideExists
+                      ? ElevatedButton(
+                      style: customButtonStyle(context, isBlack: true),
+                      onPressed: () => model.cancelActiveRide(),
+                      child: Text('Annuler la course', style: TextStyle(fontWeight: FontWeight.bold))
+                  )
+                      : ElevatedButton(
                       style: customButtonStyle(context),
                       onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
                       child: Text('Demander un chauffeur', style: TextStyle(fontWeight: FontWeight.bold))

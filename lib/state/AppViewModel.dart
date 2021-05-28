@@ -11,37 +11,46 @@ class AppViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
-  double get deviceHeight => this._getDeviceHeight();
-  double get deviceWidth => this._getDeviceWidth();
-  bool get activeRideExists => this.coreService.dashboardState.activeRideExists;
-  Artboard eyeArtboard;
-  Artboard logoArtboard;
-  RiveAnimationController eyeAnimationController;
-  RiveAnimationController logoAnimationController;
+
+
+  // Dashboard
+  cancelActiveRide() {
+    this.coreService.dashboardState.activeRideExists = false;
+    notifyListeners();
+  }
+
 
   // Contact driver page
   bool contactedDriver = false;
-
   callDriver() async {
     var callSucceded = await this.contactDriverService.callDriver();
     if(callSucceded) contactedDriver = true;
     notifyListeners();
   }
-
   textDriver() {
     var textSucceded = this.contactDriverService.textDriver();
     if(textSucceded) this.contactedDriver = true;
     notifyListeners();
   }
 
+
+  // App utils
+  bool get activeRideExists => this.coreService.dashboardState.activeRideExists;
+  double get deviceHeight => this._getDeviceHeight();
+  double get deviceWidth => this._getDeviceWidth();
   double _getDeviceWidth() {
     return MediaQuery.of(navigatorKey.currentState.context).size.width;
   }
-
   double _getDeviceHeight() {
     return MediaQuery.of(navigatorKey.currentState.context).size.height;
   }
 
+
+  // Login page
+  Artboard eyeArtboard;
+  Artboard logoArtboard;
+  RiveAnimationController eyeAnimationController;
+  RiveAnimationController logoAnimationController;
   initEyeAnimation() {
     rootBundle.load('assets/rive/close_open_eye.riv')
         .then(
