@@ -16,6 +16,7 @@ class AppViewModel extends BaseViewModel {
   // Dashboard
   cancelActiveRide() {
     this.coreService.dashboardState.activeRideExists = false;
+    navigatorKey.currentState.pop();
     notifyListeners();
   }
 
