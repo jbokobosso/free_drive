@@ -76,6 +76,7 @@ class NotificationsPage extends StatelessWidget {
 class NotifTile extends StatelessWidget {
   NotificationModel notif;
   final double cardWidthScale = 0.8;
+  double cancelRideAlertTopRadius = 20.0;
   NotifTile({
     this.notif
   });
@@ -83,23 +84,48 @@ class NotifTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
-        builder: (context, model, child) => Container(
-            margin: EdgeInsets.symmetric(vertical: model.deviceHeight*0.02),
-            padding: EdgeInsets.all(15.0),
-            width: model.deviceWidth*this.cardWidthScale,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(25.0),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
+        builder: (context, model, child) => GestureDetector(
+          onTap: () => showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (_) => AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(this.cancelRideAlertTopRadius))
+                ),
+                titlePadding: EdgeInsets.all(0.0),
+                title: Container(
+                  decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
-                      spreadRadius: 0.1,
-                      blurRadius: 0.5
-                  )
-                ]
-            ),
-            child: Text(this.notif.content)
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(this.cancelRideAlertTopRadius))
+                  ),
+                  width: double.infinity,
+                  height: 30.0,
+                  child: Align(child: Text("Notification", style: TextStyle(color: Colors.white)), alignment: Alignment.center),
+                ),
+                content: Text(this.notif.content),
+                actions: [
+                  TextButton(child: Text('Ok'), onPressed: () => model.cancelActiveRide()),
+                ],
+              )
+          ),
+          child: Container(
+              margin: EdgeInsets.symmetric(vertical: model.deviceHeight*0.02),
+              padding: EdgeInsets.all(15.0),
+              width: model.deviceWidth*this.cardWidthScale,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(25.0),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: Theme.of(context).primaryColor,
+                        spreadRadius: 0.1,
+                        blurRadius: 0.5
+                    )
+                  ]
+              ),
+              child: Text(this.notif.content)
+          ),
         ),
         viewModelBuilder: () => AppViewModel()
     );
