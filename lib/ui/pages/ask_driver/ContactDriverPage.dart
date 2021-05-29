@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
@@ -114,18 +115,7 @@ class ContactDriverPage extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              padding: EdgeInsets.only(top: 55),
-              height: model.deviceHeight*0.25,
-              color: Theme.of(context).primaryColor,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(icon: Icon(Icons.person, color: Colors.white), onPressed: () => null),
-                  IconButton(icon: Icon(Icons.notifications, color: Colors.white), onPressed: () => navigatorKey.currentState.pushNamed("/notifs")),
-                ],
-              ),
-            ),
+            AppBanner(),
             UserDashboardCard(),
           ],
         ),
