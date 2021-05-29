@@ -32,6 +32,18 @@ class AppViewModel extends BaseViewModel {
 
 
   // Dashboard
+  completeRide() {
+    this.coreService.driverDashboardState.activeRideExists = false;
+    this.coreService.driverDashboardState.completedRidesCount++;
+    navigatorKey.currentState.pop();
+    navigatorKey.currentState.pushNamedAndRemoveUntil("/driverDashboard", (route) => false);
+  }
+  startRide() {
+    this.coreService.driverDashboardState.pendingRideExists = false;
+    this.coreService.driverDashboardState.activeRideExists = true;
+    navigatorKey.currentState.pop();
+    navigatorKey.currentState.pushNamedAndRemoveUntil("/driverDashboard", (route) => false);
+  }
   cancelActiveRide() {
     this.coreService.userDashboardState.activeRideExists = false;
     navigatorKey.currentState.pop();

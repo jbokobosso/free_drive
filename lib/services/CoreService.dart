@@ -18,7 +18,7 @@ class CoreService {
   DriverDashboardModel driverDashboardState = new DriverDashboardModel(
     balance: 25000,
     activeRideExists: false,
-    pendingRideExists: false,
+    pendingRideExists: true,
     completedRidesCount: 0,
     isActiveAccount: false,
   );

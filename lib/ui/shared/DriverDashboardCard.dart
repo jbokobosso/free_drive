@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverDashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
+  TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
   DriverDashboardCard({Key key}) : super(key: key);
 
   @override
@@ -39,9 +41,21 @@ class DriverDashboardCard extends StatelessWidget {
                   ],
                 ),
                 Text('Gain', style: TextStyle(color: Theme.of(context).primaryColor)),
-                Text('\nCourse en attente: ${model.coreService.driverDashboardState.pendingRideExists ? 1 : 0}'),
-                Text('\nCourse en cours: ${model.coreService.driverDashboardState.activeRideExists ? 1 : 0}'),
-                Text('\nCourse en terminée: ${model.coreService.driverDashboardState.completedRidesCount}'),
+                GestureDetector(
+                  onTap: () => navigatorKey.currentState.pushNamed("/rideDetails"),
+                  child: Text(
+                    '\nCourse en attente: ${model.coreService.driverDashboardState.pendingRideExists ? 1 : 0}',
+                    style: model.coreService.driverDashboardState.pendingRideExists ? this.hightlightStyle : TextStyle(),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => navigatorKey.currentState.pushNamed("/rideDetails"),
+                  child: Text(
+                    '\nCourse en cours: ${model.coreService.driverDashboardState.activeRideExists ? 1 : 0}',
+                    style: model.coreService.driverDashboardState.activeRideExists ? this.hightlightStyle : TextStyle(),
+                  ),
+                ),
+                Text('\nCourses terminée: ${model.coreService.driverDashboardState.completedRidesCount}'),
                 Text('\nStatut: : ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}'),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
