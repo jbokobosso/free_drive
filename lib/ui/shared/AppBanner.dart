@@ -5,8 +5,10 @@ import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class AppBanner extends StatelessWidget {
-  const AppBanner({
+  bool showNotifIcon;
+  AppBanner({
     Key key,
+    this.showNotifIcon = true
   }) : super(key: key);
 
   @override
@@ -21,7 +23,7 @@ class AppBanner extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(icon: Icon(Icons.person, color: Colors.white), onPressed: () => null),
-            Padding(
+            this.showNotifIcon ? Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Badge(
                 badgeContent: Text("10", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
@@ -31,7 +33,7 @@ class AppBanner extends StatelessWidget {
                   onPressed: () => navigatorKey.currentState.pushNamed("/notifs")
                 )
               ),
-            ),
+            ) : Text(""),
           ],
         ),
       ),

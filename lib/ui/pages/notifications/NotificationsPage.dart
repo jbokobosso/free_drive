@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
@@ -24,6 +25,17 @@ class NotificationsPage extends StatelessWidget {
   DateTime returnDate;
   TimeOfDay departureTime;
   TimeOfDay returnTime;
+  List<NotificationModel> notifs = [
+    new NotificationModel(content: "Nous vous invitons à passer à l'auto école Adonaï pour votre test ce vendredi 14 mai 2021 à 14h30."),
+    new NotificationModel(content: "Veuillez trouver ici vos credentials de connextion: \n\n user: elodie846 \n mdp: xz2s6e6r54"),
+    new NotificationModel(content: "Première connexion réussie !!! Si ce n'était pas vous, veuillez nous contacter"),
+    new NotificationModel(content: "Vous avez 48h pour aller chez votre instructeur"),
+    new NotificationModel(content: "Bonjour et bienvenue chez Free Drive..."),
+    new NotificationModel(content: "Vous devez vous connecter à votre espace admin au plus vite possible afin de valider votre compte"),
+    new NotificationModel(content: "Cher client, veuillez vous adresser à votre institeur afin d'obtenir votre résultat de test"),
+    new NotificationModel(content: "Félicitaions !!! Vous avez été sélectioné pour la suite. Merci de nous faire confiance, vous passerez un excellent contrat avec nous"),
+    new NotificationModel(content: "Tentative de connexoin multiple bloquée suite à des positions géographiques spontanément différentes. Veuillez nous contacter pour débloquer votre compte"),
+  ];
 
   heightSpacing() {
     return SizedBox(height: 10.0);
@@ -49,19 +61,15 @@ class NotificationsPage extends StatelessWidget {
                 height: model.deviceHeight,
                 color: Theme.of(context).accentColor
             ),
-            AppBanner(),
+            AppBanner(showNotifIcon: false),
             Positioned(
               height: model.deviceHeight,
               top: model.deviceHeight*this.cardTopSpacingScale,
               child: SizedBox(
                 width: model.deviceWidth*0.8,
-                child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (context, index) => NotifTile(notif: new NotificationModel(
-                    content: "Nous vous invitons à passer à "
-                        "l'auto école Adonaï pour votre test"
-                        "ce vendredi 14 mai 2021 à 14h30."
-                  ),),
+                child: ListView(
+                  padding: EdgeInsets.all(0.0),
+                  children: this.notifs.map((notif) => NotifTile(notif: notif)).toList(),
                 ),
               ),
             )
