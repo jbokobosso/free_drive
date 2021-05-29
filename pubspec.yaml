@@ -29,6 +29,7 @@ dependencies:
   lottie: ^1.0.1
   flutter_svg: ^0.22.0
   # UI facilities
+  badges: ^2.0.1
   introduction_screen: ^2.1.0
   # Arch dependencies
   stacked: ^2.1.0

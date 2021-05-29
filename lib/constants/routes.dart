@@ -9,6 +9,7 @@ import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/YourDriverPage.dart';
 import 'package:free_drive/ui/pages/intro/IntroPage.dart';
+import 'package:free_drive/ui/pages/notifications/NotificationsPage.dart';
 import 'package:free_drive/ui/shared/NavigationStarter.dart';
 
 Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
@@ -23,4 +24,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/contactDriver': (BuildContext context) => ContactDriverPage(),
   '/navigationStarter': (BuildContext context) => NavigationStarter(),
   '/uploadDriverLicence': (BuildContext context) => UploadDriverLicencePage(),
+  '/notifs': (BuildContext context) => NotificationsPage(),
 };
