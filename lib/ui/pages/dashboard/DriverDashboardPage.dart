@@ -4,7 +4,8 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/DashboardCard.dart';
+import 'package:free_drive/ui/shared/UserDashboardCard.dart';
+import 'package:free_drive/ui/shared/DriverDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,7 +20,7 @@ class DriverDashboardPage extends StatelessWidget {
     return ViewModelBuilder<AppViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: 'Tableau de bord\nCHAUFFEUR'),
+        appBar: CustomAppBar(title: 'Tableau de bord'),
         extendBodyBehindAppBar: true,
         body: Stack(
           alignment: Alignment.topCenter,
@@ -37,51 +38,9 @@ class DriverDashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(height: 0, width: 0),
-                  model.coreService.dashboardState.activeRideExists
-                      ? ElevatedButton(
-                      style: customButtonStyle(context, isBlack: true),
-                      onPressed: () => showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) => ExtendRideDialog(cancelRideAlertTopRadius: cancelRideAlertTopRadius)
-                      ),
-                      child: Text('Prolonger la course', style: TextStyle(fontWeight: FontWeight.bold))
-                  )
-                      : Text(''),
-                  model.coreService.dashboardState.activeRideExists
-                      ? ElevatedButton(
-                      style: customButtonStyle(context, isRed: true),
-                      onPressed: () => showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(this.cancelRideAlertTopRadius))
-                            ),
-                            titlePadding: EdgeInsets.all(0.0),
-                            title: Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(context).primaryColor,
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(this.cancelRideAlertTopRadius))
-                              ),
-                              width: double.infinity,
-                              height: 30.0,
-                              child: Align(child: Text("Confirmez", style: TextStyle(color: Colors.white)), alignment: Alignment.center),
-                            ),
-                            content: Text('Etes vous sûr de vouloir annuler la course en cours ?'),
-                            actions: [
-                              TextButton(child: Text('Oui'), onPressed: () => model.cancelActiveRide()),
-                              TextButton(child: Text('Non'), onPressed: () => navigatorKey.currentState.pop()),
-                            ],
-                          )
-                      ),
-                      child: Text('Annuler la course', style: TextStyle(fontWeight: FontWeight.bold))
-                  )
-                      : ElevatedButton(
-                      style: customButtonStyle(context),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
-                      child: Text('Demander un chauffeur', style: TextStyle(fontWeight: FontWeight.bold))
-                  )
+                  Center(child: Text("Votre inscription a été bien efffectuée et est en attente de validation.", style: Theme.of(context).textTheme.headline1)),
+                  SizedBox(height: model.deviceHeight*0.05),
+                  Text("Vous serez invité à passer un test.", style: TextStyle(color: Theme.of(context).primaryColor),)
                 ],
               ),
             ),
@@ -97,7 +56,7 @@ class DriverDashboardPage extends StatelessWidget {
                 ],
               ),
             ),
-            DashboardCard()
+            DriverDashboardCard()
           ],
         ),
       ),

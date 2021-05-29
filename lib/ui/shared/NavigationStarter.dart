@@ -5,7 +5,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/DashboardCard.dart';
+import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 

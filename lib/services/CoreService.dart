@@ -8,11 +8,19 @@ class CoreService {
 
   EUserType userType = EUserType.hint;
 
-  DashboardModel dashboardState = new DashboardModel(
+  DashboardModel userDashboardState = new DashboardModel(
     balance: 25000,
     activeRideExists: false,
     pendingRideExists: false,
     completedRidesCount: 0
+  );
+
+  DriverDashboardModel driverDashboardState = new DriverDashboardModel(
+    balance: 25000,
+    activeRideExists: false,
+    pendingRideExists: false,
+    completedRidesCount: 0,
+    isActiveAccount: false,
   );
 
   List<Widget> navigationPages = [

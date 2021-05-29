@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
-class DashboardCard extends StatelessWidget {
+class UserDashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
   final double cardHeight = 0.35;
-  DashboardCard({Key key}) : super(key: key);
+  UserDashboardCard({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +36,14 @@ class DashboardCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("${model.coreService.dashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
+                        Text("${model.coreService.userDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
                         IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
                       ],
                     ),
                     Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    Text('\nCourse en attente: ${model.coreService.dashboardState.pendingRideExists ? 1 : 0}'),
-                    Text('\nCourse en cours: ${model.coreService.dashboardState.activeRideExists ? 1 : 0}'),
-                    Text('\nCourse en terminée: ${model.coreService.dashboardState.completedRidesCount}'),
+                    Text('\nCourse en attente: ${model.coreService.userDashboardState.pendingRideExists ? 1 : 0}'),
+                    Text('\nCourse en cours: ${model.coreService.userDashboardState.activeRideExists ? 1 : 0}'),
+                    Text('\nCourse en terminée: ${model.coreService.userDashboardState.completedRidesCount}'),
                   ],
                 ),
               ),

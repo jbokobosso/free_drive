@@ -4,7 +4,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/DashboardCard.dart';
+import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,7 +19,7 @@ class UserDashboardPage extends StatelessWidget {
     return ViewModelBuilder<AppViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: 'Tableau de bord\nCLIENT'),
+        appBar: CustomAppBar(title: 'Tableau de bord'),
         extendBodyBehindAppBar: true,
         body: Stack(
           alignment: Alignment.topCenter,
@@ -37,7 +37,7 @@ class UserDashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(height: 0, width: 0),
-                  model.coreService.dashboardState.activeRideExists
+                  model.coreService.userDashboardState.activeRideExists
                       ? ElevatedButton(
                           style: customButtonStyle(context, isBlack: true),
                           onPressed: () => showDialog(
@@ -48,7 +48,7 @@ class UserDashboardPage extends StatelessWidget {
                           child: Text('Prolonger la course', style: TextStyle(fontWeight: FontWeight.bold))
                         )
                       : Text(''),
-                  model.coreService.dashboardState.activeRideExists
+                  model.coreService.userDashboardState.activeRideExists
                       ? ElevatedButton(
                           style: customButtonStyle(context, isRed: true),
                           onPressed: () => showDialog(
@@ -97,7 +97,7 @@ class UserDashboardPage extends StatelessWidget {
                 ],
               ),
             ),
-            DashboardCard()
+            UserDashboardCard()
           ],
         ),
       ),

@@ -33,7 +33,7 @@ class AppViewModel extends BaseViewModel {
 
   // Dashboard
   cancelActiveRide() {
-    this.coreService.dashboardState.activeRideExists = false;
+    this.coreService.userDashboardState.activeRideExists = false;
     navigatorKey.currentState.pop();
     notifyListeners();
   }
@@ -64,7 +64,7 @@ class AppViewModel extends BaseViewModel {
 
 
   // App utils
-  bool get activeRideExists => this.coreService.dashboardState.activeRideExists;
+  bool get activeRideExists => this.coreService.userDashboardState.activeRideExists;
   double get deviceHeight => this._getDeviceHeight();
   double get deviceWidth => this._getDeviceWidth();
   double _getDeviceWidth() {

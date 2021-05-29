@@ -7,7 +7,7 @@ class ContactDriverService {
   CoreService _coreService = getIt.get<CoreService>();
 
   newRide() {
-    _coreService.dashboardState.activeRideExists = true;
+    _coreService.userDashboardState.activeRideExists = true;
   }
 
   Future<bool> callDriver() async {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/ui/pages/ask_driver/UploadDriverLicencePage.dart';
 import 'package:free_drive/ui/pages/auth/LoginPage.dart';
 import 'package:free_drive/ui/pages/auth/SignupPage.dart';
 import 'package:free_drive/ui/pages/auth/ValidationPage.dart';
@@ -21,4 +22,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/yourDriver': (BuildContext context) => YourDriverPage(),
   '/contactDriver': (BuildContext context) => ContactDriverPage(),
   '/navigationStarter': (BuildContext context) => NavigationStarter(),
+  '/uploadDriverLicence': (BuildContext context) => UploadDriverLicencePage(),
 };

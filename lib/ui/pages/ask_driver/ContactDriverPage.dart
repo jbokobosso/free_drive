@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/DashboardCard.dart';
+import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -126,7 +126,7 @@ class ContactDriverPage extends StatelessWidget {
                 ],
               ),
             ),
-            DashboardCard(),
+            UserDashboardCard(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

@@ -4,6 +4,7 @@ import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
+import 'package:free_drive/ui/shared/TitleBanner.dart';
 import 'package:stacked/stacked.dart';
 
 class ValidationPage extends StatelessWidget {
@@ -26,13 +27,7 @@ class ValidationPage extends StatelessWidget {
                   children: [
                     Logo(sizeScale: 0.35),
                     SizedBox(height: model.deviceHeight*this.inputSpacingScale),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                          'Entrez votre code de confirmation',
-                          style: Theme.of(context).textTheme.headline1
-                      ),
-                    ),
+                    TitleBanner(titleText: "Entrez votre code de confirmation"),
                     SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                     Form(
                       child: Column(
@@ -91,7 +86,7 @@ class ValidationPage extends StatelessWidget {
                           if(model.userType == EUserType.client)
                             navigatorKey.currentState.pushNamed('/dashboard');
                           else if(model.userType == EUserType.driver)
-                            navigatorKey.currentState.pushNamed('/driverDashboard');
+                            navigatorKey.currentState.pushNamed('/uploadDriverLicence');
                           else
                             print("Nothing to do");
                         },
