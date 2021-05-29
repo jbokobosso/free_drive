@@ -82,10 +82,8 @@ class LoginPage extends StatelessWidget {
                                 filled: true,
                                 fillColor: Colors.white,
                                 labelText: 'Email',
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                                ),
+                                enabledBorder: customInputBorder(context),
+                                border: customInputBorder(context),
                               ),
                             ),
                           ),
@@ -112,10 +110,8 @@ class LoginPage extends StatelessWidget {
                                     model.notifyListeners();
                                   },
                                 ),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                                ),
+                                enabledBorder: customInputBorder(context),
+                                border: customInputBorder(context),
                               ),
                             ),
                           ),

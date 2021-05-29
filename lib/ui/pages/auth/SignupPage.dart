@@ -4,6 +4,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
+import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -29,7 +30,7 @@ class SignupPage extends StatelessWidget {
             padding: EdgeInsets.all(0.0),
             children: [
               SizedBox(height: model.deviceHeight*0.1),
-              Logo(sizeScale: 0.3),
+              Logo(sizeScale: 0.2),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Align(
                 alignment: Alignment.center,
@@ -49,10 +50,8 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           labelText: 'Nom et prénoms',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
@@ -65,10 +64,8 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           labelText: 'Email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
@@ -81,10 +78,8 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           labelText: 'N° de Téléphone',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
@@ -96,10 +91,8 @@ class SignupPage extends StatelessWidget {
                           filled: true,
                           fillColor: Colors.white,
                           labelText: 'Adresse',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
@@ -126,10 +119,8 @@ class SignupPage extends StatelessWidget {
                               model.notifyListeners();
                             },
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
@@ -156,10 +147,8 @@ class SignupPage extends StatelessWidget {
                               model.notifyListeners();
                             },
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
-                          ),
+                          enabledBorder: customInputBorder(context),
+                          border: customInputBorder(context),
                         ),
                       ),
                     ),
