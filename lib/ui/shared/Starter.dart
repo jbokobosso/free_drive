@@ -1,16 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
-import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
-import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/UserDashboardCard.dart';
-import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
-class NavigationStarter extends StatelessWidget {
-  NavigationStarter({Key key}) : super(key: key);
+class Starter extends StatelessWidget {
+  Starter({Key key}) : super(key: key);
   double cancelRideAlertTopRadius = 20.0;
   int currentNavigationIndex = 0;
   double cardTopSpacingScale = 0.2;
