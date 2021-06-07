@@ -22,9 +22,13 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<UserCredential> authenticateByMail(String email, String password) async {
-    var result = await this.firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-    return result;
+  Future<dynamic> authenticateByMail(String email, String password) async {
+    try{
+      UserCredential result = await this.firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      return result;
+    } on FirebaseAuthException catch (exception) {
+      return exception;
+    }
   }
 
   @override
