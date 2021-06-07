@@ -21,19 +21,30 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  #  Firebase
+  firebase_storage: ^8.1.0
+  firebase_database: ^7.0.0
+  firebase_core: ^1.2.0
+  cloud_firestore: ^2.2.0
+  firebase_auth: ^1.2.0
+
   # Utililties
   flutter_sms: ^2.3.1
   flutter_phone_direct_caller: ^2.0.0
+
   # Media
   rive: ^0.7.10
   lottie: ^1.0.1
   flutter_svg: ^0.22.0
+
   # UI facilities
   badges: ^2.0.1
   introduction_screen: ^2.1.0
+
   # Arch dependencies
   stacked: ^2.1.0
   get_it: ^6.1.1
+
   # Default
   flutter:
     sdk: flutter
