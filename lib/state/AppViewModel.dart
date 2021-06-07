@@ -19,6 +19,7 @@ class AppViewModel extends BaseViewModel {
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
   // Auth
+  final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
   TextEditingController displayNameCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
@@ -61,6 +62,23 @@ class AppViewModel extends BaseViewModel {
         }
       });
     } else setBusy(false);
+  }
+  login(EUserType chosenUserType) async {
+    setBusy(true);
+    bool isValid = this.loginFormKey.currentState.validate();
+    if(isValid) {
+      UserCredential userCredential = await this.authService.authenticateByMail(this.emailCtrl.text, this.passCtrl.text);
+      if(userCredential.user != null) {
+        if(this.userType == EUserType.client)
+          navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
+        else if(this.userType == EUserType.driver)
+          navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (route) => false);
+        else
+          this.coreService.showErrorDialog("Incomplet", "Renseignez qui vous êtes: \nclient ou chauffeur ?");
+      }
+      setBusy(false);
+    }
+    else setBusy(false);
   }
 
   // Driver

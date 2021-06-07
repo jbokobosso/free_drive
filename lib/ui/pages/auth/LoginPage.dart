@@ -6,6 +6,7 @@ import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/LicenceSufixIcons.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:rive/rive.dart';
@@ -38,7 +39,7 @@ class LoginPage extends StatelessWidget {
           ),
           width: model.deviceWidth,
           color: Theme.of(context).accentColor,
-          child: ListView(
+          child: model.isBusy ? Center(child: Loading()) : ListView(
             children: [
               model.logoArtboard == null
                   ? Logo(sizeScale: 0.35)
@@ -72,12 +73,20 @@ class LoginPage extends StatelessWidget {
               ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Form(
-                      child: Column(
+                key: model.loginFormKey,
+                child: Column(
                         children: [
                           SizedBox(
                             height: model.deviceHeight*inputHeightScale,
                             child: TextFormField(
+                              controller: model.emailCtrl,
                               keyboardType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if(value == null || value.isEmpty)
+                                  return "Champ requis";
+                                else
+                                  return null;
+                              },
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
@@ -91,7 +100,14 @@ class LoginPage extends StatelessWidget {
                           SizedBox(
                             height: model.deviceHeight*inputHeightScale,
                             child: TextFormField(
+                              controller: model.passCtrl,
                               obscureText: this.isObscure,
+                              validator: (value) {
+                                if(value == null || value.isEmpty)
+                                  return "Champ requis";
+                                else
+                                  return null;
+                              },
                               decoration: InputDecoration(
                                 filled: true,
                                 fillColor: Colors.white,
@@ -124,14 +140,7 @@ class LoginPage extends StatelessWidget {
                                 )
                             ),
                             child: Text('Connexion', style: TextStyle(fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              if(model.userType == EUserType.client)
-                                navigatorKey.currentState.pushNamed('/dashboard');
-                              else if(model.userType == EUserType.driver)
-                                navigatorKey.currentState.pushNamed('/driverDashboard');
-                              else
-                                print("Nothing to do");
-                            },
+                            onPressed: () => model.login(model.userType)
                           ),
                           SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                           Text('ou'),
@@ -142,7 +151,7 @@ class LoginPage extends StatelessWidget {
                           )
                         ],
                       ),
-                    )
+              )
             ],
           ),
         ),

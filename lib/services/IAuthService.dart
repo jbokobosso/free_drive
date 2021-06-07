@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 
 abstract class IAuthService {
