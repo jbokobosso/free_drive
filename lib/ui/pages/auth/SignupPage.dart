@@ -12,9 +12,9 @@ import 'package:stacked/stacked.dart';
 class SignupPage extends StatelessWidget {
   bool isObscure = true;
   double inputSpacingScale = 0.02;
-  double inputHeightScale = 0.07;
+  double inputHeightScale = 0.09;
   double radioFontSize = 10.0;
-  EUserType _userTypeChosen;
+  EUserType _userTypeChosen=EUserType.client;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
@@ -42,15 +42,23 @@ class SignupPage extends StatelessWidget {
               ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Form(
+                key: model.signupFormKey,
                 child: Column(
                   children: [
                     SizedBox(
                       height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        controller: model.displayNameCtrl,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Saisir nom complet';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
-                          labelText: 'Nom et prénoms',
+                          labelText: 'Prénom suivi du nom',
                           enabledBorder: customInputBorder(context),
                           border: customInputBorder(context),
                         ),
@@ -60,7 +68,17 @@ class SignupPage extends StatelessWidget {
                     SizedBox(
                       height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        controller: model.emailCtrl,
                         keyboardType: TextInputType.emailAddress,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Champ requis';
+                          }
+                          if(!model.coreService.validateEmail(value)) {
+                            return "Ceci n'est pas une adresse mail";
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -74,7 +92,17 @@ class SignupPage extends StatelessWidget {
                     SizedBox(
                       height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        controller: model.phoneNumberCtrl,
                         keyboardType: TextInputType.phone,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Téléphone requis';
+                          }
+                          if(!model.coreService.validatePhoneNumber(value)) {
+                            return "Numéro invalide. Ex: +228xxxxxxxx";
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -86,8 +114,16 @@ class SignupPage extends StatelessWidget {
                     ),
                     SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                     SizedBox(
-                      height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        minLines: 3,
+                        maxLines: 4,
+                        controller: model.addressCtrl,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Adresse requise';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -101,7 +137,14 @@ class SignupPage extends StatelessWidget {
                     SizedBox(
                       height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        controller: model.passCtrl,
                         obscureText: this.isObscure,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Choisissez un mot de passe';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,
@@ -129,7 +172,17 @@ class SignupPage extends StatelessWidget {
                     SizedBox(
                       height: model.deviceHeight*inputHeightScale,
                       child: TextFormField(
+                        controller: model.confirmPassCtrl,
                         obscureText: this.isObscure,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Vous devez confirmer le mot de passe';
+                          }
+                          if (value != model.passCtrl.text) {
+                            return 'Les deux mots de passe ne concordent pas';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white,

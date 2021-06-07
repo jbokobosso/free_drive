@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/models/UserModel.dart';
 
 abstract class IAuthService {
 
@@ -6,5 +8,5 @@ abstract class IAuthService {
   Future<UserCredential> authenticateByMail(String email, String password);
   sendPasswordRecoveryMail(String email);
   confirmPasswordResetCode(String code, String newPassword);
-  Future<bool> storeUserInfos(String firstname, String lastname, String email, String phoneNumber, String address, String password);
+  Future<bool> storeUserInfos(UserModel userModel);
 }

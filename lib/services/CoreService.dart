@@ -93,5 +93,17 @@ class CoreService {
     );
   }
 
+  bool validatePhoneNumber(String phoneNumber) {
+    if(phoneNumber.characters.length != 12)
+      return false;
+    else
+      return true;
+  }
 
+  bool validateEmail(String email) {
+    if(!email.contains("@"))
+      return false;
+    else
+      return true;
+  }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
@@ -18,27 +19,48 @@ class AppViewModel extends BaseViewModel {
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
   // Auth
+  final signupFormKey = GlobalKey<FormState>();
+  TextEditingController displayNameCtrl = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
+  TextEditingController phoneNumberCtrl = TextEditingController();
+  TextEditingController addressCtrl = TextEditingController();
+  TextEditingController passCtrl = TextEditingController();
+  TextEditingController confirmPassCtrl = TextEditingController();
   EUserType get userType => coreService.userType;
   chooseUserType(EUserType newValue) {
     coreService.userType = newValue;
     notifyListeners();
   }
-
   registerUser(EUserType chosenUserType) {
     setBusy(true);
-    coreService.userType = chosenUserType;
-    dynamic result = this.authService.registerByMail("technonovich@gmail.com", "123456");
-    result.then((userCredentials) async {
-      if(userCredentials.runtimeType == FirebaseAuthException) {
-        setBusy(false);
-        this.coreService.showErrorDialog(userCredentials.code, userCredentials.message);
-      } else {
-        var isStored = await this.authService.storeUserInfos("Spartan_117", "NOVICH", "technonovich@gmail.com", "+22899885825", "Avédji, non loin du restaurant Opéra, derrière ESGIS", "123456");
-        if(isStored)
-          navigatorKey.currentState.pushNamed('/validation');
-        setBusy(false);
-      }
-    });
+    var isValid = this.signupFormKey.currentState.validate();
+    if(isValid) {
+      coreService.userType = chosenUserType;
+      dynamic result = this.authService.registerByMail(this.emailCtrl.text, this.passCtrl.text);
+      result.then((userCredentials) async {
+        if(userCredentials.runtimeType == FirebaseAuthException) {
+          setBusy(false);
+          this.coreService.showErrorDialog(userCredentials.code, userCredentials.message);
+        } else {
+          var isStored = await this.authService.storeUserInfos(new UserModel(
+              this.displayNameCtrl.text,
+              this.emailCtrl.text,
+              this.phoneNumberCtrl.text,
+              this.addressCtrl.text,
+              chosenUserType
+          ));
+          if(isStored) {
+            if(userType == EUserType.client)
+              navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
+            else if(userType == EUserType.driver)
+              navigatorKey.currentState.pushNamedAndRemoveUntil('/uploadDriverLicence', (routeMatch) => false);
+            else
+              print("Nothing to do");
+          }
+          setBusy(false);
+        }
+      });
+    } else setBusy(false);
   }
 
   // Driver

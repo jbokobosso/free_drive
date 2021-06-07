@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:free_drive/main.dart';
+import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/IAuthService.dart';
 
@@ -36,17 +38,17 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<bool> storeUserInfos(
-      String firstname,
-      String lastname,
-      String email,
-      String phoneNumber,
-      String address,
-      String password) async {
-    this.firebaseAuth.currentUser.updateDisplayName("$firstname $lastname");
-    this.firebaseAuth.currentUser.updatePassword(password);
-    var result = await this.firestore.collection("users")
-        .add(new UserModel("$firstname $lastname", email, phoneNumber, address).toMap());
+  Future<bool> storeUserInfos(UserModel userModel) async {
+    this.firebaseAuth.currentUser.updateDisplayName(userModel.displayName);
+    var result = await this.firestore.collection("users").add(
+        new UserModel(
+            "${userModel.displayName.trim()}",
+            userModel.email.trim(),
+            userModel.phoneNumber.trim(),
+            userModel.address,
+            userModel.userType)
+            .toMap()
+    );
     if(result != null)
       return true;
     else
