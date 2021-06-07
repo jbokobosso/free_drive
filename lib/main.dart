@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/constants/routes.dart';
 import 'package:free_drive/services/GetIt.dart';
@@ -5,8 +6,9 @@ import 'package:free_drive/services/GetIt.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   setupServiceLocator();
   runApp(MyApp());
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:rive/rive.dart';
@@ -26,7 +27,7 @@ class SignupPage extends StatelessWidget {
           ),
           width: model.deviceWidth,
           color: Theme.of(context).accentColor,
-          child: ListView(
+          child: model.isBusy ? Center(child: Loading()) : ListView(
             padding: EdgeInsets.all(0.0),
             children: [
               SizedBox(height: model.deviceHeight*0.1),
