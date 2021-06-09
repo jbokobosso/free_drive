@@ -5,7 +5,5 @@ abstract class IAuthService {
 
   Future<dynamic> registerByMail(String email, String password);
   Future<dynamic> authenticateByMail(String email, String password);
-  sendPasswordRecoveryMail(String email);
-  confirmPasswordResetCode(String code, String newPassword);
-  Future<bool> storeUserInfos(UserModel userModel);
+  Future<bool> storeFirebaseUserInfos(UserModel userModel);
 }

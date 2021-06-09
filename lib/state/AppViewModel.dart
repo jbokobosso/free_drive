@@ -43,7 +43,7 @@ class AppViewModel extends BaseViewModel {
           setBusy(false);
           this.coreService.showErrorDialog(userCredentials.code, userCredentials.message);
         } else {
-          var isStored = await this.authService.storeUserInfos(new UserModel(
+          var isStored = await this.authService.storeFirebaseUserInfos(new UserModel(
               this.displayNameCtrl.text,
               this.emailCtrl.text,
               this.phoneNumberCtrl.text,

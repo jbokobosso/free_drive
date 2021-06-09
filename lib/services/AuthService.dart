@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:free_drive/main.dart';
-import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/IAuthService.dart';
 
@@ -32,17 +30,7 @@ class AuthService with IAuthService {
   }
 
   @override
-  sendPasswordRecoveryMail(String email) async {
-    await this.firebaseAuth.sendPasswordResetEmail(email: email);
-  }
-
-  @override
-  confirmPasswordResetCode(String code, String newPassword) async {
-    await this.firebaseAuth.confirmPasswordReset(code: code, newPassword: newPassword);
-  }
-
-  @override
-  Future<bool> storeUserInfos(UserModel userModel) async {
+  Future<bool> storeFirebaseUserInfos(UserModel userModel) async {
     this.firebaseAuth.currentUser.updateDisplayName(userModel.displayName);
     var result = await this.firestore.collection("users").add(
         new UserModel(
