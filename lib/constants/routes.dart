@@ -11,13 +11,15 @@ import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/YourDriverPage.dart';
 import 'package:free_drive/ui/pages/intro/IntroPage.dart';
 import 'package:free_drive/ui/pages/notifications/NotificationsPage.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/Starter.dart';
 
 Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
-  '/signup': (BuildContext context) => SignupPage(),
   '/intro': (BuildContext context) => IntroPage(),
-  '/validation': (BuildContext context) => ValidationPage(),
+  '/loading': (BuildContext context) => Loading(),
+  '/signup': (BuildContext context) => SignupPage(),
   '/login': (BuildContext context) => LoginPage(),
+  '/validation': (BuildContext context) => ValidationPage(),
   '/dashboard': (BuildContext context) => UserDashboardPage(),
   '/driverDashboard': (BuildContext context) => DriverDashboardPage(),
   '/askDriver': (BuildContext context) => AskDriverPage(),

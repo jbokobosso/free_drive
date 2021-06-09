@@ -8,6 +8,8 @@ import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 class CoreService {
 
   EUserType userType = EUserType.hint;
+  bool userIsLogged;
+  bool introPassed;
 
   DashboardModel userDashboardState = new DashboardModel(
     balance: 25000,

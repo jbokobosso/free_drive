@@ -2,9 +2,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/constants/routes.dart';
 import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/IAuthService.dart';
 
-
+IAuthService _authService = getIt.get<IAuthService>();
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+
+Future<String> _getStartupRoute() async {
+  if(await _authService.checkIntroPassed() == true) {
+    if(await _authService.checkUserLoggedLocally() == true)
+      return '/starter';
+    else
+      return '/login';
+  }
+  else return '/intro';
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +28,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var rst = _getStartupRoute();
+    rst.then((value) {
+      navigatorKey.currentState.pushNamedAndRemoveUntil(value, (route) => false);
+    });
     return MaterialApp(
       title: 'Free Drive',
       theme: ThemeData(
@@ -31,7 +46,7 @@ class MyApp extends StatelessWidget {
             )
         ),
       ),
-      initialRoute: "/intro",
+      initialRoute: "/loading",
       routes: routes,
       navigatorKey: navigatorKey,
     );
