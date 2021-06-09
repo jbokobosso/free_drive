@@ -52,7 +52,7 @@ class AppViewModel extends BaseViewModel {
               chosenUserType
           ));
           if(isStored) {
-            await this.authService.markUserLoggedLocally(); // Mark locally that user is logged in for future checks
+            await this.authService.markLoggedUserLocally(chosenUserType); // Mark locally that user is logged in for future checks
             if(userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
             else if(userType == EUserType.driver)
@@ -76,7 +76,7 @@ class AppViewModel extends BaseViewModel {
         this.coreService.showErrorDialog(userCredential.code, userCredential.message);
       } else{
         if(userCredential.user != null) {
-          var rst = await this.authService.markUserLoggedLocally(); // Mark locally that user is logged in for future checks
+          var rst = await this.authService.markLoggedUserLocally(chosenUserType); // Mark locally that user is logged in for future checks
           if(this.userType == EUserType.client)
             navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
           else if(this.userType == EUserType.driver)

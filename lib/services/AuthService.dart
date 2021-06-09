@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/constants/constants.dart';
+import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
@@ -73,10 +74,18 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<bool> markUserLoggedLocally() async {
+  Future<bool> markLoggedUserLocally(EUserType chosenUserType) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(userIsLogged, true);
-    return written;
+    bool userTypeWritten = await prefs.setString(loggedUserType, chosenUserType == EUserType.client ? "client" : "driver");
+    if(written && userTypeWritten) return true;
+    else return false;
+  }
+
+  @override
+  Future<String> getLoggedUserTypeLocally() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(loggedUserType);
   }
 
 }

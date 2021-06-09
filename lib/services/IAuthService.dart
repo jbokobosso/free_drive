@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 
 abstract class IAuthService {
@@ -8,6 +8,7 @@ abstract class IAuthService {
   Future<bool> storeFirebaseUserInfos(UserModel userModel);
   Future<bool> markIntroPassed();
   Future<bool> checkIntroPassed();
-  Future<bool> markUserLoggedLocally();
+  Future<bool> markLoggedUserLocally(EUserType chosenUserType);
+  Future<String> getLoggedUserTypeLocally();
   Future<bool> checkUserLoggedLocally();
 }

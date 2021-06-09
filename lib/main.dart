@@ -8,13 +8,19 @@ IAuthService _authService = getIt.get<IAuthService>();
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
 Future<String> _getStartupRoute() async {
+  String route = "";
   if(await _authService.checkIntroPassed() == true) {
-    if(await _authService.checkUserLoggedLocally() == true)
-      return '/starter';
-    else
-      return '/login';
+    if(await _authService.checkUserLoggedLocally() == true) {
+      String userType = await _authService.getLoggedUserTypeLocally();
+      if(userType == "client")  route =  "/dashboard";
+      else if(userType == "driver") route = "/driverDashboard";
+      else throw "Locally logged user has no user type stored !!! Reinstall the app if in developpement";
+    } else
+      route = '/login';
+    } else {
+    route = '/intro';
   }
-  else return '/intro';
+  return route;
 }
 
 void main() async {
