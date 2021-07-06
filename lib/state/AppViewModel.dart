@@ -20,6 +20,7 @@ class AppViewModel extends BaseViewModel {
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
   // Auth
+  UserModel loggedUser;
   final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
   TextEditingController displayNameCtrl = TextEditingController();
@@ -29,30 +30,33 @@ class AppViewModel extends BaseViewModel {
   TextEditingController passCtrl = TextEditingController();
   TextEditingController confirmPassCtrl = TextEditingController();
   EUserType get userType => coreService.userType;
+
   chooseUserType(EUserType newValue) {
     coreService.userType = newValue;
     notifyListeners();
   }
+
   registerUser(EUserType chosenUserType) {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
     if(isValid) {
+      UserModel user = new UserModel(
+          this.displayNameCtrl.text,
+          this.emailCtrl.text,
+          this.phoneNumberCtrl.text,
+          this.addressCtrl.text,
+          chosenUserType
+      );
       coreService.userType = chosenUserType;
-      dynamic result = this.authService.registerByMail(this.emailCtrl.text, this.passCtrl.text);
+      dynamic result = this.authService.registerByMail(user, this.emailCtrl.text, this.passCtrl.text);
       result.then((userCredentials) async {
         if(userCredentials.runtimeType == FirebaseAuthException) {
           setBusy(false);
           this.coreService.showErrorDialog(userCredentials.code, userCredentials.message);
         } else {
-          var isStored = await this.authService.storeFirebaseUserInfos(new UserModel(
-              this.displayNameCtrl.text,
-              this.emailCtrl.text,
-              this.phoneNumberCtrl.text,
-              this.addressCtrl.text,
-              chosenUserType
-          ));
+          var isStored = await this.authService.storeFirebaseUserInfos(user);
           if(isStored) {
-            await this.authService.markLoggedUserLocally(chosenUserType); // Mark locally that user is logged in for future checks
+            await this.authService.markLoggedUserLocally(user, chosenUserType); // Mark locally that user is logged in for future checks
             if(userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
             else if(userType == EUserType.driver)
@@ -70,13 +74,21 @@ class AppViewModel extends BaseViewModel {
     setBusy(true);
     bool isValid = this.loginFormKey.currentState.validate();
     if(isValid) {
-      dynamic userCredential = await this.authService.authenticateByMail(this.emailCtrl.text, this.passCtrl.text);
+      UserModel user = new UserModel(
+          this.displayNameCtrl.text,
+          this.emailCtrl.text,
+          this.phoneNumberCtrl.text,
+          this.addressCtrl.text,
+          chosenUserType
+      );
+      dynamic userCredential = await this.authService.authenticateByMail(user, this.emailCtrl.text, this.passCtrl.text);
       if(userCredential.runtimeType == FirebaseAuthException) {
         setBusy(false);
         this.coreService.showErrorDialog(userCredential.code, userCredential.message);
       } else{
         if(userCredential.user != null) {
-          var rst = await this.authService.markLoggedUserLocally(chosenUserType); // Mark locally that user is logged in for future checks
+          user.displayName = userCredential.user.displayName;
+          var rst = await this.authService.markLoggedUserLocally(user, chosenUserType); // Mark locally that user is logged in for future checks
           if(this.userType == EUserType.client)
             navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
           else if(this.userType == EUserType.driver)
@@ -90,9 +102,26 @@ class AppViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  logout() async {
+    setBusy(true);
+    var isLoggout = await this.authService.logout();
+    if(isLoggout) {
+      setBusy(false);
+      navigatorKey.currentState.pushNamedAndRemoveUntil('/login', (route) => false);
+    } else {
+      setBusy(false);
+    }
+  }
+
   // Driver
   pickLicencePicture(ELicencePictureFace licencePictureFace) {
 
+  }
+
+  loadLocallyLoggedUser() async {
+    var result  = await this.authService.getLoggedUserLocally();
+    this.loggedUser = result;
+    notifyListeners();
   }
 
 

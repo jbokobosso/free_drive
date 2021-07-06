@@ -6,6 +6,7 @@ import 'package:free_drive/ui/pages/auth/ValidationPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/AdkDriverPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/ContactDriverPage.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
+import 'package:free_drive/ui/pages/dashboard/ProfilePage.dart';
 import 'package:free_drive/ui/pages/dashboard/RideDetailsPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/YourDriverPage.dart';
@@ -29,4 +30,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/uploadDriverLicence': (BuildContext context) => UploadDriverLicencePage(),
   '/notifs': (BuildContext context) => NotificationsPage(),
   '/rideDetails': (BuildContext context) => RideDetailsPage(),
+  '/profile': (BuildContext context) => ProfilePage(),
 };

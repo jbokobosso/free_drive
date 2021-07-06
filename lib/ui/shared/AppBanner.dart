@@ -6,8 +6,10 @@ import 'package:stacked/stacked.dart';
 
 class AppBanner extends StatelessWidget {
   bool showNotifIcon;
+  bool showProfileIcon;
   AppBanner({
     Key key,
+    this.showProfileIcon = true,
     this.showNotifIcon = true
   }) : super(key: key);
 
@@ -22,7 +24,7 @@ class AppBanner extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(icon: Icon(Icons.person, color: Colors.white), onPressed: () => null),
+            this.showProfileIcon ? IconButton(icon: Icon(Icons.person, color: Colors.white), onPressed: () => navigatorKey.currentState.pushNamed("/profile")) : Text(""),
             this.showNotifIcon ? Padding(
               padding: const EdgeInsets.only(right: 15.0),
               child: Badge(
