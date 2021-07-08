@@ -20,22 +20,23 @@ class AuthService with IAuthService {
   CoreService _coreService = getIt.get<CoreService>();
 
   @override
-  Future<bool> uploadLicencePictures(List<File> files) async {
+  Future<bool> uploadLicencePictures(List<File> files, EUserType userType) async {
+    String destinationFolder = userType == EUserType.driver ? FS_driverLicencesLocation : FS_clientIdCardLocation;
     try {
-      await this.firebaseStorage.ref("driver_licences/" + this.firebaseAuth.currentUser.uid + "recto").putFile(files[0]);
-      await this.firebaseStorage.ref("driver_licences/" + this.firebaseAuth.currentUser.uid + "verso").putFile(files[1]);
+      await this.firebaseStorage.ref("$destinationFolder/" + this.firebaseAuth.currentUser.uid + "recto").putFile(files[0]);
+      await this.firebaseStorage.ref("$destinationFolder/" + this.firebaseAuth.currentUser.uid + "verso").putFile(files[1]);
     } catch (e) {
       this._coreService.showErrorDialog("Erreur Téléversement", e);
     }
   }
 
   @override
-  Future<dynamic> registerByMail(UserModel user, String email, String password, List<File> files) async {
+  Future<dynamic> registerByMail(UserModel user, List<File> files) async {
     try{
-      UserCredential result = await this.firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await this.firebaseAuth.createUserWithEmailAndPassword(email: user.email, password: user.password);
       await this.firebaseAuth.currentUser.updateDisplayName(user.displayName);
-      await this.uploadLicencePictures(files);
-      await this.markLoggedUserLocally(user, user.userType);
+      await this.uploadLicencePictures(files, user.userType);
+      await this.markLoggedUserLocally(user);
       return result;
     } on FirebaseAuthException catch (exception) {
       return exception;
@@ -51,7 +52,7 @@ class AuthService with IAuthService {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
       querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
       querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
-      bool stored = await this.markLoggedUserLocally(user, user.userType);
+      bool stored = await this.markLoggedUserLocally(user);
       return user;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
@@ -80,7 +81,9 @@ class AuthService with IAuthService {
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
-            userModel.userType)
+            userModel.userType,
+            isActive: false
+        )
             .toMap()
     );
     if(result != null)
@@ -109,11 +112,11 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<bool> markLoggedUserLocally(UserModel user, EUserType chosenUserType) async {
+  Future<bool> markLoggedUserLocally(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
     bool stored = await prefs.setString(S_loggedUser, jsonEncode(user.toMap()));
-    bool userTypeWritten = await prefs.setString(S_loggedUserType, chosenUserType == EUserType.client ? "client" : "driver");
+    bool userTypeWritten = await prefs.setString(S_loggedUserType, user.userType == EUserType.client ? "client" : "driver");
     if(written && stored && userTypeWritten) return true;
     else return false;
   }

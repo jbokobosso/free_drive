@@ -41,6 +41,7 @@ class AppViewModel extends BaseViewModel {
   TextEditingController passCtrl = TextEditingController();
   TextEditingController confirmPassCtrl = TextEditingController();
   EUserType get userType => coreService.userType;
+
   chooseUserType(EUserType newValue) {
     coreService.userType = newValue;
     notifyListeners();
@@ -50,14 +51,16 @@ class AppViewModel extends BaseViewModel {
     var isValid = this.signupFormKey.currentState.validate();
     if(isValid) {
       UserModel user = new UserModel(
-          this.displayNameCtrl.text,
-          this.emailCtrl.text,
-          this.phoneNumberCtrl.text,
-          this.addressCtrl.text,
-          chosenUserType
+          this.displayNameCtrl.text.trim(),
+          this.emailCtrl.text.trim(),
+          this.phoneNumberCtrl.text.trim(),
+          this.addressCtrl.text.trim(),
+          chosenUserType,
+          password: this.passCtrl.text.trim(),
+          isActive: chosenUserType == EUserType.client ? true : false
       );
       coreService.userType = chosenUserType;
-      dynamic result = this.authService.registerByMail(user, this.emailCtrl.text, this.passCtrl.text, this.licencePictureFiles);
+      dynamic result = this.authService.registerByMail(user, this.licencePictureFiles);
       result.then((userCredentials) async {
         if(userCredentials.runtimeType == FirebaseAuthException) {
           setBusy(false);
@@ -65,7 +68,7 @@ class AppViewModel extends BaseViewModel {
         } else {
           var isStored = await this.authService.storeFirebaseUserInfos(user);
           if(isStored) {
-            await this.authService.markLoggedUserLocally(user, chosenUserType); // Mark locally that user is logged in for future checks
+            await this.authService.markLoggedUserLocally(user); // Mark locally that user is logged in for future checks
             if(userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
             else if(userType == EUserType.driver)

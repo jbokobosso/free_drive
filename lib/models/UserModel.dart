@@ -13,7 +13,7 @@ class UserModel {
       this.displayName,
       this.email,this.phoneNumber,
       this.address, this.userType,
-      {this.password, this.isActive = true}
+      {this.password, this.isActive}
       );
 
   toMap() {
@@ -23,7 +23,7 @@ class UserModel {
       "phoneNumber": this.phoneNumber,
       "address": this.address,
       "userType": this.userType == EUserType.client ? "client" : "driver",
-      "isActive": this.isActive
+      "isActive": this.isActive = false
     };
   }
 
