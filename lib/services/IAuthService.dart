@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 
 abstract class IAuthService {
 
-  Future<dynamic> registerByMail(UserModel user, String email, String password);
+  Future<bool> uploadLicencePictures(List<File> files);
+  Future<dynamic> registerByMail(UserModel user, String email, String password, List<File> files);
   Future<dynamic> authenticateByMail(UserModel user, String email, String password);
   Future<bool> logout();
   Future<bool> storeFirebaseUserInfos(UserModel userModel);

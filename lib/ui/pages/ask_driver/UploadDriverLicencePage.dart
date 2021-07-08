@@ -50,7 +50,7 @@ class UploadDriverLicencePage extends StatelessWidget {
                             filled: true,
                             fillColor: Colors.white,
                             suffixIcon: GestureDetector(
-                                onTap: () => model.pickLicencePicture(ELicencePictureFace.verso),
+                                onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
                                 child: LicenceSufixIcons()
                             ),
                             border: OutlineInputBorder(
@@ -71,7 +71,7 @@ class UploadDriverLicencePage extends StatelessWidget {
                             filled: true,
                             fillColor: Colors.white,
                             suffixIcon: GestureDetector(
-                                onTap: () => model.pickLicencePicture(ELicencePictureFace.verso),
+                                onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
                                 child: LicenceSufixIcons()
                             ),
                             border: OutlineInputBorder(

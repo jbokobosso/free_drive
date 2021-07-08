@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/shared/LicenceSufixIcons.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
@@ -241,6 +243,108 @@ class SignupPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    this._userTypeChosen == EUserType.driver
+                        ? Column(
+                      children: [
+                        Center(child: Text("Photo du Permis de conduire")),
+                        SizedBox(
+                          height: model.deviceHeight*inputHeightScale,
+                          child: TextFormField(
+                            controller: model.rectoPicture,
+                            onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
+                            style: TextStyle(color: Colors.grey),
+                            enabled: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              suffixIcon: GestureDetector(
+                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                                  child: LicenceSufixIcons()
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                        SizedBox(
+                          height: model.deviceHeight*inputHeightScale,
+                          child: TextFormField(
+                            controller: model.versoPicture,
+                            onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
+                            style: TextStyle(color: Colors.grey),
+                            enabled: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              suffixIcon: GestureDetector(
+                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                                  child: LicenceSufixIcons()
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                        : Column(
+                      children: [
+                        Center(child: Text("Photo de votre CNI")),
+                        SizedBox(
+                          height: model.deviceHeight*inputHeightScale,
+                          child: TextFormField(
+                            controller: model.rectoPicture,
+                            onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
+                            style: TextStyle(color: Colors.grey),
+                            enabled: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              suffixIcon: GestureDetector(
+                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                                  child: LicenceSufixIcons()
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: model.deviceHeight*this.inputSpacingScale),
+                        SizedBox(
+                          height: model.deviceHeight*inputHeightScale,
+                          child: TextFormField(
+                            controller: model.versoPicture,
+                            onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
+                            style: TextStyle(color: Colors.grey),
+                            enabled: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              suffixIcon: GestureDetector(
+                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                                  child: LicenceSufixIcons()
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         primary: Theme.of(context).primaryColor,

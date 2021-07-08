@@ -7,8 +7,14 @@ class UserModel {
   String address;
   EUserType userType;
   String password;
+  bool isActive;
 
-  UserModel(this.displayName, this.email,this.phoneNumber, this.address, this.userType);
+  UserModel(
+      this.displayName,
+      this.email,this.phoneNumber,
+      this.address, this.userType,
+      {this.isActive = true}
+      );
 
   toMap() {
     return {
@@ -16,11 +22,12 @@ class UserModel {
       "email": this.email,
       "phoneNumber": this.phoneNumber,
       "address": this.address,
-      "userType": this.userType == EUserType.client ? "client" : "driver"
+      "userType": this.userType == EUserType.client ? "client" : "driver",
+      "isActive": this.isActive
     };
   }
 
-  static fromMap(String displayName, String email, String phoneNumber, String address, String userType) {
-    return new UserModel(displayName, email, phoneNumber, address, userType == "client" ? EUserType.client : EUserType.driver);
+  static fromMap(String displayName, String email, String phoneNumber, String address, String userType, isActive) {
+    return new UserModel(displayName, email, phoneNumber, address, userType == "client" ? EUserType.client : EUserType.driver, isActive: isActive);
   }
 }

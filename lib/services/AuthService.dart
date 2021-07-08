@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
@@ -12,15 +14,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService with IAuthService {
 
+  FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
 
   @override
-  Future<dynamic> registerByMail(UserModel user, String email, String password) async {
+  Future<bool> uploadLicencePictures(List<File> files) async {
+    try {
+      await this.firebaseStorage.ref("driver_licences/" + this.firebaseAuth.currentUser.uid + "recto").putFile(files[0]);
+      await this.firebaseStorage.ref("driver_licences/" + this.firebaseAuth.currentUser.uid + "verso").putFile(files[1]);
+    } catch (e) {
+      this._coreService.showErrorDialog("Erreur Téléversement", e);
+    }
+  }
+
+  @override
+  Future<dynamic> registerByMail(UserModel user, String email, String password, List<File> files) async {
     try{
       UserCredential result = await this.firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
       await this.firebaseAuth.currentUser.updateDisplayName(user.displayName);
+      await this.uploadLicencePictures(files);
       await this.markLoggedUserLocally(user, user.userType);
       return result;
     } on FirebaseAuthException catch (exception) {
@@ -121,7 +135,14 @@ class AuthService with IAuthService {
   Future<UserModel> getLoggedUserLocally() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userAsMapObject = jsonDecode(prefs.getString(S_loggedUser));
-    var user = UserModel.fromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"]);
+    var user = UserModel.fromMap(
+        userAsMapObject["displayName"],
+        userAsMapObject["email"],
+        userAsMapObject["phoneNumber"],
+        userAsMapObject["address"],
+        userAsMapObject["userType"],
+        userAsMapObject["isActive"]
+    );
     if(user.runtimeType == UserModel)
       return user;
     else {

@@ -1,7 +1,9 @@
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
@@ -19,10 +21,19 @@ class AppViewModel extends BaseViewModel {
   IAuthService authService = getIt.get<IAuthService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
+  // Dashboard
+  loadUser() {
+
+  }
+
   // Auth
+  List<File> licencePictureFiles = [];
+  String activePickedFileName;
   UserModel loggedUser;
   final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
+  TextEditingController rectoPicture = TextEditingController();
+  TextEditingController versoPicture = TextEditingController();
   TextEditingController displayNameCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
   TextEditingController phoneNumberCtrl = TextEditingController();
@@ -30,12 +41,10 @@ class AppViewModel extends BaseViewModel {
   TextEditingController passCtrl = TextEditingController();
   TextEditingController confirmPassCtrl = TextEditingController();
   EUserType get userType => coreService.userType;
-
   chooseUserType(EUserType newValue) {
     coreService.userType = newValue;
     notifyListeners();
   }
-
   registerUser(EUserType chosenUserType) {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
@@ -48,7 +57,7 @@ class AppViewModel extends BaseViewModel {
           chosenUserType
       );
       coreService.userType = chosenUserType;
-      dynamic result = this.authService.registerByMail(user, this.emailCtrl.text, this.passCtrl.text);
+      dynamic result = this.authService.registerByMail(user, this.emailCtrl.text, this.passCtrl.text, this.licencePictureFiles);
       result.then((userCredentials) async {
         if(userCredentials.runtimeType == FirebaseAuthException) {
           setBusy(false);
@@ -60,7 +69,7 @@ class AppViewModel extends BaseViewModel {
             if(userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
             else if(userType == EUserType.driver)
-              navigatorKey.currentState.pushNamedAndRemoveUntil('/uploadDriverLicence', (routeMatch) => false);
+              navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (routeMatch) => false);
             else
               print("Nothing to do");
           }
@@ -69,7 +78,24 @@ class AppViewModel extends BaseViewModel {
       });
     } else setBusy(false);
   }
+  loadLocallyLoggedUser() async {
+    var result  = await this.authService.getLoggedUserLocally();
+    this.loggedUser = result;
+    notifyListeners();
+  }
+  pickLicencePictures(ELicencePictureFace licencePictureFace) async {
+    FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'JPG', 'JPEG']);
 
+    if(result != null) {
+      this.licencePictureFiles.add(File(result.files.single.path));
+      licencePictureFace == ELicencePictureFace.recto
+          ? this.rectoPicture.text = result.files.single.name
+          : this.versoPicture.text = result.files.single.name;
+      this.notifyListeners();
+    } else {
+      return null;
+    }
+  }
   login(EUserType chosenUserType) async {
     setBusy(true);
     bool isValid = this.loginFormKey.currentState.validate();
@@ -101,7 +127,6 @@ class AppViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-
   logout() async {
     setBusy(true);
     var isLoggout = await this.authService.logout();
@@ -112,18 +137,6 @@ class AppViewModel extends BaseViewModel {
       setBusy(false);
     }
   }
-
-  // Driver
-  pickLicencePicture(ELicencePictureFace licencePictureFace) {
-
-  }
-
-  loadLocallyLoggedUser() async {
-    var result  = await this.authService.getLoggedUserLocally();
-    this.loggedUser = result;
-    notifyListeners();
-  }
-
 
   // Dashboard
   completeRide() {

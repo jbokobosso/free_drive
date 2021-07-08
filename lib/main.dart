@@ -16,7 +16,7 @@ Future<String> _getStartupRoute() async {
       else if(userType == "driver") route = "/driverDashboard";
       else throw "Locally logged user has no user type stored !!! Reinstall the app if in developpement";
     } else
-      route = '/login';
+      route = '/signup';
     } else {
     route = '/intro';
   }

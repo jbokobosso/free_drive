@@ -56,7 +56,7 @@ class DriverDashboardCard extends StatelessWidget {
                   ),
                 ),
                 Text('\nCourses terminée: ${model.coreService.driverDashboardState.completedRidesCount}'),
-                Text('\nStatut: : ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}'),
+                Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}'),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
