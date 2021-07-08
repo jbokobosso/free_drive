@@ -7,7 +7,7 @@ abstract class IAuthService {
 
   Future<bool> uploadLicencePictures(List<File> files);
   Future<dynamic> registerByMail(UserModel user, String email, String password, List<File> files);
-  Future<dynamic> authenticateByMail(UserModel user, String email, String password);
+  Future<UserModel> authenticateByMail(UserModel user);
   Future<bool> logout();
   Future<bool> storeFirebaseUserInfos(UserModel userModel);
   Future<bool> markIntroPassed();

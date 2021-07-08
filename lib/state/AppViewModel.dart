@@ -96,34 +96,28 @@ class AppViewModel extends BaseViewModel {
       return null;
     }
   }
-  login(EUserType chosenUserType) async {
+  login() async {
     setBusy(true);
     bool isValid = this.loginFormKey.currentState.validate();
     if(isValid) {
       UserModel user = new UserModel(
-          this.displayNameCtrl.text,
-          this.emailCtrl.text,
-          this.phoneNumberCtrl.text,
-          this.addressCtrl.text,
-          chosenUserType
+          this.displayNameCtrl.text.trim(),
+          this.emailCtrl.text.trim(),
+          this.phoneNumberCtrl.text.trim(),
+          this.addressCtrl.text.trim(),
+          EUserType.hint,
+          password: this.passCtrl.text.trim()
       );
-      dynamic userCredential = await this.authService.authenticateByMail(user, this.emailCtrl.text, this.passCtrl.text);
-      if(userCredential.runtimeType == FirebaseAuthException) {
-        setBusy(false);
-        this.coreService.showErrorDialog(userCredential.code, userCredential.message);
-      } else{
-        if(userCredential.user != null) {
-          user.displayName = userCredential.user.displayName;
-          var rst = await this.authService.markLoggedUserLocally(user, chosenUserType); // Mark locally that user is logged in for future checks
-          if(this.userType == EUserType.client)
+      UserModel userModel = await this.authService.authenticateByMail(user);
+        if(userModel != null) {
+          if(userModel.userType == EUserType.client)
             navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
-          else if(this.userType == EUserType.driver)
+          else if(userModel.userType == EUserType.driver)
             navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (route) => false);
           else
-            this.coreService.showErrorDialog("Incomplet", "Renseignez qui vous êtes: \nclient ou chauffeur ?");
+            this.coreService.showErrorDialog("Erreur Profil", "La base de données n'a pas pu \n fournir votre rôle. (client ou chauffeur)");
         }
         setBusy(false);
-      }
     }
     setBusy(false);
   }

@@ -44,16 +44,19 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<dynamic> authenticateByMail(UserModel user, String email, String password) async {
+  Future<UserModel> authenticateByMail(UserModel user) async {
+    dynamic userCredential;
     try{
-      dynamic userCredential = await this.firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      userCredential = await this.firebaseAuth.signInWithEmailAndPassword(email: user.email, password: user.password);
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
+      querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
+      querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
       bool stored = await this.markLoggedUserLocally(user, user.userType);
-      if(userCredential.runtimeType == FirebaseAuthException) {
-        this._coreService.showErrorDialog(userCredential.code, userCredential.message);
-      }
-      return userCredential;
+      return user;
     } on FirebaseAuthException catch (exception) {
-      return exception;
+      this._coreService.showErrorDialog(exception.code, exception.message);
+    } catch (e) {
+      this._coreService.showErrorDialog("Error", e);
     }
   }
 

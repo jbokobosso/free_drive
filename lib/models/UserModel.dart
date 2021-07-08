@@ -13,7 +13,7 @@ class UserModel {
       this.displayName,
       this.email,this.phoneNumber,
       this.address, this.userType,
-      {this.isActive = true}
+      {this.password, this.isActive = true}
       );
 
   toMap() {
@@ -29,5 +29,16 @@ class UserModel {
 
   static fromMap(String displayName, String email, String phoneNumber, String address, String userType, isActive) {
     return new UserModel(displayName, email, phoneNumber, address, userType == "client" ? EUserType.client : EUserType.driver, isActive: isActive);
+  }
+
+  static UserModel fromFirebase(Map<String, dynamic> jsonData) {
+    return new UserModel(
+        jsonData["displayName"],
+        jsonData["email"],
+        jsonData["phoneNumber"],
+        jsonData["address"],
+        jsonData["userType"] == "client" ? EUserType.client : EUserType.driver,
+        isActive: jsonData["isActive"]
+    );
   }
 }
