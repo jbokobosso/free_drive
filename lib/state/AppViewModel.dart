@@ -42,39 +42,29 @@ class AppViewModel extends BaseViewModel {
   EUserType get userType => coreService.loggedUser.userType;
   UserModel get loggedUser => coreService.loggedUser;
 
-  registerUser(EUserType chosenUserType) {
+  registerUser(EUserType chosenUserType) async {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
-    if(isValid) {
-      UserModel user = new UserModel(
-          this.displayNameCtrl.text.trim(),
-          this.emailCtrl.text.trim(),
-          this.phoneNumberCtrl.text.trim(),
-          this.addressCtrl.text.trim(),
-          chosenUserType,
-          password: this.passCtrl.text.trim(),
-          isActive: chosenUserType == EUserType.client ? true : false
-      );
-      dynamic result = this.authService.registerByMail(user, this.licencePictureFiles);
-      result.then((userCredentials) async {
-        if(userCredentials.runtimeType == FirebaseAuthException) {
-          setBusy(false);
-          this.coreService.showErrorDialog(userCredentials.code, userCredentials.message);
-        } else {
-          var isStored = await this.authService.storeFirebaseUserInfos(user);
-          if(isStored) {
-            await this.authService.storeLoggedUser(user); // Mark locally that user is logged in for future checks
-            if(user.userType == EUserType.client)
-              navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
-            else if(user.userType == EUserType.driver)
-              navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (routeMatch) => false);
-            else
-              print("Nothing to do");
-          }
-          setBusy(false);
-        }
-      });
-    } else setBusy(false);
+    if(!isValid) {setBusy(false); return;}
+    UserModel user = new UserModel(
+        this.displayNameCtrl.text.trim(),
+        this.emailCtrl.text.trim(),
+        this.phoneNumberCtrl.text.trim(),
+        this.addressCtrl.text.trim(),
+        chosenUserType,
+        password: this.passCtrl.text.trim(),
+        isActive: chosenUserType == EUserType.client ? true : false
+    );
+    bool registrationSucceeded = await this.authService.registerByMail(user, this.licencePictureFiles);
+    if(registrationSucceeded) {
+      if(user.userType == EUserType.client)
+        navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
+      else if(user.userType == EUserType.driver)
+        navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (routeMatch) => false);
+      else
+        throw("Given user does not have correct user type. Something went wrong when getting user type from the signup form");
+    }
+    setBusy(false);
   }
   loadLocallyLoggedUser() async {
     var result  = await this.authService.getLoggedUser();

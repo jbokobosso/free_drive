@@ -7,7 +7,7 @@ abstract class IAuthService {
 
   Future<bool> uploadLicencePictures(List<File> files, EUserType userType);
 
-  Future<dynamic> registerByMail(UserModel user, List<File> files);
+  Future<bool> registerByMail(UserModel user, List<File> files);
   Future<UserModel> authenticateByMail(UserModel user);
   Future<bool> logout();
 

@@ -31,26 +31,30 @@ class AuthService extends IAuthService {
   }
 
   @override
-  Future<dynamic> registerByMail(UserModel user, List<File> files) async {
+  Future<bool> registerByMail(UserModel user, List<File> files) async {
     try{
-      UserCredential result = await this.firebaseAuth.createUserWithEmailAndPassword(email: user.email, password: user.password);
+      await this.firebaseAuth.createUserWithEmailAndPassword(email: user.email, password: user.password);
       await this.firebaseAuth.currentUser.updateDisplayName(user.displayName);
       await this.uploadLicencePictures(files, user.userType);
-      await this.storeLoggedUser(user);
-      return result;
+      bool storedFirebase = await this.storeFirebaseUserInfos(user);
+      bool storedLocal = await this.storeLoggedUser(user);
+      return storedFirebase && storedLocal;
     } on FirebaseAuthException catch (exception) {
-      return exception;
+      this._coreService.showErrorDialog(exception.code, exception.message);
+      return false;
+    } catch (e) {
+      this._coreService.showErrorDialog("Error", e);
+      return false;
     }
 
   }
 
   @override
   Future<UserModel> authenticateByMail(UserModel user) async {
-    dynamic userCredential;
     try{
-      userCredential = await this.firebaseAuth.signInWithEmailAndPassword(email: user.email, password: user.password);
+      await this.firebaseAuth.signInWithEmailAndPassword(email: user.email, password: user.password);
+      // getting user type from firebase for local storage
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
-      // querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
       querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
       await this.storeLoggedUser(user);
       return user;
