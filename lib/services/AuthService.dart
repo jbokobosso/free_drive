@@ -52,7 +52,7 @@ class AuthService extends IAuthService {
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
       // querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
       querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
-      bool stored = await this.storeLoggedUser(user);
+      await this.storeLoggedUser(user);
       return user;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
@@ -116,8 +116,8 @@ class AuthService extends IAuthService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
     bool stored = await prefs.setString(S_loggedUser, jsonEncode(user.toMap()));
-    bool userTypeWritten = await prefs.setString(S_loggedUserType, user.userType == EUserType.client ? "client" : "driver");
-    if(written && stored && userTypeWritten) return true;
+    this._coreService.loggedUser = user;
+    if(written && stored) return true;
     else return false;
   }
 

@@ -42,11 +42,6 @@ class AppViewModel extends BaseViewModel {
   EUserType get userType => coreService.loggedUser.userType;
   UserModel get loggedUser => coreService.loggedUser;
 
-  // chooseUserType(EUserType newValue) {
-  //   coreService.userType = newValue;
-  //   notifyListeners();
-  // }
-
   registerUser(EUserType chosenUserType) {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
@@ -60,7 +55,6 @@ class AppViewModel extends BaseViewModel {
           password: this.passCtrl.text.trim(),
           isActive: chosenUserType == EUserType.client ? true : false
       );
-      // coreService.userType = chosenUserType;
       dynamic result = this.authService.registerByMail(user, this.licencePictureFiles);
       result.then((userCredentials) async {
         if(userCredentials.runtimeType == FirebaseAuthException) {
@@ -70,9 +64,9 @@ class AppViewModel extends BaseViewModel {
           var isStored = await this.authService.storeFirebaseUserInfos(user);
           if(isStored) {
             await this.authService.storeLoggedUser(user); // Mark locally that user is logged in for future checks
-            if(userType == EUserType.client)
+            if(user.userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
-            else if(userType == EUserType.driver)
+            else if(user.userType == EUserType.driver)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (routeMatch) => false);
             else
               print("Nothing to do");
