@@ -27,6 +27,7 @@ class AppViewModel extends BaseViewModel {
   }
 
   // Auth
+  EUserType chosenUserType=EUserType.client;
   List<File> licencePictureFiles = [];
   String activePickedFileName;
   final loginFormKey = GlobalKey<FormState>();
@@ -42,7 +43,11 @@ class AppViewModel extends BaseViewModel {
   EUserType get userType => coreService.loggedUser.userType;
   UserModel get loggedUser => coreService.loggedUser;
 
-  registerUser(EUserType chosenUserType) async {
+  chooseUserTypeRadio(EUserType newChoice) {
+    this.chosenUserType = newChoice;
+    notifyListeners();
+  }
+  registerUser() async {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
     if(!isValid) {setBusy(false); return;}
@@ -51,7 +56,7 @@ class AppViewModel extends BaseViewModel {
         this.emailCtrl.text.trim(),
         this.phoneNumberCtrl.text.trim(),
         this.addressCtrl.text.trim(),
-        chosenUserType,
+        this.chosenUserType,
         password: this.passCtrl.text.trim(),
         isActive: chosenUserType == EUserType.client ? true : false
     );

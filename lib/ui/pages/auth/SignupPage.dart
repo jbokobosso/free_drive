@@ -16,7 +16,6 @@ class SignupPage extends StatelessWidget {
   double inputSpacingScale = 0.02;
   double inputHeightScale = 0.09;
   double radioFontSize = 10.0;
-  EUserType _userTypeChosen=EUserType.client;
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AppViewModel>.reactive(
@@ -218,11 +217,8 @@ class SignupPage extends StatelessWidget {
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
                               value: EUserType.client,
-                              groupValue: _userTypeChosen,
-                              onChanged: (EUserType value) {
-                                _userTypeChosen = value;
-                                model.notifyListeners();
-                              },
+                              groupValue: model.chosenUserType,
+                              onChanged: (EUserType value) => model.chooseUserTypeRadio(value),
                             ),
                           ),
                         ),
@@ -233,17 +229,14 @@ class SignupPage extends StatelessWidget {
                             leading: Radio<EUserType>(
                               activeColor: Theme.of(context).primaryColor,
                               value: EUserType.driver,
-                              groupValue: _userTypeChosen,
-                              onChanged: (EUserType value) {
-                                _userTypeChosen = value;
-                                model.notifyListeners();
-                              },
+                              groupValue: model.chosenUserType,
+                              onChanged: (EUserType value) => model.chooseUserTypeRadio(value),
                             ),
                           ),
                         ),
                       ],
                     ),
-                    this._userTypeChosen == EUserType.driver
+                    model.chosenUserType == EUserType.driver
                         ? Column(
                       children: [
                         Center(child: Text("Photo du Permis de conduire")),
@@ -352,7 +345,7 @@ class SignupPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30.0)
                         )
                       ),
-                      onPressed: () => model.registerUser(this._userTypeChosen),
+                      onPressed: () => model.registerUser(),
                       child: Text('Suivant')
                     ),
                     SizedBox(height: model.deviceHeight*this.inputSpacingScale),
