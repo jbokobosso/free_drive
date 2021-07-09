@@ -41,7 +41,9 @@ class ProfileCard extends StatelessWidget {
                 Text('\n ${model.loggedUser.displayName}'),
                 Text('\n ${model.loggedUser.phoneNumber}'),
                 Text('\n ${model.loggedUser.email}'),
-                model.coreService.userType == EUserType.driver ? Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}') : Text(""),
+                model.coreService.loggedUser.userType == EUserType.driver // if user is driver, show account status. If not, show nothing (because client users are active by default)
+                    ? Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}')
+                    : Text(""),
                 model.isBusy ? Center(child: Loading()) : SizedBox(height: 0, width: 0)
               ],
             )

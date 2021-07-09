@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
-import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 
 class CoreService {
 
-  EUserType userType = EUserType.hint;
-  bool userIsLogged;
-  bool introPassed;
+  UserModel loggedUser;
+  // EUserType userType = EUserType.hint;
+  // bool userIsLogged;
+  // bool introPassed;
 
   DashboardModel userDashboardState = new DashboardModel(
     balance: 25000,
@@ -26,11 +27,15 @@ class CoreService {
     isActiveAccount: false,
   );
 
-  List<Widget> navigationPages = [
-    new DriverDashboardPage(),
-    new UserDashboardPage(),
-    new DriverDashboardPage(),
-  ];
+  List<Widget> navigationPages = [new DriverDashboardPage(), new UserDashboardPage(), new DriverDashboardPage()];
+
+  setUserState(UserModel user) {
+
+  }
+
+  setDriverState(UserModel user) {
+    this.driverDashboardState.isActiveAccount = user.isActive;
+  }
 
   formatDate(DateTime datetime) {
     String result;

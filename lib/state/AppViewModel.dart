@@ -29,7 +29,6 @@ class AppViewModel extends BaseViewModel {
   // Auth
   List<File> licencePictureFiles = [];
   String activePickedFileName;
-  UserModel loggedUser;
   final loginFormKey = GlobalKey<FormState>();
   final signupFormKey = GlobalKey<FormState>();
   TextEditingController rectoPicture = TextEditingController();
@@ -40,12 +39,14 @@ class AppViewModel extends BaseViewModel {
   TextEditingController addressCtrl = TextEditingController();
   TextEditingController passCtrl = TextEditingController();
   TextEditingController confirmPassCtrl = TextEditingController();
-  EUserType get userType => coreService.userType;
+  EUserType get userType => coreService.loggedUser.userType;
+  UserModel get loggedUser => coreService.loggedUser;
 
-  chooseUserType(EUserType newValue) {
-    coreService.userType = newValue;
-    notifyListeners();
-  }
+  // chooseUserType(EUserType newValue) {
+  //   coreService.userType = newValue;
+  //   notifyListeners();
+  // }
+
   registerUser(EUserType chosenUserType) {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
@@ -59,7 +60,7 @@ class AppViewModel extends BaseViewModel {
           password: this.passCtrl.text.trim(),
           isActive: chosenUserType == EUserType.client ? true : false
       );
-      coreService.userType = chosenUserType;
+      // coreService.userType = chosenUserType;
       dynamic result = this.authService.registerByMail(user, this.licencePictureFiles);
       result.then((userCredentials) async {
         if(userCredentials.runtimeType == FirebaseAuthException) {
@@ -68,7 +69,7 @@ class AppViewModel extends BaseViewModel {
         } else {
           var isStored = await this.authService.storeFirebaseUserInfos(user);
           if(isStored) {
-            await this.authService.markLoggedUserLocally(user); // Mark locally that user is logged in for future checks
+            await this.authService.storeLoggedUser(user); // Mark locally that user is logged in for future checks
             if(userType == EUserType.client)
               navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (routeMatch) => false);
             else if(userType == EUserType.driver)
@@ -82,8 +83,8 @@ class AppViewModel extends BaseViewModel {
     } else setBusy(false);
   }
   loadLocallyLoggedUser() async {
-    var result  = await this.authService.getLoggedUserLocally();
-    this.loggedUser = result;
+    var result  = await this.authService.getLoggedUser();
+    this.coreService.loggedUser = result;
     notifyListeners();
   }
   pickLicencePictures(ELicencePictureFace licencePictureFace) async {

@@ -12,7 +12,7 @@ import 'package:free_drive/services/GetIt.dart';
 import 'package:free_drive/services/IAuthService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthService with IAuthService {
+class AuthService extends IAuthService {
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
@@ -36,7 +36,7 @@ class AuthService with IAuthService {
       UserCredential result = await this.firebaseAuth.createUserWithEmailAndPassword(email: user.email, password: user.password);
       await this.firebaseAuth.currentUser.updateDisplayName(user.displayName);
       await this.uploadLicencePictures(files, user.userType);
-      await this.markLoggedUserLocally(user);
+      await this.storeLoggedUser(user);
       return result;
     } on FirebaseAuthException catch (exception) {
       return exception;
@@ -50,9 +50,9 @@ class AuthService with IAuthService {
     try{
       userCredential = await this.firebaseAuth.signInWithEmailAndPassword(email: user.email, password: user.password);
       QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
-      querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
+      // querySnapshot.docs.forEach((element) {print(UserModel.fromFirebase(element.data()));});
       querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
-      bool stored = await this.markLoggedUserLocally(user);
+      bool stored = await this.storeLoggedUser(user);
       return user;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
@@ -99,7 +99,7 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<bool> checkUserLoggedLocally() async {
+  Future<bool> checkUserIsLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(S_userIsLogged);
   }
@@ -112,7 +112,7 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<bool> markLoggedUserLocally(UserModel user) async {
+  Future<bool> storeLoggedUser(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
     bool stored = await prefs.setString(S_loggedUser, jsonEncode(user.toMap()));
@@ -132,13 +132,7 @@ class AuthService with IAuthService {
   }
 
   @override
-  Future<String> getLoggedUserTypeLocally() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(S_loggedUserType);
-  }
-
-  @override
-  Future<UserModel> getLoggedUserLocally() async {
+  Future<UserModel> getLoggedUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userAsMapObject = jsonDecode(prefs.getString(S_loggedUser));
     var user = UserModel.fromMap(
