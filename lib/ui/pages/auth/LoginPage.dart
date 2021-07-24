@@ -49,28 +49,28 @@ class LoginPage extends StatelessWidget {
                     ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
-              // Form(
-              //   child: Column(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Text("Qui êtes vous ?"),
-              //       DropdownButtonFormField<EUserType>(
-              //         onChanged: (newValue) => model.chooseUserType(newValue),
-              //         value: model.userType,
-              //         decoration: InputDecoration(
-              //           enabledBorder: customInputBorder(context),
-              //           border: customInputBorder(context),
-              //           contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-              //         ),
-              //         items: [
-              //           DropdownMenuItem(child: Text("Choisissez s'il vous plait", style: TextStyle(color: Colors.grey),), value: EUserType.hint),
-              //           DropdownMenuItem(child: Text('JE SUIS CLIENT'), value: EUserType.client),
-              //           DropdownMenuItem(child: Text('JE SUIS CHAUFFEUR'), value: EUserType.driver),
-              //         ],
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Form(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Qui êtes vous ?"),
+                    DropdownButtonFormField<EUserType>(
+                      onChanged: (newValue) => model.chooseUserType(newValue),
+                      value: model.chosenUserType,
+                      decoration: InputDecoration(
+                        enabledBorder: customInputBorder(context),
+                        border: customInputBorder(context),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                      ),
+                      items: [
+                        DropdownMenuItem(child: Text("Choisissez s'il vous plait", style: TextStyle(color: Colors.grey),), value: EUserType.hint),
+                        DropdownMenuItem(child: Text('JE SUIS CLIENT'), value: EUserType.client),
+                        DropdownMenuItem(child: Text('JE SUIS CHAUFFEUR'), value: EUserType.driver),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               SizedBox(height: model.deviceHeight*this.inputSpacingScale),
               Form(
                 key: model.loginFormKey,

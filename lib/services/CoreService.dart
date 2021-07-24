@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
+import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
@@ -30,8 +31,8 @@ class CoreService {
 
   }
 
-  setDriverState(UserModel user) {
-    this.driverDashboardState.isActiveAccount = user.isActive;
+  setDriverState(DriverModel driver) {
+    this.driverDashboardState.isActiveAccount = driver.isActive;
   }
 
   formatDate(DateTime datetime) {

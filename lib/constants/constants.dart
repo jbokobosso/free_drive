@@ -1,6 +1,6 @@
 // Local Shared preferences keys
-const String S_introPassed = "introPassed";
-const String S_userIsLogged = "userIsLogged";
+const String S_introPassed = "passedIntro";
+const String S_userIsLogged = "isAuth";
 const String S_loggedUserType = "loggedUserType";
 const String S_loggedUser = "loggedUser";
 

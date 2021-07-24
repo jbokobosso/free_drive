@@ -5,6 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:free_drive/constants/constants.dart';
+import 'package:free_drive/models/ClientModel.dart';
+import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
@@ -50,18 +52,32 @@ class AuthService extends IAuthService {
   }
 
   @override
-  Future<UserModel> authenticateByMail(UserModel user) async {
+  Future<UserModel> authenticateByMail(UserModel userModel) async {
+    UserModel firebaseUser;
     try{
-      await this.firebaseAuth.signInWithEmailAndPassword(email: user.email, password: user.password);
-      // getting user type from firebase for local storage
-      QuerySnapshot<Map<String, dynamic>> querySnapshot = await this.firestore.collection("users").where("email", isEqualTo: user.email).get();
-      querySnapshot.docs.forEach((element) { user.userType = UserModel.fromFirebase(element.data()).userType; });
-      await this.storeLoggedUser(user);
-      return user;
+      await this.firebaseAuth.signInWithEmailAndPassword(email: userModel.email, password: userModel.password);
+      if(userModel.userType == EUserType.client) {
+        QuerySnapshot querysnapshot = await this.firestore.collection("clients").where("email", isEqualTo: userModel.email).get();
+        firebaseUser = UserModel.clientFromFirebase(querysnapshot.docs.first.data());
+      } else if(userModel.userType == EUserType.driver) {
+        QuerySnapshot querysnapshot = await this.firestore.collection("drivers").where("email", isEqualTo: userModel.email).get();
+        firebaseUser = UserModel.clientFromFirebase(querysnapshot.docs.first.data());
+      } else {
+        throw "Recognition error: the app could not determine if the user is a driver or a client. Verify that you gave it in the form of authentication";
+      }
+      firebaseUser.userType = userModel.userType;
+      firebaseUser.password = userModel.password;
+      await this.storeLoggedUser(firebaseUser);
+      return firebaseUser;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
     } catch (e) {
-      this._coreService.showErrorDialog("Error", e);
+      if(e.toString() == "Bad state: No element")
+        this._coreService.showErrorDialog("Erreur", "Vous avez mal choisi qui vous êtes: client/chauffeur");
+      else {
+        this._coreService.showErrorDialog("Error", e.toString());
+        throw e;
+      }
     }
   }
 
@@ -79,21 +95,36 @@ class AuthService extends IAuthService {
   @override
   Future<bool> storeFirebaseUserInfos(UserModel userModel) async {
     this.firebaseAuth.currentUser.updateDisplayName(userModel.displayName);
-    var result = await this.firestore.collection("users").add(
-        new UserModel(
+    if(userModel.userType == EUserType.client) {
+      var result = await this.firestore.collection("clients").add(
+          new ClientModel(
             "${userModel.displayName.trim()}",
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
-            userModel.userType,
-            isActive: false
-        )
-            .toMap()
-    );
-    if(result != null)
-      return true;
-    else
-      return false;
+          ).toMap()
+      );
+      if(result != null)
+        return true;
+      else
+        return false;
+    } else if(userModel.userType == EUserType.driver) {
+      var result = await this.firestore.collection("drivers").add(
+          new DriverModel(
+            "${userModel.displayName.trim()}",
+            userModel.email.trim(),
+            userModel.phoneNumber.trim(),
+            userModel.address,
+            false
+          ).toMap()
+      );
+      if(result != null)
+        return true;
+      else
+        return false;
+    } else {
+      throw "Error in storeing user infos on firebase firestore. Reason: The provide user type is neither driver nor client.";
+    }
   }
 
   @override
@@ -121,7 +152,8 @@ class AuthService extends IAuthService {
   Future<bool> storeLoggedUser(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
-    bool stored = await prefs.setString(S_loggedUser, jsonEncode(user.toMap()));
+    String toBeStoredString = jsonEncode(user.toMap(userType: user.userType));
+    bool stored = await prefs.setString(S_loggedUser, toBeStoredString);
     this._coreService.loggedUser = user;
     if(written && stored) return true;
     else return false;
@@ -130,10 +162,12 @@ class AuthService extends IAuthService {
   @override
   Future<bool> markUserLoggedOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool written = await prefs.setBool(S_userIsLogged, false);
-    bool stored = await prefs.setString(S_loggedUser, "");
-    bool userTypeWritten = await prefs.setString(S_loggedUserType, "");
-    if(written && stored && userTypeWritten) return true;
+    bool cleared = await prefs.clear();
+    // bool written = await prefs.setBool(S_userIsLogged, null);
+    // bool stored = await prefs.setString(S_loggedUser, null);
+    // bool userTypeWritten = await prefs.setString(S_loggedUserType, null);
+    // if(written && stored && userTypeWritten) return true;
+    if(cleared) return true;
     else return false;
   }
 
@@ -142,14 +176,14 @@ class AuthService extends IAuthService {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String stringUser = prefs.getString(S_loggedUser);
     var userAsMapObject = jsonDecode(stringUser);
-    var user = UserModel.fromMap(
-        userAsMapObject["displayName"],
-        userAsMapObject["email"],
-        userAsMapObject["phoneNumber"],
-        userAsMapObject["address"],
-        userAsMapObject["userType"],
-        userAsMapObject["isActive"]
-    );
+    UserModel user;
+    if(userAsMapObject["userType"] == "driver") {
+      user = UserModel.driverFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"], userAsMapObject["isActive"]);
+      user.userType = EUserType.driver;
+    } else if(userAsMapObject["userType" == "client"]) {
+      user = UserModel.clientFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"]);
+      user.userType = EUserType.client;
+    }
     if(user.runtimeType == UserModel)
       return user;
     else {

@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/ClientModel.dart';
+import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
@@ -51,15 +53,17 @@ class AppViewModel extends BaseViewModel {
     setBusy(true);
     var isValid = this.signupFormKey.currentState.validate();
     if(!isValid) {setBusy(false); return;}
-    UserModel user = new UserModel(
-        this.displayNameCtrl.text.trim(),
-        this.emailCtrl.text.trim(),
-        this.phoneNumberCtrl.text.trim(),
-        this.addressCtrl.text.trim(),
-        this.chosenUserType,
-        password: this.passCtrl.text.trim(),
-        isActive: chosenUserType == EUserType.client ? true : false
-    );
+
+    UserModel user;
+
+    if(chosenUserType == EUserType.driver) {
+      user = new DriverModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim(), false);
+    } else if(chosenUserType == EUserType.client) {
+      user = new ClientModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim());
+    }
+
+    user.userType = this.chosenUserType;
+    user.password = this.passCtrl.text.trim();
     bool registrationSucceeded = await this.authService.registerByMail(user, this.licencePictureFiles);
     if(registrationSucceeded) {
       if(user.userType == EUserType.client)
@@ -89,31 +93,46 @@ class AppViewModel extends BaseViewModel {
       return null;
     }
   }
+
+  chooseUserType(EUserType choice) {
+    this.chosenUserType = choice;
+    notifyListeners();
+  }
+  
   login() async {
     setBusy(true);
     bool isValid = this.loginFormKey.currentState.validate();
-    if(isValid) {
-      UserModel user = new UserModel(
+    if(!isValid) {setBusy(false); return;}
+
+    UserModel user;
+
+    if(chosenUserType == EUserType.driver) {
+      user = new DriverModel(
           this.displayNameCtrl.text.trim(),
           this.emailCtrl.text.trim(),
           this.phoneNumberCtrl.text.trim(),
           this.addressCtrl.text.trim(),
-          EUserType.hint,
-          password: this.passCtrl.text.trim()
+          false,
       );
-      UserModel userModel = await this.authService.authenticateByMail(user);
-        if(userModel != null) {
-          if(userModel.userType == EUserType.client)
-            navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
-          else if(userModel.userType == EUserType.driver)
-            navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (route) => false);
-          else
-            this.coreService.showErrorDialog("Erreur Profil", "La base de données n'a pas pu \n fournir votre rôle. (client ou chauffeur)");
-        }
-        setBusy(false);
+    } else if(chosenUserType == EUserType.client) {
+      user = new ClientModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim());
+    }
+
+    user.userType = this.chosenUserType;
+    user.password = this.passCtrl.text.trim();
+
+    UserModel userModel = await this.authService.authenticateByMail(user);
+    if(userModel != null) {
+      if(userModel.userType == EUserType.client)
+        navigatorKey.currentState.pushNamedAndRemoveUntil('/dashboard', (route) => false);
+      else if(userModel.userType == EUserType.driver)
+        navigatorKey.currentState.pushNamedAndRemoveUntil('/driverDashboard', (route) => false);
+      else
+        this.coreService.showErrorDialog("Erreur Profil", "La base de données n'a pas pu \n fournir le type d'utilisateur. (client ou chauffeur)");
     }
     setBusy(false);
   }
+
   logout() async {
     setBusy(true);
     var isLoggout = await this.authService.logout();
