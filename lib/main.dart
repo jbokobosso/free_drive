@@ -1,34 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/constants/routes.dart';
-import 'package:free_drive/models/EUserType.dart';
-import 'package:free_drive/models/UserModel.dart';
-import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
-import 'package:free_drive/services/IAuthService.dart';
 
-IAuthService _authService = getIt.get<IAuthService>();
-CoreService _coreService = getIt.get<CoreService>();
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
-
-Future<String> _getStartupRoute() async {
-  String route = "";
-  if(await _authService.checkIntroPassed() == true) {
-    if(await _authService.checkUserIsLogged() == true) {
-      UserModel loggedUser = await _authService.getLoggedUser();
-      if(loggedUser.userType == EUserType.client)  {
-        route =  "/dashboard";
-      } else if(loggedUser.userType == EUserType.driver) {
-        _coreService.setDriverState(loggedUser);
-        route = "/driverDashboard";
-      } else throw "Locally logged user has no user type stored !!! Reinstall the app if in developpement";
-    } else
-      route = '/login';
-    } else {
-    route = '/intro';
-  }
-  return route;
-}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,10 +16,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var rst = _getStartupRoute();
-    rst.then((value) {
-      navigatorKey.currentState.pushNamedAndRemoveUntil(value, (route) => false);
-    });
     return MaterialApp(
       title: 'Free Drive',
       theme: ThemeData(
@@ -59,7 +30,7 @@ class MyApp extends StatelessWidget {
             )
         ),
       ),
-      initialRoute: "/loading",
+      initialRoute: "/startup",
       routes: routes,
       navigatorKey: navigatorKey,
     );

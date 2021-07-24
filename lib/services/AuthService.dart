@@ -99,13 +99,15 @@ class AuthService extends IAuthService {
   @override
   Future<bool> checkIntroPassed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(S_introPassed);
+    bool introPassed = prefs.getBool(S_introPassed);
+    return introPassed;
   }
 
   @override
   Future<bool> checkUserIsLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(S_userIsLogged);
+    bool isAuth = prefs.getBool(S_userIsLogged);
+    return isAuth;
   }
 
   @override
@@ -138,7 +140,8 @@ class AuthService extends IAuthService {
   @override
   Future<UserModel> getLoggedUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var userAsMapObject = jsonDecode(prefs.getString(S_loggedUser));
+    String stringUser = prefs.getString(S_loggedUser);
+    var userAsMapObject = jsonDecode(stringUser);
     var user = UserModel.fromMap(
         userAsMapObject["displayName"],
         userAsMapObject["email"],
