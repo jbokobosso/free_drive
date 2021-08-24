@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
@@ -7,6 +8,9 @@ import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 
 class CoreService {
+
+  double get deviceHeight => this._getDeviceHeight();
+  double get deviceWidth => this._getDeviceWidth();
 
   UserModel loggedUser;
 
@@ -110,5 +114,25 @@ class CoreService {
       return false;
     else
       return true;
+  }
+
+  double _getDeviceWidth() {
+    return MediaQuery.of(navigatorKey.currentState.context).size.width;
+  }
+
+  double _getDeviceHeight() {
+    return MediaQuery.of(navigatorKey.currentState.context).size.height;
+  }
+
+  showToastMessage(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
   }
 }

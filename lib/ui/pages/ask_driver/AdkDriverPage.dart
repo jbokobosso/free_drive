@@ -3,8 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,7 +16,7 @@ class AskDriverPage extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double contentPaddingScale = 0.07;
   final double cardWidthScale = 0.8;
-  ERideType chosenRide = ERideType.hint;
+  ERideType chosenRide = ERideType.ride;
   var _askDriverFormKey = GlobalKey<FormState>();
   TextEditingController rideDurationController = new TextEditingController();
   TextEditingController departureDateController = new TextEditingController();
@@ -32,7 +34,7 @@ class AskDriverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
+    return ViewModelBuilder<AskDriverViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Demander un chauffeur'),
@@ -42,19 +44,19 @@ class AskDriverPage extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.only(
-                  top: model.deviceHeight*0.1,
-                  left: model.deviceWidth*0.07,
-                  right: model.deviceWidth*0.07
+                  top: model.coreService.deviceHeight*0.1,
+                  left: model.coreService.deviceWidth*0.07,
+                  right: model.coreService.deviceWidth*0.07
               ),
-              width: model.deviceWidth,
-              height: model.deviceHeight,
+              width: model.coreService.deviceWidth,
+              height: model.coreService.deviceHeight,
               color: Theme.of(context).accentColor
             ),
             AppBanner(),
             Positioned(
-              top: model.deviceHeight*this.cardTopSpacingScale,
+              top: model.coreService.deviceHeight*this.cardTopSpacingScale,
               child: Container(
-                width: model.deviceWidth*this.cardWidthScale,
+                width: model.coreService.deviceWidth*this.cardWidthScale,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.rectangle,
@@ -74,23 +76,23 @@ class AskDriverPage extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        DropdownButtonFormField<ERideType>(
-                          onChanged: (ERideType newValue) {
-                            this.chosenRide = newValue;
-                            model.notifyListeners();
-                          },
-                          value: this.chosenRide,
-                          decoration: InputDecoration(
-                            enabledBorder: customInputBorder(context),
-                            border: customInputBorder(context),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                          ),
-                          items: [
-                            DropdownMenuItem(child: Text('Type de course', style: TextStyle(color: Colors.grey),), value: ERideType.hint),
-                            DropdownMenuItem(child: Text('Course en ville'), value: ERideType.ride),
-                            DropdownMenuItem(child: Text('Voyage'), value: ERideType.trip),
-                          ],
-                        ),
+                        // DropdownButtonFormField<ERideType>(
+                        //   onChanged: (ERideType newValue) {
+                        //     this.chosenRide = newValue;
+                        //     model.notifyListeners();
+                        //   },
+                        //   value: this.chosenRide,
+                        //   decoration: InputDecoration(
+                        //     enabledBorder: customInputBorder(context),
+                        //     border: customInputBorder(context),
+                        //     contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                        //   ),
+                        //   items: [
+                        //     DropdownMenuItem(child: Text('Type de course', style: TextStyle(color: Colors.grey),), value: ERideType.hint),
+                        //     DropdownMenuItem(child: Text('Course en ville'), value: ERideType.ride),
+                        //     DropdownMenuItem(child: Text('Voyage'), value: ERideType.trip),
+                        //   ],
+                        // ),
                         heightSpacing(),
                         TextFormField(
                           decoration: InputDecoration(
@@ -115,8 +117,7 @@ class AskDriverPage extends StatelessWidget {
                               disabledBorder: customInputBorder(context),
                             )
                         ),
-                        this.chosenRide == ERideType.trip
-                        ? Column(
+                        Column(
                             children: [
                               heightSpacing(),
                               GestureDetector(
@@ -173,62 +174,61 @@ class AskDriverPage extends StatelessWidget {
                                 ),
                               ),
                             ],
-                        )
-                        : this.chosenRide == ERideType.ride ? Column(
-                          children: [
-                            heightSpacing(),
-                            GestureDetector(
-                              onTap: () async {
-                                TimeOfDay pickedTime = await showTimePicker(
-                                  initialTime: TimeOfDay(hour: 0, minute: 0),
-                                  cancelText: 'Annuler',
-                                  context: context
-                                );
-                                this.departureTime = pickedTime;
-                                this.departureTimeController.text = model.coreService.formatTime(pickedTime);
-                              },
-                              child: TextFormField(
-                                  controller: this.departureTimeController,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    labelText: "Heure de départ",
-                                    prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                                    contentPadding: EdgeInsets.all(0),
-                                    enabledBorder: customInputBorder(context),
-                                    border: customInputBorder(context),
-                                    disabledBorder: customInputBorder(context),
-                                  )
-                              ),
-                            ),
-                            heightSpacing(),
-                            GestureDetector(
-                              onTap: () async {
-                                TimeOfDay pickedTime = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay(hour: 0, minute: 0),
-                                  cancelText: 'Annuler',
-                                );
-                                this.returnTime = pickedTime;
-                                this.returnTimeController.text = model.coreService.formatTime(pickedTime);
-                                var rideDuration = this.returnTime.hour - this.departureTime.hour;
-                                this.rideDurationController.text = "${rideDuration.toString()} Heures";
-                              },
-                              child: TextFormField(
-                                  controller: this.returnTimeController,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    labelText: "Heure de retour",
-                                    prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                                    contentPadding: EdgeInsets.all(0),
-                                    enabledBorder: customInputBorder(context),
-                                    border: customInputBorder(context),
-                                    disabledBorder: customInputBorder(context),
-                                  )
-                              ),
-                            ),
-                          ],
-                        )
-                        : Container(height: 0, width: 0,),
+                        ),
+                        // Column(
+                        //   children: [
+                        //     heightSpacing(),
+                        //     GestureDetector(
+                        //       onTap: () async {
+                        //         TimeOfDay pickedTime = await showTimePicker(
+                        //           initialTime: TimeOfDay(hour: 0, minute: 0),
+                        //           cancelText: 'Annuler',
+                        //           context: context
+                        //         );
+                        //         this.departureTime = pickedTime;
+                        //         this.departureTimeController.text = model.coreService.formatTime(pickedTime);
+                        //       },
+                        //       child: TextFormField(
+                        //           controller: this.departureTimeController,
+                        //           enabled: false,
+                        //           decoration: InputDecoration(
+                        //             labelText: "Heure de départ",
+                        //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
+                        //             contentPadding: EdgeInsets.all(0),
+                        //             enabledBorder: customInputBorder(context),
+                        //             border: customInputBorder(context),
+                        //             disabledBorder: customInputBorder(context),
+                        //           )
+                        //       ),
+                        //     ),
+                        //     heightSpacing(),
+                        //     GestureDetector(
+                        //       onTap: () async {
+                        //         TimeOfDay pickedTime = await showTimePicker(
+                        //           context: context,
+                        //           initialTime: TimeOfDay(hour: 0, minute: 0),
+                        //           cancelText: 'Annuler',
+                        //         );
+                        //         this.returnTime = pickedTime;
+                        //         this.returnTimeController.text = model.coreService.formatTime(pickedTime);
+                        //         var rideDuration = this.returnTime.hour - this.departureTime.hour;
+                        //         this.rideDurationController.text = "${rideDuration.toString()} Heures";
+                        //       },
+                        //       child: TextFormField(
+                        //           controller: this.returnTimeController,
+                        //           enabled: false,
+                        //           decoration: InputDecoration(
+                        //             labelText: "Heure de retour",
+                        //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
+                        //             contentPadding: EdgeInsets.all(0),
+                        //             enabledBorder: customInputBorder(context),
+                        //             border: customInputBorder(context),
+                        //             disabledBorder: customInputBorder(context),
+                        //           )
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
                         heightSpacing(),
                         TextFormField(
                           controller: this.rideDurationController,
@@ -243,23 +243,22 @@ class AskDriverPage extends StatelessWidget {
                             )
                         ),
                         heightSpacing(),
-                        this.chosenRide != ERideType.hint
-                            ? ElevatedButton(
-                                style: customButtonStyle(context),
-                                child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
-                                onPressed: () => navigatorKey.currentState.pushNamed("/yourDriver"),
-                              )
-                            : Container(height: 0, width: 0,)
+                        ElevatedButton(
+                          style: customButtonStyle(context),
+                          child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => model.askDriver(),
+                        )
                       ],
                     ),
                   ),
                 ),
               ),
-            )
+            ),
+            model.isBusy ? Loading() : Container(height: 0, width: 0)
           ],
         )
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => AskDriverViewModel(),
     );
   }
 }

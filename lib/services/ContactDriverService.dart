@@ -1,7 +1,9 @@
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactDriverService {
   CoreService _coreService = getIt.get<CoreService>();
@@ -10,14 +12,16 @@ class ContactDriverService {
     _coreService.userDashboardState.activeRideExists = true;
   }
 
-  Future<bool> callDriver() async {
-    const number = '+22899885825'; //set the number here
-    bool callSucceded = await FlutterPhoneDirectCaller.callNumber(number);
+  Future<bool> callDriver(String phoneNumber) async {
+    bool callSucceded = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
     return callSucceded;
   }
 
-  bool textDriver() {
-    navigatorKey.currentState.pop();
+  Future<bool> textDriver(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+          this._coreService.showErrorDialog("SMS", onError);
+        });
     return true;
   }
 }

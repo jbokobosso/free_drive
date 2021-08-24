@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
@@ -25,6 +26,7 @@ class YourDriverPage extends StatelessWidget {
   DateTime returnDate;
   TimeOfDay departureTime;
   TimeOfDay returnTime;
+  DriverModel driver;
 
   heightSpacing() {
     return SizedBox(height: 10.0);
@@ -32,6 +34,9 @@ class YourDriverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    this.driver = ModalRoute.of(context).settings.arguments;
+
     return ViewModelBuilder<AppViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
@@ -55,7 +60,7 @@ class YourDriverPage extends StatelessWidget {
                   SizedBox(height: 0, width: 0,),
                   ElevatedButton(
                       style: customButtonStyle(context, isBlack: true),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/contactDriver'),
+                      onPressed: () => navigatorKey.currentState.pushNamed('/contactDriver', arguments: this.driver),
                       child: Text('Contactez', style: TextStyle(fontWeight: FontWeight.bold))
                   ),
                 ],
@@ -94,8 +99,8 @@ class YourDriverPage extends StatelessWidget {
                             border: Border.all(color: Theme.of(context).primaryColor)
                           ),
                         ),
-                        title: Text('Jonas AMEDE', style: TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text("Tél.: +228 - 00 00 00 00\n Quartier: Hédranawoé"),
+                        title: Text(this.driver.displayName, style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text("${this.driver.phoneNumber}\n\n ${this.driver.address}"),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

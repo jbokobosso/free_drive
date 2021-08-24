@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/UserDashboardCard.dart';
@@ -13,11 +15,16 @@ class ContactDriverPage extends StatelessWidget {
   final double inputSpacingScale = 0.02;
   final double inputHeightScale = 0.08;
   int currentNavigationIndex = 1;
+  DriverModel driver;
   ContactDriverPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
+
+
+    this.driver = ModalRoute.of(context).settings.arguments;
+
+    return ViewModelBuilder<AskDriverViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Contact'),
@@ -45,7 +52,7 @@ class ContactDriverPage extends StatelessWidget {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(10.0)
                       ),
-                      onPressed: () => model.callDriver(),
+                      onPressed: () => model.callDriver(this.driver.phoneNumber),
                       child: Icon(Icons.phone, size: model.deviceWidth*0.1)
                   ),
                   model.contactedDriver ? Text("") : ElevatedButton(
@@ -59,11 +66,13 @@ class ContactDriverPage extends StatelessWidget {
                         builder: (_) => AlertDialog(
                           title: Text('SMS'),
                           content: SizedBox(
-                            height: model.deviceHeight*0.35,
+                            height: model.deviceHeight*0.50,
                             child: Form(
+                              key: model.smsFormKey,
                               child: Column(
                                 children: [
                                   TextFormField(
+                                    initialValue: this.driver.phoneNumber,
                                     keyboardType: TextInputType.phone,
                                     decoration: InputDecoration(
                                       filled: true,
@@ -75,6 +84,7 @@ class ContactDriverPage extends StatelessWidget {
                                   ),
                                   SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                                   TextFormField(
+                                    controller: model.smsMessageCtrl,
                                     minLines: 3,
                                     maxLines: 5,
                                     decoration: InputDecoration(
@@ -84,6 +94,11 @@ class ContactDriverPage extends StatelessWidget {
                                       enabledBorder: customInputBorder(context),
                                       border: customInputBorder(context),
                                     ),
+                                    validator: (value) {
+                                      if(value.isEmpty)
+                                        return "Ecrivez le message";
+                                      else return null;
+                                    },
                                   ),
                                   SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                                   ElevatedButton(
@@ -93,7 +108,11 @@ class ContactDriverPage extends StatelessWidget {
                                               borderRadius: BorderRadius.circular(30.0)
                                           )
                                       ),
-                                      onPressed: () => model.textDriver(),
+                                      onPressed: () {
+                                        bool isValid = model.smsFormKey.currentState.validate();
+                                        if(!isValid) return;
+                                        model.textDriver(this.driver.phoneNumber, model.smsMessageCtrl.text.trim());
+                                      },
                                       child: Icon(Icons.send)
                                   ),
                                 ],
@@ -120,7 +139,7 @@ class ContactDriverPage extends StatelessWidget {
           ],
         )
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => AskDriverViewModel(),
     );
   }
 }

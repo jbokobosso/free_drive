@@ -3,7 +3,7 @@ import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EUserType.dart';
 
 abstract class UserModel {
-  int id;
+  String id;
   String email;
   String password;
   String displayName;
@@ -34,8 +34,19 @@ abstract class UserModel {
     );
   }
 
-  static DriverModel driverFromMap(String displayName, String email, String phoneNumber, String address, String userType, isActive) {
+  static DriverModel driverFromMapOld(String displayName, String email, String phoneNumber, String address, String userType, isActive) {
     return new DriverModel(displayName, email, phoneNumber, address, isActive);
+  }
+
+  static DriverModel driverFromMap(Map<String, dynamic> driver) {
+    var driverObject = new DriverModel(
+        driver["displayName"],
+        driver["email"],
+        driver["phoneNumber"],
+        driver["address"],
+        driver["isActive"]
+    );
+    return driverObject;
   }
 
   static DriverModel driverFromFirebase(Map<String, dynamic> jsonData) {

@@ -178,13 +178,13 @@ class AuthService extends IAuthService {
     var userAsMapObject = jsonDecode(stringUser);
     UserModel user;
     if(userAsMapObject["userType"] == "driver") {
-      user = UserModel.driverFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"], userAsMapObject["isActive"]);
+      user = UserModel.driverFromMapOld(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"], userAsMapObject["isActive"]);
       user.userType = EUserType.driver;
-    } else if(userAsMapObject["userType" == "client"]) {
+    } else if(userAsMapObject["userType"] == "client") {
       user = UserModel.clientFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"]);
       user.userType = EUserType.client;
     }
-    if(user.runtimeType == UserModel)
+    if(user.runtimeType == DriverModel || user.runtimeType == ClientModel)
       return user;
     else {
       this._coreService.showErrorDialog("Error Converting", "Error when converting json locally loged user from dart Map to UserModel");

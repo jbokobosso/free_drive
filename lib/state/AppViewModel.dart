@@ -23,6 +23,9 @@ class AppViewModel extends BaseViewModel {
   IAuthService authService = getIt.get<IAuthService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
+  double get deviceWidth => this.coreService.deviceWidth;
+  double get deviceHeight => this.coreService.deviceHeight;
+
   // Dashboard
   loadUser() {
 
@@ -174,30 +177,8 @@ class AppViewModel extends BaseViewModel {
   }
 
 
-  // Contact driver page
-  bool contactedDriver = false;
-  callDriver() async {
-    var callSucceded = await this.contactDriverService.callDriver();
-    if(callSucceded) contactedDriver = true;
-    notifyListeners();
-  }
-  textDriver() {
-    var textSucceded = this.contactDriverService.textDriver();
-    if(textSucceded) this.contactedDriver = true;
-    notifyListeners();
-  }
-
-
   // App utils
   bool get activeRideExists => this.coreService.userDashboardState.activeRideExists;
-  double get deviceHeight => this._getDeviceHeight();
-  double get deviceWidth => this._getDeviceWidth();
-  double _getDeviceWidth() {
-    return MediaQuery.of(navigatorKey.currentState.context).size.width;
-  }
-  double _getDeviceHeight() {
-    return MediaQuery.of(navigatorKey.currentState.context).size.height;
-  }
 
 
   // Login page
