@@ -178,7 +178,7 @@ class AuthService extends IAuthService {
     var userAsMapObject = jsonDecode(stringUser);
     UserModel user;
     if(userAsMapObject["userType"] == "driver") {
-      user = UserModel.driverFromMapOld(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"], userAsMapObject["isActive"]);
+      user = UserModel.driverFromMapOld(userAsMapObject);
       user.userType = EUserType.driver;
     } else if(userAsMapObject["userType"] == "client") {
       user = UserModel.clientFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"]);

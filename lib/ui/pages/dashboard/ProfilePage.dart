@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
-import 'package:free_drive/ui/shared/ProfileCard.dart';
+import 'package:free_drive/ui/shared/profileCard/ProfileCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
 

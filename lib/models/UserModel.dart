@@ -34,8 +34,14 @@ abstract class UserModel {
     );
   }
 
-  static DriverModel driverFromMapOld(String displayName, String email, String phoneNumber, String address, String userType, isActive) {
-    return new DriverModel(displayName, email, phoneNumber, address, isActive);
+  static DriverModel driverFromMapOld(Map<String, dynamic> data) {
+    return new DriverModel(
+      data["displayName"],
+      data["email"],
+      data["phoneNumber"],
+      data["address"],
+      data["isActive"]
+    );
   }
 
   static DriverModel driverFromMap(Map<String, dynamic> driver) {

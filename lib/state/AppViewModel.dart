@@ -78,11 +78,7 @@ class AppViewModel extends BaseViewModel {
     }
     setBusy(false);
   }
-  loadLocallyLoggedUser() async {
-    var result  = await this.authService.getLoggedUser();
-    this.coreService.loggedUser = result;
-    notifyListeners();
-  }
+
   pickLicencePictures(ELicencePictureFace licencePictureFace) async {
     FilePickerResult result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['jpg', 'jpeg', 'JPG', 'JPEG']);
 

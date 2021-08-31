@@ -1,21 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
-import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
+import 'package:free_drive/ui/shared/profileCard/ProfileCardViewModel.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
   TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
-  ProfileCard({Key key}) : super(key: key);
+  ProfileCard();
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
-      onModelReady: (model) => model.loadLocallyLoggedUser(),
-      builder: (context, model, child) => Positioned(
+    return ViewModelBuilder<ProfileCardViewModel>.reactive(
+      onModelReady: (model) => model.initView(),
+      builder: (context, model, child) => model.isBusy ? Loading() : Positioned(
         top: model.deviceHeight*this.cardTopSpacingScale,
         child: Container(
           width: model.deviceWidth*this.cardWidth,
@@ -37,12 +39,30 @@ class ProfileCard extends StatelessWidget {
                 ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Center(child: Icon(Icons.person, size: model.deviceWidth*0.5)),
+                model.isUploading ? Lottie.asset("assets/lottie/uploading.json", width: model.deviceWidth*0.5) : GestureDetector(
+                  onTap: () => model.pickProfilePicture(),
+                  // child: Center(child: Icon(Icons.person, size: model.deviceWidth*0.5))
+                  child: Center(
+                    child: model.profilePictureLoaded
+                        ? CircleAvatar(
+                            radius: model.deviceWidth*0.2,
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: NetworkImage(model.profilePictureUrl)
+                          )
+                        : Icon(Icons.person, size: model.deviceWidth*0.5)
+                  )
+                ),
+                model.isUploading
+                    ? Center(
+                        child: Text("\n${model.uploadPercentage.toInt().toString()} %",
+                        style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))
+                      )
+                    : Container(height: 0, width: 0),
                 Text('\n ${model.loggedUser.displayName}'),
                 Text('\n ${model.loggedUser.phoneNumber}'),
                 Text('\n ${model.loggedUser.email}'),
                 model.coreService.loggedUser.userType == EUserType.driver // if user is driver, show account status. If not, show nothing (because client users are active by default)
-                    ? Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount ? "Activé" : "Non actif"}')
+                    ? Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount != null ? "Activé" : "Non actif"}')
                     : Text(""),
                 model.isBusy ? Center(child: Loading()) : SizedBox(height: 0, width: 0)
               ],
@@ -51,7 +71,7 @@ class ProfileCard extends StatelessWidget {
           ),
         ),
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => ProfileCardViewModel(),
     );
   }
 }

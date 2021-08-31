@@ -1,11 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CoreService {
 
@@ -135,4 +139,26 @@ class CoreService {
         fontSize: 16.0
     );
   }
+
+  Future<bool> storeProfilePictureUrl(String url) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool result = await prefs.setString(S_profilePictureUrl, url);
+    return result;
+  }
+
+  Future<String> getProfilePictureUrl() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String result = prefs.getString(S_profilePictureUrl);
+    return result;
+  }
+
+  fileIsImage(File file) {
+    bool result = false;
+    S_ALLOWED_PROFILE_IMAGES_EXTENSIONS.forEach((String extension) {
+      if(file.path.endsWith(extension))
+        result = true;
+    });
+    return result;
+  }
+
 }
