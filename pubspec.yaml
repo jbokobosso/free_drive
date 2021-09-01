@@ -30,6 +30,9 @@ dependencies:
   firebase_auth: ^3.0.1
 
   # Utils
+  flutter_typeahead: ^3.2.0
+  latlong2: ^0.8.0
+  mapbox_search: ^2.1.0+1
   shared_preferences: ^2.0.6
   flutter_sms: ^2.3.1
   flutter_phone_direct_caller: ^2.0.0

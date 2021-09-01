@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
+import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,16 +23,38 @@ class AskDriverViewModel extends BaseViewModel {
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
 
+  var smsFormKey = GlobalKey<FormState>();
+  var departureFormKey = GlobalKey<FormState>();
+  TextEditingController departureLocationCtrl = new TextEditingController();
+  TextEditingController destinationLocationCtrl = new TextEditingController();
+  TextEditingController smsMessageCtrl = new TextEditingController();
+  ERideType chosenRide = ERideType.ride;
+  var durationFormKey = GlobalKey<FormState>();
+  TextEditingController rideDurationController = new TextEditingController();
+  TextEditingController departureDateController = new TextEditingController();
+  TextEditingController returnDateController = new TextEditingController();
+  TextEditingController departureTimeController = new TextEditingController();
+  TextEditingController returnTimeController = new TextEditingController();
+  DateTime departureDate;
+  DateTime returnDate;
+  TimeOfDay departureTime;
+  TimeOfDay returnTime;
+
   double get deviceWidth => this.coreService.deviceWidth;
   double get deviceHeight => this.coreService.deviceHeight;
 
   bool contactedDriver = false;
 
-  var smsFormKey = GlobalKey<FormState>();
-  TextEditingController smsMessageCtrl = new TextEditingController();
+  List<MapBoxPlace> places = [];
 
-  initContactDriverView() {
+  var placesSearch = PlacesSearch(
+    apiKey: MAPBOX_TOKEN,
+    limit: PLACES_SEARCH_RESULT_LIMIT,
+  );
+
+  initView() {
     this.smsFormKey = new GlobalKey<FormState>();
+    this.initEyeAnimation();
   }
 
   initEyeAnimation() {
@@ -105,6 +131,10 @@ class AskDriverViewModel extends BaseViewModel {
     bool textSucceded = await this.contactDriverService.textDriver(message, [phoneNumber]);
     if(textSucceded) this.contactedDriver = true;
     notifyListeners();
+  }
+
+  Future<List<MapBoxPlace>> getPlaces(String searchText) async {
+    return await placesSearch.getPlaces(searchText);
   }
 
 }

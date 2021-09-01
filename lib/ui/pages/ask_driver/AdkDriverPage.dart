@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:free_drive/main.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/models/ERideType.dart';
-import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
+import 'package:free_drive/ui/pages/ask_driver/AutoCompleteInput.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
 
 class AskDriverPage extends StatelessWidget {
@@ -16,17 +16,6 @@ class AskDriverPage extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double contentPaddingScale = 0.07;
   final double cardWidthScale = 0.8;
-  ERideType chosenRide = ERideType.ride;
-  var _askDriverFormKey = GlobalKey<FormState>();
-  TextEditingController rideDurationController = new TextEditingController();
-  TextEditingController departureDateController = new TextEditingController();
-  TextEditingController returnDateController = new TextEditingController();
-  TextEditingController departureTimeController = new TextEditingController();
-  TextEditingController returnTimeController = new TextEditingController();
-  DateTime departureDate;
-  DateTime returnDate;
-  TimeOfDay departureTime;
-  TimeOfDay returnTime;
 
   heightSpacing() {
     return SizedBox(height: 10.0);
@@ -35,7 +24,7 @@ class AskDriverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AskDriverViewModel>.reactive(
-      onModelReady: (model) => model.initEyeAnimation(),
+      onModelReady: (model) => model.initView(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Demander un chauffeur'),
         extendBodyBehindAppBar: true,
@@ -71,185 +60,172 @@ class AskDriverPage extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
-                  child: Form(
-                    key: _askDriverFormKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // DropdownButtonFormField<ERideType>(
-                        //   onChanged: (ERideType newValue) {
-                        //     this.chosenRide = newValue;
-                        //     model.notifyListeners();
-                        //   },
-                        //   value: this.chosenRide,
-                        //   decoration: InputDecoration(
-                        //     enabledBorder: customInputBorder(context),
-                        //     border: customInputBorder(context),
-                        //     contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                        //   ),
-                        //   items: [
-                        //     DropdownMenuItem(child: Text('Type de course', style: TextStyle(color: Colors.grey),), value: ERideType.hint),
-                        //     DropdownMenuItem(child: Text('Course en ville'), value: ERideType.ride),
-                        //     DropdownMenuItem(child: Text('Voyage'), value: ERideType.trip),
-                        //   ],
-                        // ),
-                        heightSpacing(),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            enabled: false,
-                            labelText: 'Lieu de départ',
-                            prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
-                            contentPadding: EdgeInsets.all(0),
-                            enabledBorder: customInputBorder(context),
-                            border: customInputBorder(context),
-                            disabledBorder: customInputBorder(context),
-                          )
+                  child: Column(
+                    children: [
+                      Form(
+                        key: model.departureFormKey,
+                        child: Column(
+                          children: [
+                            heightSpacing(),
+                            AutoCompleteInput(model.departureLocationCtrl, "Lieu de départ"),
+                            heightSpacing(),
+                            AutoCompleteInput(model.destinationLocationCtrl, "Lieu d'arrivée"),
+                          ],
                         ),
-                        heightSpacing(),
-                        TextFormField(
-                            decoration: InputDecoration(
-                              enabled: false,
-                              labelText: "Lieu d'arrivvée",
-                              prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
-                              contentPadding: EdgeInsets.all(0),
-                              enabledBorder: customInputBorder(context),
-                              border: customInputBorder(context),
-                              disabledBorder: customInputBorder(context),
-                            )
-                        ),
-                        Column(
-                            children: [
-                              heightSpacing(),
-                              GestureDetector(
-                                onTap: () async {
-                                  DateTime pickedDate = await showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime.now(),
-                                    lastDate: DateTime.now().add(Duration(days: 365)),
-                                    initialDate: DateTime.now(),
-                                    currentDate: DateTime.now(),
-                                  );
-                                  this.departureDate = pickedDate;
-                                  this.departureDateController.text = model.coreService.formatDate(pickedDate);
-                                },
-                                child: TextFormField(
-                                    controller: this.departureDateController,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      labelText: "Date de départ",
-                                      prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
-                                      contentPadding: EdgeInsets.all(0),
-                                      enabledBorder: customInputBorder(context),
-                                      border: customInputBorder(context),
-                                      disabledBorder: customInputBorder(context),
-                                    )
-                                ),
+                      ),
+                      Form(
+                        key: model.durationFormKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // DropdownButtonFormField<ERideType>(
+                            //   onChanged: (ERideType newValue) {
+                            //     model.chosenRide = newValue;
+                            //     model.notifyListeners();
+                            //   },
+                            //   value: model.chosenRide,
+                            //   decoration: InputDecoration(
+                            //     enabledBorder: customInputBorder(context),
+                            //     border: customInputBorder(context),
+                            //     contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                            //   ),
+                            //   items: [
+                            //     DropdownMenuItem(child: Text('Type de course', style: TextStyle(color: Colors.grey),), value: ERideType.hint),
+                            //     DropdownMenuItem(child: Text('Course en ville'), value: ERideType.ride),
+                            //     DropdownMenuItem(child: Text('Voyage'), value: ERideType.trip),
+                            //   ],
+                            // ),
+                            heightSpacing(),
+                            GestureDetector(
+                              onTap: () async {
+                                DateTime pickedDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime.now(),
+                                  lastDate: DateTime.now().add(Duration(days: 365)),
+                                  initialDate: DateTime.now(),
+                                  currentDate: DateTime.now(),
+                                );
+                                model.departureDate = pickedDate;
+                                model.departureDateController.text = model.coreService.formatDate(pickedDate);
+                              },
+                              child: TextFormField(
+                                  controller: model.departureDateController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelText: "Date de départ",
+                                    prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                                    contentPadding: EdgeInsets.all(0),
+                                    enabledBorder: customInputBorder(context),
+                                    border: customInputBorder(context),
+                                    disabledBorder: customInputBorder(context),
+                                  )
                               ),
-                              heightSpacing(),
-                              GestureDetector(
-                                onTap: () async {
-                                  DateTime pickedDate = await showDatePicker(
-                                    context: context,
-                                    firstDate: this.departureDate.add(Duration(days: 1)),
-                                    lastDate: DateTime.now().add(Duration(days: 365)),
-                                    initialDate: this.departureDate.add(Duration(days: 1)),
-                                    currentDate: DateTime.now(),
-                                  );
-                                  this.returnDate = pickedDate;
-                                  this.returnDateController.text = model.coreService.formatDate(pickedDate);
-                                  Duration rideDuration = this.returnDate.difference(this.departureDate);
-                                  this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
-                                },
-                                child: TextFormField(
-                                    controller: this.returnDateController,
-                                    enabled: false,
-                                    decoration: InputDecoration(
-                                      labelText: "Date de retour",
-                                      prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
-                                      contentPadding: EdgeInsets.all(0),
-                                      enabledBorder: customInputBorder(context),
-                                      border: customInputBorder(context),
-                                      disabledBorder: customInputBorder(context),
-                                    )
-                                ),
+                            ),
+                            heightSpacing(),
+                            GestureDetector(
+                              onTap: () async {
+                                DateTime pickedDate = await showDatePicker(
+                                  context: context,
+                                  firstDate: model.departureDate.add(Duration(days: 1)),
+                                  lastDate: DateTime.now().add(Duration(days: 365)),
+                                  initialDate: model.departureDate.add(Duration(days: 1)),
+                                  currentDate: DateTime.now(),
+                                );
+                                model.returnDate = pickedDate;
+                                model.returnDateController.text = model.coreService.formatDate(pickedDate);
+                                Duration rideDuration = model.returnDate.difference(model.departureDate);
+                                model.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
+                              },
+                              child: TextFormField(
+                                  controller: model.returnDateController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelText: "Date de retour",
+                                    prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                                    contentPadding: EdgeInsets.all(0),
+                                    enabledBorder: customInputBorder(context),
+                                    border: customInputBorder(context),
+                                    disabledBorder: customInputBorder(context),
+                                  )
                               ),
-                            ],
-                        ),
-                        // Column(
-                        //   children: [
-                        //     heightSpacing(),
-                        //     GestureDetector(
-                        //       onTap: () async {
-                        //         TimeOfDay pickedTime = await showTimePicker(
-                        //           initialTime: TimeOfDay(hour: 0, minute: 0),
-                        //           cancelText: 'Annuler',
-                        //           context: context
-                        //         );
-                        //         this.departureTime = pickedTime;
-                        //         this.departureTimeController.text = model.coreService.formatTime(pickedTime);
-                        //       },
-                        //       child: TextFormField(
-                        //           controller: this.departureTimeController,
-                        //           enabled: false,
-                        //           decoration: InputDecoration(
-                        //             labelText: "Heure de départ",
-                        //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                        //             contentPadding: EdgeInsets.all(0),
-                        //             enabledBorder: customInputBorder(context),
-                        //             border: customInputBorder(context),
-                        //             disabledBorder: customInputBorder(context),
-                        //           )
-                        //       ),
-                        //     ),
-                        //     heightSpacing(),
-                        //     GestureDetector(
-                        //       onTap: () async {
-                        //         TimeOfDay pickedTime = await showTimePicker(
-                        //           context: context,
-                        //           initialTime: TimeOfDay(hour: 0, minute: 0),
-                        //           cancelText: 'Annuler',
-                        //         );
-                        //         this.returnTime = pickedTime;
-                        //         this.returnTimeController.text = model.coreService.formatTime(pickedTime);
-                        //         var rideDuration = this.returnTime.hour - this.departureTime.hour;
-                        //         this.rideDurationController.text = "${rideDuration.toString()} Heures";
-                        //       },
-                        //       child: TextFormField(
-                        //           controller: this.returnTimeController,
-                        //           enabled: false,
-                        //           decoration: InputDecoration(
-                        //             labelText: "Heure de retour",
-                        //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                        //             contentPadding: EdgeInsets.all(0),
-                        //             enabledBorder: customInputBorder(context),
-                        //             border: customInputBorder(context),
-                        //             disabledBorder: customInputBorder(context),
-                        //           )
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        heightSpacing(),
-                        TextFormField(
-                          controller: this.rideDurationController,
-                            decoration: InputDecoration(
-                              enabled: false,
-                              labelText: "Durée de la course",
-                              prefixIcon: Icon(Icons.hourglass_bottom_outlined, color: Theme.of(context).primaryColor),
-                              contentPadding: EdgeInsets.all(0),
-                              enabledBorder: customInputBorder(context),
-                              border: customInputBorder(context),
-                              disabledBorder: customInputBorder(context),
+                            ),
+                            // Column(
+                            //   children: [
+                            //     heightSpacing(),
+                            //     GestureDetector(
+                            //       onTap: () async {
+                            //         TimeOfDay pickedTime = await showTimePicker(
+                            //           initialTime: TimeOfDay(hour: 0, minute: 0),
+                            //           cancelText: 'Annuler',
+                            //           context: context
+                            //         );
+                            //         model.departureTime = pickedTime;
+                            //         model.departureTimeController.text = model.coreService.formatTime(pickedTime);
+                            //       },
+                            //       child: TextFormField(
+                            //           controller: model.departureTimeController,
+                            //           enabled: false,
+                            //           decoration: InputDecoration(
+                            //             labelText: "Heure de départ",
+                            //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
+                            //             contentPadding: EdgeInsets.all(0),
+                            //             enabledBorder: customInputBorder(context),
+                            //             border: customInputBorder(context),
+                            //             disabledBorder: customInputBorder(context),
+                            //           )
+                            //       ),
+                            //     ),
+                            //     heightSpacing(),
+                            //     GestureDetector(
+                            //       onTap: () async {
+                            //         TimeOfDay pickedTime = await showTimePicker(
+                            //           context: context,
+                            //           initialTime: TimeOfDay(hour: 0, minute: 0),
+                            //           cancelText: 'Annuler',
+                            //         );
+                            //         model.returnTime = pickedTime;
+                            //         model.returnTimeController.text = model.coreService.formatTime(pickedTime);
+                            //         var rideDuration = model.returnTime.hour - model.departureTime.hour;
+                            //         model.rideDurationController.text = "${rideDuration.toString()} Heures";
+                            //       },
+                            //       child: TextFormField(
+                            //           controller: model.returnTimeController,
+                            //           enabled: false,
+                            //           decoration: InputDecoration(
+                            //             labelText: "Heure de retour",
+                            //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
+                            //             contentPadding: EdgeInsets.all(0),
+                            //             enabledBorder: customInputBorder(context),
+                            //             border: customInputBorder(context),
+                            //             disabledBorder: customInputBorder(context),
+                            //           )
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                            heightSpacing(),
+                            TextFormField(
+                              controller: model.rideDurationController,
+                                decoration: InputDecoration(
+                                  enabled: false,
+                                  labelText: "Durée de la course",
+                                  prefixIcon: Icon(Icons.hourglass_bottom_outlined, color: Theme.of(context).primaryColor),
+                                  contentPadding: EdgeInsets.all(0),
+                                  enabledBorder: customInputBorder(context),
+                                  border: customInputBorder(context),
+                                  disabledBorder: customInputBorder(context),
+                                )
+                            ),
+                            heightSpacing(),
+                            ElevatedButton(
+                              style: customButtonStyle(context),
+                              child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
+                              onPressed: () => model.askDriver(),
                             )
+                          ],
                         ),
-                        heightSpacing(),
-                        ElevatedButton(
-                          style: customButtonStyle(context),
-                          child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
-                          onPressed: () => model.askDriver(),
-                        )
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -18,3 +18,7 @@ const String FCN_users = "users";
 
 // Allowed upload profile image extensions
 const List<String> S_ALLOWED_PROFILE_IMAGES_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"];
+
+// MapBox
+const MAPBOX_TOKEN = "sk.eyJ1Ijoic25vdmljaDExNyIsImEiOiJja3QwYjZwbXkwYmpjMm5xdDg2dmVzN2FnIn0.mkxhOPsC1kONuEaOu4hRww";
+const PLACES_SEARCH_RESULT_LIMIT = 5;
