@@ -96,6 +96,9 @@ class AskDriverViewModel extends BaseViewModel {
     if(!departureValid || !durationValid)
       return;
     setBusy(true);
+    // Constituer les données de la course
+
+
     List<DriverModel> drivers = await this.askDriverService.loadDrivers();
     if(drivers != null) {
       setBusy(false);
@@ -144,6 +147,11 @@ class AskDriverViewModel extends BaseViewModel {
     return await placesSearch.getPlaces(searchText);
   }
 
+  Future<MapBoxPlace> getOnePlace(String searchText) async {
+    List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
+    return foundPlaces.first;
+  }
+
   void computeAndSetRideDuration() {
     Duration rideDuration = this.returnDate.difference(this.departureDate);
     this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
@@ -153,7 +161,7 @@ class AskDriverViewModel extends BaseViewModel {
     this.returnIsSameDay = newValue;
     if(newValue == true) { // if checked return same date
       this.returnDate = this.departureDate;
-      this.returnDateController.text = this.coreService.formatDate(this.departureDate);
+      this.returnDateController.text = this.coreService.formatDateToHuman(this.departureDate);
       this.computeAndSetRideDuration();
     }
     this.notifyListeners();
@@ -168,7 +176,7 @@ class AskDriverViewModel extends BaseViewModel {
       currentDate: DateTime.now(),
     );
     this.departureDate = pickedDate;
-    this.departureDateController.text = this.coreService.formatDate(pickedDate);
+    this.departureDateController.text = this.coreService.formatDateToHuman(pickedDate);
     this.notifyListeners();
   }
 
@@ -186,7 +194,7 @@ class AskDriverViewModel extends BaseViewModel {
       currentDate: DateTime.now(),
     );
     this.returnDate = pickedDate;
-    this.returnDateController.text = this.coreService.formatDate(pickedDate);
+    this.returnDateController.text = this.coreService.formatDateToHuman(pickedDate);
     this.computeAndSetRideDuration();
   }
 

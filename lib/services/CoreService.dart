@@ -44,11 +44,11 @@ class CoreService {
     this.driverDashboardState.isActiveAccount = driver.isActive;
   }
 
-  formatDate(DateTime datetime) {
+  String formatDateToHuman(DateTime datetime) {
     String result;
     String yearmonth;
     String weekday;
-    if(datetime == null) return;
+    if(datetime == null) return "";
     switch(datetime.weekday) {
       case 1 : weekday = "Lundi";break;
       case 2 : weekday = "Mardi";break;
@@ -76,7 +76,8 @@ class CoreService {
     return result;
   }
 
-  formatTime(TimeOfDay time) {
+  String formatTimeToHuman(TimeOfDay time) {
+    if(time == null) return "";
     return "${time.hour}:${time.minute}";
   }
 
