@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
-import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/models/RideModel.dart';
-import 'package:free_drive/models/YourDriverArgument.dart';
-import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
@@ -28,7 +25,6 @@ class YourDriverPage extends StatelessWidget {
   DateTime returnDate;
   TimeOfDay departureTime;
   TimeOfDay returnTime;
-  DriverModel driver;
   RideModel ride;
 
   heightSpacing() {
@@ -38,11 +34,9 @@ class YourDriverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    YourDriverArgument arguments = ModalRoute.of(context).settings.arguments;
-    this.driver = arguments.driver;
-    this.ride = arguments.ride;
+    this.ride = ModalRoute.of(context).settings.arguments;
 
-    return ViewModelBuilder<AppViewModel>.reactive(
+    return ViewModelBuilder<AskDriverViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Demander un chauffeur'),
@@ -65,7 +59,7 @@ class YourDriverPage extends StatelessWidget {
                   SizedBox(height: 0, width: 0,),
                   ElevatedButton(
                       style: customButtonStyle(context, isBlack: true),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/contactDriver', arguments: this.driver),
+                      onPressed: () => navigatorKey.currentState.pushNamed("/contactDriver", arguments: this.ride),
                       child: Text('Contactez', style: TextStyle(fontWeight: FontWeight.bold))
                   ),
                 ],
@@ -104,8 +98,8 @@ class YourDriverPage extends StatelessWidget {
                             border: Border.all(color: Theme.of(context).primaryColor)
                           ),
                         ),
-                        title: Text(this.driver.displayName, style: TextStyle(fontWeight: FontWeight.bold)),
-                        subtitle: Text("${this.driver.phoneNumber}\n\n ${this.driver.address}"),
+                        title: Text(this.ride.driver.displayName, style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text("${this.ride.driver.phoneNumber}\n\n ${this.ride.driver.address}"),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,7 +119,7 @@ class YourDriverPage extends StatelessWidget {
           ],
         )
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => AskDriverViewModel(),
     );
   }
 }

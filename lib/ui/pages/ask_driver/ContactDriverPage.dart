@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
-import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/models/YourDriverArgument.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
@@ -15,14 +17,13 @@ class ContactDriverPage extends StatelessWidget {
   final double inputSpacingScale = 0.02;
   final double inputHeightScale = 0.08;
   int currentNavigationIndex = 1;
-  DriverModel driver;
+  RideModel ride;
   ContactDriverPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-
-    this.driver = ModalRoute.of(context).settings.arguments;
+    this.ride = ModalRoute.of(context).settings.arguments;
 
     return ViewModelBuilder<AskDriverViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
@@ -52,7 +53,7 @@ class ContactDriverPage extends StatelessWidget {
                           shape: CircleBorder(),
                           padding: EdgeInsets.all(10.0)
                       ),
-                      onPressed: () => model.callDriver(this.driver.phoneNumber),
+                      onPressed: () => model.callDriver(this.ride.driver.phoneNumber),
                       child: Icon(Icons.phone, size: model.deviceWidth*0.1)
                   ),
                   model.contactedDriver ? Text("") : ElevatedButton(
@@ -72,7 +73,7 @@ class ContactDriverPage extends StatelessWidget {
                               child: Column(
                                 children: [
                                   TextFormField(
-                                    initialValue: this.driver.phoneNumber,
+                                    initialValue: this.ride.driver.phoneNumber,
                                     keyboardType: TextInputType.phone,
                                     decoration: InputDecoration(
                                       filled: true,
@@ -111,7 +112,7 @@ class ContactDriverPage extends StatelessWidget {
                                       onPressed: () {
                                         bool isValid = model.smsFormKey.currentState.validate();
                                         if(!isValid) return;
-                                        model.textDriver(this.driver.phoneNumber, model.smsMessageCtrl.text.trim());
+                                        model.textDriver(this.ride.driver.phoneNumber, model.smsMessageCtrl.text.trim());
                                       },
                                       child: Icon(Icons.send)
                                   ),
@@ -126,8 +127,7 @@ class ContactDriverPage extends StatelessWidget {
                   ElevatedButton(
                       style: customButtonStyle(context),
                       onPressed: () {
-                        model.contactDriverService.newRide();
-                        navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false);
+                        model.newRide(ride);
                       },
                       child: Text('Poursuivre')
                   )
@@ -136,6 +136,7 @@ class ContactDriverPage extends StatelessWidget {
             ),
             AppBanner(),
             UserDashboardCard(),
+            model.isBusy ? Loading() : Container(height: 0, width: 0)
           ],
         )
       ),

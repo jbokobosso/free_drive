@@ -4,8 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
+import 'package:free_drive/services/ExceptionService.dart';
 import 'package:free_drive/services/GetIt.dart';
 
 class AskDriverService {
@@ -14,6 +16,22 @@ class AskDriverService {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
+  ExceptionService _exceptionService = getIt.get<ExceptionService>();
+
+  Future<bool> newRide(RideModel ride) async {
+    bool result = false;
+    try {
+      DocumentReference newRide = await this.firestore.collection(FCN_rides).add(ride.toJSON());
+      if(newRide != null)
+        result = true;
+      else
+        result = false;
+    } catch (e) {
+      result = false;
+      this._exceptionService.manageExCeption(e);
+    }
+    return result;
+  }
 
   Future<List<DriverModel>> loadDrivers() async {
     List<DriverModel> drivers = [];

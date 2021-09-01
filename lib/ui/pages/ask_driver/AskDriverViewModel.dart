@@ -1,16 +1,12 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
-import 'package:free_drive/models/EAutocompleteType.dart';
 import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/models/RideModel.dart';
-import 'package:free_drive/models/YourDriverArgument.dart';
 import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
@@ -29,12 +25,13 @@ class AskDriverViewModel extends BaseViewModel {
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
 
-  var smsFormKey = GlobalKey<FormState>();
-  TextEditingController departureLocationCtrl = new TextEditingController();
-  TextEditingController destinationLocationCtrl = new TextEditingController();
+
   TextEditingController smsMessageCtrl = new TextEditingController();
   ERideType chosenRide = ERideType.ride;
+  var smsFormKey = GlobalKey<FormState>();
   var durationFormKey = GlobalKey<FormState>();
+  TextEditingController departureLocationCtrl = new TextEditingController();
+  TextEditingController destinationLocationCtrl = new TextEditingController();
   TextEditingController rideDurationController = new TextEditingController();
   TextEditingController departureDateController = new TextEditingController();
   TextEditingController returnDateController = new TextEditingController();
@@ -44,6 +41,7 @@ class AskDriverViewModel extends BaseViewModel {
   DateTime returnDate;
   TimeOfDay departureTime;
   TimeOfDay returnTime;
+  int rideDurationInDays;
   bool returnIsSameDay = false;
 
   double get deviceWidth => this.coreService.deviceWidth;
@@ -114,7 +112,10 @@ class AskDriverViewModel extends BaseViewModel {
             content: ListView.builder(
               itemCount: drivers.length,
               itemBuilder: (context, index) => ListTile(
-                onTap: () => navigatorKey.currentState.pushNamed("/yourDriver", arguments: new YourDriverArgument(driver: drivers[index], ride: ride)),
+                onTap: () {
+                  ride.driver = drivers[index];
+                  navigatorKey.currentState.pushNamed("/yourDriver", arguments: ride);
+                },
                 title: Text(drivers[index].displayName),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -136,17 +137,17 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   Future<RideModel> buildRideModel() async {
-    MapBoxPlace departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
-    MapBoxPlace destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
+    Place departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
+    Place destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
     RideModel ride = new RideModel(
-        id: null,
-        departureLocation: departureLocation,
-        destinationLocation: destinationLocation,
-        departureDate: this.departureDate,
-        returnDate: this.returnDate,
-        rideDurationInDays: int.tryParse(this.rideDurationController.text),
-        timeStarted: null,
-        timeEnded: null
+      id: null,
+      departureLocation: departureLocation,
+      destinationLocation: destinationLocation,
+      departureDate: this.departureDate,
+      returnDate: this.returnDate,
+      rideDurationInDays: this.rideDurationInDays,
+      timeStarted: null,
+      timeEnded: null
     );
     return ride;
   }
@@ -167,13 +168,19 @@ class AskDriverViewModel extends BaseViewModel {
     return await placesSearch.getPlaces(searchText);
   }
 
-  Future<MapBoxPlace> getOnePlace(String searchText) async {
+  Future<Place> getOnePlace(String searchText) async {
     List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
-    return foundPlaces.first;
+    return new Place(
+      latitude: foundPlaces.first.center.first,
+      longitude: foundPlaces.first.center.first,
+      shortName: foundPlaces.first.text,
+      longName: foundPlaces.first.placeName
+    );
   }
 
   void computeAndSetRideDuration() {
     Duration rideDuration = this.returnDate.difference(this.departureDate);
+    this.rideDurationInDays = rideDuration.inDays;
     this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
   }
   
@@ -224,6 +231,14 @@ class AskDriverViewModel extends BaseViewModel {
 
   handleDestinationLocationInput(MapBoxPlace selectedSuggestion) {
     this.destinationLocationCtrl.text = selectedSuggestion.placeName;
+  }
+
+  newRide(RideModel ride) async {
+    setBusy(true);
+    bool success = await this.askDriverService.newRide(ride);
+    setBusy(false);
+    if(success)
+      navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false);
   }
 
 }

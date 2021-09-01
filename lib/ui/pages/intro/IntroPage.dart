@@ -4,7 +4,6 @@ import 'package:free_drive/models/IntroContentModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/Logo.dart';
 import 'package:lottie/lottie.dart';
-import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:stacked/stacked.dart';
 

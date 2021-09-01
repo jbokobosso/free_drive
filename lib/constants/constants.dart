@@ -15,6 +15,7 @@ const String FS_clientProfileLocation = "client_profiles";
 const String FCN_drivers = "drivers";
 const String FCN_clients = "clients";
 const String FCN_users = "users";
+const String FCN_rides = "rides";
 
 // Allowed upload profile image extensions
 const List<String> S_ALLOWED_PROFILE_IMAGES_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"];

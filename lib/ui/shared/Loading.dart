@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
 class Loading extends StatelessWidget {
@@ -14,15 +15,10 @@ class Loading extends StatelessWidget {
       onModelReady: (model) => model.initEyeAnimation(),
       builder: (context, model, child) => Scaffold(
         body: Container(
-          padding: EdgeInsets.only(
-              left: model.deviceWidth*0.07,
-              right: model.deviceWidth*0.07,
-              bottom: model.deviceHeight*0.1
-          ),
           width: model.deviceWidth,
           height: model.deviceHeight,
           color: Theme.of(context).accentColor,
-          child: Center(child: CircularProgressIndicator())
+          child: Center(child: Lottie.asset("assets/lottie/loading-tire.json", width: 150))
         ),
       ),
       viewModelBuilder: () => AppViewModel(),

@@ -5,6 +5,7 @@ import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/UserDashboardCard.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:stacked/stacked.dart';
@@ -87,7 +88,8 @@ class UserDashboardPage extends StatelessWidget {
               ),
             ),
             AppBanner(),
-            UserDashboardCard()
+            UserDashboardCard(),
+            model.isBusy ? Loading() : Container(height: 0, width: 0),
           ],
         ),
       ),

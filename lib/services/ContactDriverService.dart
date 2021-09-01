@@ -8,10 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 class ContactDriverService {
   CoreService _coreService = getIt.get<CoreService>();
 
-  newRide() {
-    _coreService.userDashboardState.activeRideExists = true;
-  }
-
   Future<bool> callDriver(String phoneNumber) async {
     bool callSucceded = await FlutterPhoneDirectCaller.callNumber(phoneNumber);
     return callSucceded;
