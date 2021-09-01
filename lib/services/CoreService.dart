@@ -6,6 +6,7 @@ import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
+import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
@@ -47,6 +48,7 @@ class CoreService {
     String result;
     String yearmonth;
     String weekday;
+    if(datetime == null) return;
     switch(datetime.weekday) {
       case 1 : weekday = "Lundi";break;
       case 2 : weekday = "Mardi";break;
@@ -103,6 +105,34 @@ class CoreService {
           TextButton(child: Text("D'accord"), onPressed: () => navigatorKey.currentState.pop()),
         ],
       )
+    );
+  }
+
+  showDialogBox(String title, String content, {EDialogType dialogType}) {
+    showDialog(
+        barrierDismissible: false,
+        context: navigatorKey.currentContext,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+          ),
+          titlePadding: EdgeInsets.all(0.0),
+          title: Container(
+            decoration: BoxDecoration(
+                color: dialogType == EDialogType.info ? Colors.blue : dialogType == EDialogType.error ? Colors.red : Colors.amberAccent,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+            ),
+            width: double.infinity,
+            height: 30.0,
+            child: Align(child: Text(title, style: TextStyle(color: Colors.white)), alignment: Alignment.center),
+          ),
+          content: SizedBox(
+              child: Text(content)
+          ),
+          actions: [
+            TextButton(child: Text("D'accord"), onPressed: () => navigatorKey.currentState.pop()),
+          ],
+        )
     );
   }
 

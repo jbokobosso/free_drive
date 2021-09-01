@@ -4,6 +4,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
+import 'package:free_drive/models/EAutocompleteType.dart';
+import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
@@ -89,6 +91,10 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   askDriver() async {
+    bool departureValid = this.departureFormKey.currentState.validate();
+    bool durationValid = this.durationFormKey.currentState.validate();
+    if(!departureValid || !durationValid)
+      return;
     setBusy(true);
     List<DriverModel> drivers = await this.askDriverService.loadDrivers();
     if(drivers != null) {
@@ -141,6 +147,58 @@ class AskDriverViewModel extends BaseViewModel {
   void computeAndSetRideDuration() {
     Duration rideDuration = this.returnDate.difference(this.departureDate);
     this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
+  }
+  
+  handleCheckbox(bool newValue) {
+    this.returnIsSameDay = newValue;
+    if(newValue == true) { // if checked return same date
+      this.returnDate = this.departureDate;
+      this.returnDateController.text = this.coreService.formatDate(this.departureDate);
+      this.computeAndSetRideDuration();
+    }
+    this.notifyListeners();
+  }
+  
+  handleDepartureDateInput() async {
+    DateTime pickedDate = await showDatePicker(
+      context: navigatorKey.currentContext,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      initialDate: DateTime.now(),
+      currentDate: DateTime.now(),
+    );
+    this.departureDate = pickedDate;
+    this.departureDateController.text = this.coreService.formatDate(pickedDate);
+    this.notifyListeners();
+  }
+
+  handleReturnDateInput() async {
+    if(this.returnIsSameDay) return;
+    if(this.departureDate == null) {
+      this.coreService.showDialogBox("ATTENTION", "Veuillez sélectionner la date de départ d'abord", dialogType: EDialogType.warning);
+      return;
+    }
+    DateTime pickedDate = await showDatePicker(
+      context: navigatorKey.currentContext,
+      firstDate: this.departureDate,
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      initialDate: this.departureDate.add(Duration(days: 1)),
+      currentDate: DateTime.now(),
+    );
+    this.returnDate = pickedDate;
+    this.returnDateController.text = this.coreService.formatDate(pickedDate);
+    this.computeAndSetRideDuration();
+  }
+
+  handleAutocompleteInputs(EAutocompleteType autocompleteType, MapBoxPlace selectedSuggestion) {
+    switch(autocompleteType) {
+      case EAutocompleteType.departure:
+        this.departureLocationCtrl.text = selectedSuggestion.placeName;
+        break;
+      case EAutocompleteType.returnback:
+        this.destinationLocationCtrl.text = selectedSuggestion.placeName;
+        break;
+    }
   }
 
 }

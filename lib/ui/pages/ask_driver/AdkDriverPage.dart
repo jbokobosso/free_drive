@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:free_drive/models/ERideType.dart';
+import 'package:free_drive/models/EAutocompleteType.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/pages/ask_driver/AutoCompleteInput.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
-import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
 
 class AskDriverPage extends StatelessWidget {
   AskDriverPage({Key key}) : super(key: key);
-  int currentNavigationIndex = 1;
+  final int currentNavigationIndex = 1;
   final double cardTopSpacingScale = 0.2;
   final double contentPaddingScale = 0.07;
   final double cardWidthScale = 0.8;
@@ -67,9 +65,9 @@ class AskDriverPage extends StatelessWidget {
                         child: Column(
                           children: [
                             heightSpacing(),
-                            AutoCompleteInput(model.departureLocationCtrl, "Lieu de départ"),
+                            AutoCompleteInput("Lieu de départ", EAutocompleteType.departure),
                             heightSpacing(),
-                            AutoCompleteInput(model.destinationLocationCtrl, "Lieu d'arrivée"),
+                            AutoCompleteInput("Lieu d'arrivée", EAutocompleteType.returnback),
                           ],
                         ),
                       ),
@@ -97,29 +95,26 @@ class AskDriverPage extends StatelessWidget {
                             // ),
                             heightSpacing(),
                             GestureDetector(
-                              onTap: () async {
-                                DateTime pickedDate = await showDatePicker(
-                                  context: context,
-                                  firstDate: DateTime.now(),
-                                  lastDate: DateTime.now().add(Duration(days: 365)),
-                                  initialDate: DateTime.now(),
-                                  currentDate: DateTime.now(),
-                                );
-                                model.departureDate = pickedDate;
-                                model.departureDateController.text = model.coreService.formatDate(pickedDate);
-                                model.notifyListeners();
-                              },
+                              onTap: () async => model.handleDepartureDateInput(),
                               child: TextFormField(
-                                  controller: model.departureDateController,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    labelText: "Date de départ",
-                                    prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
-                                    contentPadding: EdgeInsets.all(0),
-                                    enabledBorder: customInputBorder(context),
-                                    border: customInputBorder(context),
-                                    disabledBorder: customInputBorder(context),
-                                  )
+                                controller: model.departureDateController,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText: "Date de départ",
+                                  prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                                  contentPadding: EdgeInsets.all(0),
+                                  enabledBorder: customInputBorder(context),
+                                  border: customInputBorder(context),
+                                  disabledBorder: customInputBorder(context),
+                                  errorBorder: customInputBorder(context)
+                                ),
+                                validator: (value) {
+                                    if(value.isEmpty)
+                                      return "Champ requis";
+                                    else if(model.departureLocationCtrl.text.isEmpty || model.departureLocationCtrl.text.trim() == "")
+                                      return "Lieu de départ requis";
+                                    return null;
+                                },
                               ),
                             ),
                             heightSpacing(),
@@ -128,44 +123,31 @@ class AskDriverPage extends StatelessWidget {
                                 Checkbox(
                                   checkColor: Colors.black,
                                   value: model.returnIsSameDay,
-                                  onChanged: (bool newValue) {
-                                    model.returnIsSameDay = newValue;
-                                    if(newValue == true) { // if checked return same date
-                                      model.returnDate = model.departureDate;
-                                      model.returnDateController.text = model.coreService.formatDate(model.departureDate);
-                                      model.computeAndSetRideDuration();
-                                    }
-                                    model.notifyListeners();
-                                  },
+                                  onChanged: (bool newValue) => model.handleCheckbox(newValue),
                                 ),
                                 Text("Je reviens le même jour")
                               ],
                             ) : Container(),
                             heightSpacing(),
                             GestureDetector(
-                              onTap: model.returnIsSameDay ? null : () async {
-                                DateTime pickedDate = await showDatePicker(
-                                  context: context,
-                                  firstDate: model.departureDate,
-                                  lastDate: DateTime.now().add(Duration(days: 365)),
-                                  initialDate: model.departureDate.add(Duration(days: 1)),
-                                  currentDate: DateTime.now(),
-                                );
-                                model.returnDate = pickedDate;
-                                model.returnDateController.text = model.coreService.formatDate(pickedDate);
-                                model.computeAndSetRideDuration();
-                              },
+                              onTap: model.handleReturnDateInput,
                               child: TextFormField(
-                                  controller: model.returnDateController,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    labelText: "Date de retour",
-                                    prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
-                                    contentPadding: EdgeInsets.all(0),
-                                    enabledBorder: customInputBorder(context),
-                                    border: customInputBorder(context),
-                                    disabledBorder: customInputBorder(context),
-                                  )
+                                controller: model.returnDateController,
+                                enabled: false,
+                                decoration: InputDecoration(
+                                  labelText: "Date de retour",
+                                  prefixIcon: Icon(Icons.calendar_today, color: Theme.of(context).primaryColor),
+                                  contentPadding: EdgeInsets.all(0),
+                                  enabledBorder: customInputBorder(context),
+                                  border: customInputBorder(context),
+                                  disabledBorder: customInputBorder(context),
+                                  errorBorder: customInputBorder(context)
+                                ),
+                                validator: (value) {
+                                    if(value.isEmpty)
+                                      return "Champ requis";
+                                    return null;
+                                },
                               ),
                             ),
                             // model.returnIsSameDay ? Column(
@@ -225,7 +207,7 @@ class AskDriverPage extends StatelessWidget {
                             heightSpacing(),
                             TextFormField(
                               controller: model.rideDurationController,
-                                decoration: InputDecoration(
+                              decoration: InputDecoration(
                                   enabled: false,
                                   labelText: "Durée de la course",
                                   prefixIcon: Icon(Icons.hourglass_bottom_outlined, color: Theme.of(context).primaryColor),
@@ -239,7 +221,7 @@ class AskDriverPage extends StatelessWidget {
                             ElevatedButton(
                               style: customButtonStyle(context),
                               child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
-                              onPressed: () => model.askDriver(),
+                              onPressed: () => model.askDriver,
                             )
                           ],
                         ),

@@ -1,0 +1,4 @@
+enum EAutocompleteType {
+  departure,
+  returnback
+}

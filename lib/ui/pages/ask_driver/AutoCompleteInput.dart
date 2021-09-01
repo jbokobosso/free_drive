@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:free_drive/models/EAutocompleteType.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
 
 class AutoCompleteInput extends StatelessWidget {
-  TextEditingController controller;
-  String inputLabel;
-  AutoCompleteInput(this.controller, this.inputLabel, {Key key}) : super(key: key);
+  final EAutocompleteType  autocompleteType;
+  final String inputLabel;
+  AutoCompleteInput(this.inputLabel, this.autocompleteType, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class AutoCompleteInput extends StatelessWidget {
       builder: (context, model, child) => TypeAheadField<MapBoxPlace>(
         hideSuggestionsOnKeyboardHide: false,
         textFieldConfiguration: TextFieldConfiguration(
-            controller: model.departureLocationCtrl,
+            controller: this.autocompleteType == EAutocompleteType.departure ? model.departureLocationCtrl : model.destinationLocationCtrl,
             autofocus: false,
             decoration: InputDecoration(
               labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
@@ -26,7 +27,7 @@ class AutoCompleteInput extends StatelessWidget {
               enabledBorder: customInputBorder(context),
               border: customInputBorder(context),
               disabledBorder: customInputBorder(context),
-            )
+            ),
         ),
         suggestionsCallback: model.getPlaces,
         itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
@@ -34,7 +35,7 @@ class AutoCompleteInput extends StatelessWidget {
           subtitle: Text(suggestion.placeName),
         ),
         onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
-          this.controller.text = selectedSuggestion.placeName;
+          model.handleAutocompleteInputs(this.autocompleteType, selectedSuggestion);
         },
       ),
       viewModelBuilder: () => new AskDriverViewModel()
