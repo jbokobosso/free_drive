@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:free_drive/models/EAutocompleteType.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
-import 'package:free_drive/ui/pages/ask_driver/AutoCompleteInput.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
 
 class AskDriverPage extends StatelessWidget {
@@ -61,13 +61,58 @@ class AskDriverPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Form(
-                        key: model.departureFormKey,
                         child: Column(
                           children: [
                             heightSpacing(),
-                            AutoCompleteInput("Lieu de départ", EAutocompleteType.departure),
+                            TypeAheadField<MapBoxPlace>(
+                            hideSuggestionsOnKeyboardHide: false,
+                            textFieldConfiguration: TextFieldConfiguration(
+                              controller: model.departureLocationCtrl,
+                              autofocus: false,
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
+                                labelText: "Lieu de départ",
+                                prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
+                                contentPadding: EdgeInsets.all(0),
+                                enabledBorder: customInputBorder(context),
+                                border: customInputBorder(context),
+                                disabledBorder: customInputBorder(context),
+                              ),
+                            ),
+                            suggestionsCallback: model.getPlaces,
+                            itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
+                              title: Text(suggestion.text),
+                              subtitle: Text(suggestion.placeName),
+                            ),
+                            onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
+                              model.handleDepartureLocationInput(selectedSuggestion);
+                            },
+                          ),
                             heightSpacing(),
-                            AutoCompleteInput("Lieu d'arrivée", EAutocompleteType.returnback),
+                            TypeAheadField<MapBoxPlace>(
+                              hideSuggestionsOnKeyboardHide: false,
+                              textFieldConfiguration: TextFieldConfiguration(
+                                controller: model.destinationLocationCtrl,
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
+                                  labelText: "Lieu d'arrivée",
+                                  prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
+                                  contentPadding: EdgeInsets.all(0),
+                                  enabledBorder: customInputBorder(context),
+                                  border: customInputBorder(context),
+                                  disabledBorder: customInputBorder(context),
+                                ),
+                              ),
+                              suggestionsCallback: model.getPlaces,
+                              itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
+                                title: Text(suggestion.text),
+                                subtitle: Text(suggestion.placeName),
+                              ),
+                              onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
+                                model.handleDestinationLocationInput(selectedSuggestion);
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -76,26 +121,9 @@ class AskDriverPage extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // DropdownButtonFormField<ERideType>(
-                            //   onChanged: (ERideType newValue) {
-                            //     model.chosenRide = newValue;
-                            //     model.notifyListeners();
-                            //   },
-                            //   value: model.chosenRide,
-                            //   decoration: InputDecoration(
-                            //     enabledBorder: customInputBorder(context),
-                            //     border: customInputBorder(context),
-                            //     contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
-                            //   ),
-                            //   items: [
-                            //     DropdownMenuItem(child: Text('Type de course', style: TextStyle(color: Colors.grey),), value: ERideType.hint),
-                            //     DropdownMenuItem(child: Text('Course en ville'), value: ERideType.ride),
-                            //     DropdownMenuItem(child: Text('Voyage'), value: ERideType.trip),
-                            //   ],
-                            // ),
                             heightSpacing(),
                             GestureDetector(
-                              onTap: () async => model.handleDepartureDateInput(),
+                              onTap: model.handleDepartureDateInput,
                               child: TextFormField(
                                 controller: model.departureDateController,
                                 enabled: false,
@@ -111,8 +139,6 @@ class AskDriverPage extends StatelessWidget {
                                 validator: (value) {
                                     if(value.isEmpty)
                                       return "Champ requis";
-                                    else if(model.departureLocationCtrl.text.isEmpty || model.departureLocationCtrl.text.trim() == "")
-                                      return "Lieu de départ requis";
                                     return null;
                                 },
                               ),
@@ -150,60 +176,6 @@ class AskDriverPage extends StatelessWidget {
                                 },
                               ),
                             ),
-                            // model.returnIsSameDay ? Column(
-                            //   children: [
-                            //     heightSpacing(),
-                            //     GestureDetector(
-                            //       onTap: () async {
-                            //         TimeOfDay pickedTime = await showTimePicker(
-                            //           initialTime: TimeOfDay(hour: 0, minute: 0),
-                            //           cancelText: 'Annuler',
-                            //           context: context
-                            //         );
-                            //         model.departureTime = pickedTime;
-                            //         model.departureTimeController.text = model.coreService.formatTime(pickedTime);
-                            //       },
-                            //       child: TextFormField(
-                            //           controller: model.departureTimeController,
-                            //           enabled: false,
-                            //           decoration: InputDecoration(
-                            //             labelText: "Heure de départ",
-                            //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                            //             contentPadding: EdgeInsets.all(0),
-                            //             enabledBorder: customInputBorder(context),
-                            //             border: customInputBorder(context),
-                            //             disabledBorder: customInputBorder(context),
-                            //           )
-                            //       ),
-                            //     ),
-                            //     heightSpacing(),
-                            //     GestureDetector(
-                            //       onTap: () async {
-                            //         TimeOfDay pickedTime = await showTimePicker(
-                            //           context: context,
-                            //           initialTime: TimeOfDay(hour: 0, minute: 0),
-                            //           cancelText: 'Annuler',
-                            //         );
-                            //         model.returnTime = pickedTime;
-                            //         model.returnTimeController.text = model.coreService.formatTime(pickedTime);
-                            //         var rideDuration = model.returnTime.hour - model.departureTime.hour;
-                            //         model.rideDurationController.text = "${rideDuration.toString()} Heures";
-                            //       },
-                            //       child: TextFormField(
-                            //           controller: model.returnTimeController,
-                            //           enabled: false,
-                            //           decoration: InputDecoration(
-                            //             labelText: "Heure de retour",
-                            //             prefixIcon: Icon(Icons.timelapse, color: Theme.of(context).primaryColor),
-                            //             contentPadding: EdgeInsets.all(0),
-                            //             enabledBorder: customInputBorder(context),
-                            //             border: customInputBorder(context),
-                            //             disabledBorder: customInputBorder(context),
-                            //           )
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ) : Container(),
                             heightSpacing(),
                             TextFormField(
                               controller: model.rideDurationController,
@@ -221,7 +193,7 @@ class AskDriverPage extends StatelessWidget {
                             ElevatedButton(
                               style: customButtonStyle(context),
                               child: Text('Demander', style: TextStyle(fontWeight: FontWeight.bold)),
-                              onPressed: () => model.askDriver,
+                              onPressed: () => model.askDriver(),
                             )
                           ],
                         ),

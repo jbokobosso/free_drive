@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -7,6 +9,8 @@ import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EAutocompleteType.dart';
 import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/ERideType.dart';
+import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/models/YourDriverArgument.dart';
 import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
@@ -26,7 +30,6 @@ class AskDriverViewModel extends BaseViewModel {
   RiveAnimationController logoAnimationController;
 
   var smsFormKey = GlobalKey<FormState>();
-  var departureFormKey = GlobalKey<FormState>();
   TextEditingController departureLocationCtrl = new TextEditingController();
   TextEditingController destinationLocationCtrl = new TextEditingController();
   TextEditingController smsMessageCtrl = new TextEditingController();
@@ -91,14 +94,15 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   askDriver() async {
-    bool departureValid = this.departureFormKey.currentState.validate();
-    bool durationValid = this.durationFormKey.currentState.validate();
-    if(!departureValid || !durationValid)
-      return;
     setBusy(true);
-    // Constituer les données de la course
-
-
+    bool departureValid = this.departureLocationCtrl.text != "" && this.departureLocationCtrl.text != "";
+    bool durationValid = this.durationFormKey.currentState.validate();
+    if(!departureValid || !durationValid) {
+      this.coreService.showDialogBox("Formulaire incomplet", "Veuillez entrer toutes les informations demandées.", dialogType: EDialogType.info); // Si le formulaire est invalide
+      setBusy(false);
+      return;
+    }
+    RideModel ride = await this.buildRideModel(); // Constituer les données de la course
     List<DriverModel> drivers = await this.askDriverService.loadDrivers();
     if(drivers != null) {
       setBusy(false);
@@ -110,7 +114,7 @@ class AskDriverViewModel extends BaseViewModel {
             content: ListView.builder(
               itemCount: drivers.length,
               itemBuilder: (context, index) => ListTile(
-                onTap: () => navigatorKey.currentState.pushNamed("/yourDriver", arguments: drivers[index]),
+                onTap: () => navigatorKey.currentState.pushNamed("/yourDriver", arguments: new YourDriverArgument(driver: drivers[index], ride: ride)),
                 title: Text(drivers[index].displayName),
                 leading: CircleAvatar(
                   backgroundColor: Theme.of(context).primaryColor,
@@ -129,6 +133,22 @@ class AskDriverViewModel extends BaseViewModel {
       this.coreService.showToastMessage("Base de données vide. Revenez plus tard...");
     }
 
+  }
+
+  Future<RideModel> buildRideModel() async {
+    MapBoxPlace departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
+    MapBoxPlace destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
+    RideModel ride = new RideModel(
+        id: null,
+        departureLocation: departureLocation,
+        destinationLocation: destinationLocation,
+        departureDate: this.departureDate,
+        returnDate: this.returnDate,
+        rideDurationInDays: int.tryParse(this.rideDurationController.text),
+        timeStarted: null,
+        timeEnded: null
+    );
+    return ride;
   }
 
   callDriver(String phoneNumber) async {
@@ -198,15 +218,12 @@ class AskDriverViewModel extends BaseViewModel {
     this.computeAndSetRideDuration();
   }
 
-  handleAutocompleteInputs(EAutocompleteType autocompleteType, MapBoxPlace selectedSuggestion) {
-    switch(autocompleteType) {
-      case EAutocompleteType.departure:
-        this.departureLocationCtrl.text = selectedSuggestion.placeName;
-        break;
-      case EAutocompleteType.returnback:
-        this.destinationLocationCtrl.text = selectedSuggestion.placeName;
-        break;
-    }
+  handleDepartureLocationInput(MapBoxPlace selectedSuggestion) {
+    this.departureLocationCtrl.text = selectedSuggestion.placeName;
+  }
+
+  handleDestinationLocationInput(MapBoxPlace selectedSuggestion) {
+    this.destinationLocationCtrl.text = selectedSuggestion.placeName;
   }
 
 }

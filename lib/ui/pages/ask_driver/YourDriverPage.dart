@@ -3,6 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ERideType.dart';
+import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/models/YourDriverArgument.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
@@ -27,6 +29,7 @@ class YourDriverPage extends StatelessWidget {
   TimeOfDay departureTime;
   TimeOfDay returnTime;
   DriverModel driver;
+  RideModel ride;
 
   heightSpacing() {
     return SizedBox(height: 10.0);
@@ -35,7 +38,9 @@ class YourDriverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    this.driver = ModalRoute.of(context).settings.arguments;
+    YourDriverArgument arguments = ModalRoute.of(context).settings.arguments;
+    this.driver = arguments.driver;
+    this.ride = arguments.ride;
 
     return ViewModelBuilder<AppViewModel>.reactive(
       onModelReady: (model) => model.initEyeAnimation(),
