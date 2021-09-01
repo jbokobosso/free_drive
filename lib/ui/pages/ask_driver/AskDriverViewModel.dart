@@ -39,6 +39,7 @@ class AskDriverViewModel extends BaseViewModel {
   DateTime returnDate;
   TimeOfDay departureTime;
   TimeOfDay returnTime;
+  bool returnIsSameDay = false;
 
   double get deviceWidth => this.coreService.deviceWidth;
   double get deviceHeight => this.coreService.deviceHeight;
@@ -135,6 +136,11 @@ class AskDriverViewModel extends BaseViewModel {
 
   Future<List<MapBoxPlace>> getPlaces(String searchText) async {
     return await placesSearch.getPlaces(searchText);
+  }
+
+  void computeAndSetRideDuration() {
+    Duration rideDuration = this.returnDate.difference(this.departureDate);
+    this.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
   }
 
 }

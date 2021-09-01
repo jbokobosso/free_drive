@@ -107,6 +107,7 @@ class AskDriverPage extends StatelessWidget {
                                 );
                                 model.departureDate = pickedDate;
                                 model.departureDateController.text = model.coreService.formatDate(pickedDate);
+                                model.notifyListeners();
                               },
                               child: TextFormField(
                                   controller: model.departureDateController,
@@ -122,19 +123,37 @@ class AskDriverPage extends StatelessWidget {
                               ),
                             ),
                             heightSpacing(),
+                            model.departureDate != null ? Row(
+                              children: [
+                                Checkbox(
+                                  checkColor: Colors.black,
+                                  value: model.returnIsSameDay,
+                                  onChanged: (bool newValue) {
+                                    model.returnIsSameDay = newValue;
+                                    if(newValue == true) { // if checked return same date
+                                      model.returnDate = model.departureDate;
+                                      model.returnDateController.text = model.coreService.formatDate(model.departureDate);
+                                      model.computeAndSetRideDuration();
+                                    }
+                                    model.notifyListeners();
+                                  },
+                                ),
+                                Text("Je reviens le même jour")
+                              ],
+                            ) : Container(),
+                            heightSpacing(),
                             GestureDetector(
-                              onTap: () async {
+                              onTap: model.returnIsSameDay ? null : () async {
                                 DateTime pickedDate = await showDatePicker(
                                   context: context,
-                                  firstDate: model.departureDate.add(Duration(days: 1)),
+                                  firstDate: model.departureDate,
                                   lastDate: DateTime.now().add(Duration(days: 365)),
                                   initialDate: model.departureDate.add(Duration(days: 1)),
                                   currentDate: DateTime.now(),
                                 );
                                 model.returnDate = pickedDate;
                                 model.returnDateController.text = model.coreService.formatDate(pickedDate);
-                                Duration rideDuration = model.returnDate.difference(model.departureDate);
-                                model.rideDurationController.text = "${rideDuration.inDays.toString()} Jours";
+                                model.computeAndSetRideDuration();
                               },
                               child: TextFormField(
                                   controller: model.returnDateController,
@@ -149,7 +168,7 @@ class AskDriverPage extends StatelessWidget {
                                   )
                               ),
                             ),
-                            // Column(
+                            // model.returnIsSameDay ? Column(
                             //   children: [
                             //     heightSpacing(),
                             //     GestureDetector(
@@ -202,7 +221,7 @@ class AskDriverPage extends StatelessWidget {
                             //       ),
                             //     ),
                             //   ],
-                            // ),
+                            // ) : Container(),
                             heightSpacing(),
                             TextFormField(
                               controller: model.rideDurationController,
