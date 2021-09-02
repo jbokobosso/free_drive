@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
@@ -53,11 +54,12 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   Future<void> checkActiveRide() async {
+    if(this.coreService.alreadyLoadedActiveRideStream) return;
     setBusy(true);
     bool activeRideExists = await this._dashboardService.activeRideExists();
     setBusy(false);
     if(activeRideExists) {
-      this.activeRide = await this.loadActiveRide();
+      this.loadActiveRide();
       var state = new UserDashboardModel(
           balance: 0,
           activeRideExists: activeRideExists,
@@ -67,12 +69,16 @@ class DashboardViewModel extends BaseViewModel {
       this.coreService.userDashboardState = state;
       notifyListeners();
       setBusy(false);
+      this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
     }
   }
 
-  Future<RideModel> loadActiveRide() async {
-    RideModel ride = await this._dashboardService.getActiveRide();
-    return ride;
+  void loadActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getActiveRide();
+    querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+      notifyListeners();
+    });
   }
 
 }

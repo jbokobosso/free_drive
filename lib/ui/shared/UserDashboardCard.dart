@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class UserDashboardCard extends StatelessWidget {
@@ -12,7 +13,7 @@ class UserDashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
+    return ViewModelBuilder<DashboardViewModel>.reactive(
       builder: (context, model, child) => Positioned(
             top: model.deviceHeight*this.cardTopSpacingScale,
             child: Container(
@@ -69,7 +70,7 @@ class UserDashboardCard extends StatelessWidget {
               ),
             ),
           ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => DashboardViewModel(),
     );
   }
 }

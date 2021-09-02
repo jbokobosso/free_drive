@@ -19,6 +19,8 @@ class CoreService {
 
   UserModel loggedUser;
 
+  bool alreadyLoadedActiveRideStream = false;
+
   UserDashboardModel userDashboardState = new UserDashboardModel(
     balance: 25000,
     activeRideExists: false,
