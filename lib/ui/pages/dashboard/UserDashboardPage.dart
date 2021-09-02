@@ -40,7 +40,7 @@ class UserDashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(height: 0, width: 0),
-                  model.coreService.userDashboardState.activeRideExists
+                  model.activeRide != null
                       ? ElevatedButton(
                           style: customButtonStyle(context, isBlack: true),
                           onPressed: () => showDialog(
@@ -51,7 +51,7 @@ class UserDashboardPage extends StatelessWidget {
                           child: Text('Prolonger la course', style: TextStyle(fontWeight: FontWeight.bold))
                         )
                       : Text(''),
-                  model.coreService.userDashboardState.activeRideExists
+                  model.activeRide != null
                       ? ElevatedButton(
                           style: customButtonStyle(context, isRed: true),
                           onPressed: () => showDialog(
@@ -89,7 +89,7 @@ class UserDashboardPage extends StatelessWidget {
               ),
             ),
             AppBanner(),
-            UserDashboardCard(activeRideExists: model.activeRide != null, pendingRideExists: model.pendingRide != null),
+            model.activeRide != null ? UserDashboardCard(ride: model.activeRide) : UserDashboardCard(),
             model.isBusy ? Loading() : Container(height: 0, width: 0),
           ],
         ),

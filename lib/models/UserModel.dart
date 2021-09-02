@@ -24,7 +24,7 @@ abstract class UserModel {
   }
 
   static ClientModel clientFromFirebase(Map<String, dynamic> jsonData) {
-    return new ClientModel(
+    return jsonData == null ? null : new ClientModel(
       jsonData["displayName"],
       jsonData["email"],
       jsonData["phoneNumber"],

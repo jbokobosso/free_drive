@@ -8,6 +8,7 @@ import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
@@ -27,6 +28,7 @@ class AskDriverViewModel extends BaseViewModel {
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
 
+  Future<UserModel> get loggedUser async => await coreService.loggedUser;
 
   TextEditingController smsMessageCtrl = new TextEditingController();
   ERideType chosenRide = ERideType.ride;
@@ -150,8 +152,9 @@ class AskDriverViewModel extends BaseViewModel {
       rideDurationInDays: this.rideDurationInDays,
       timeStarted: null,
       timeEnded: null,
-      client: this.coreService.loggedUser,
-      clientEmail: this._firebaseAuth.currentUser.email
+      client: await this.loggedUser,
+      clientEmail: this._firebaseAuth.currentUser.email,
+      rideState: ERideState.pending
     );
     return ride;
   }

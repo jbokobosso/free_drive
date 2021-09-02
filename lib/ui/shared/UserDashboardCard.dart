@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
@@ -6,9 +7,8 @@ class UserDashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
   final double cardHeight = 0.35;
-  bool pendingRideExists;
-  bool activeRideExists;
-  UserDashboardCard({this.pendingRideExists, this.activeRideExists, Key key}) : super(key: key);
+  RideModel ride;
+  UserDashboardCard({this.ride, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,14 +50,14 @@ class UserDashboardCard extends StatelessWidget {
                         Text('${model.coreService.userDashboardState.completedRidesCount} courses total')
                       ],
                     ),
-                    this.pendingRideExists ? Row(
+                    this.ride != null && this.ride.rideState == ERideState.pending ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Icon(Icons.motorcycle, color: Colors.yellow,),
                         Text('Vous avez une course en attente...', style: TextStyle(color: Colors.yellow))
                       ],
                     ) : Container(),
-                    this.activeRideExists ? Row(
+                    this.ride != null && this.ride.rideState == ERideState.running ? Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Icon(Icons.motorcycle, color: Colors.blue,),

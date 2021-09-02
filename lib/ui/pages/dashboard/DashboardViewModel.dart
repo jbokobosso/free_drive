@@ -55,6 +55,7 @@ class DashboardViewModel extends BaseViewModel {
   Future<void> checkActiveRide() async {
     setBusy(true);
     bool activeRideExists = await this._dashboardService.activeRideExists();
+    setBusy(false);
     if(activeRideExists) {
       this.activeRide = await this.loadActiveRide();
       var state = new UserDashboardModel(

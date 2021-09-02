@@ -5,6 +5,12 @@ import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/utils/Utils.dart';
 
+enum ERideState {
+  pending,
+  running,
+  done
+}
+
 class RideModel {
   String id;
   Place departureLocation;
@@ -17,6 +23,7 @@ class RideModel {
   DriverModel driver;
   UserModel client;
   String clientEmail;
+  ERideState rideState;
 
   RideModel({
     @required this.id,
@@ -29,22 +36,24 @@ class RideModel {
     @required this.timeEnded,
     @required this.driver,
     @required this.client,
-    @required this.clientEmail
+    @required this.clientEmail,
+    @required this.rideState
   });
 
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
     RideModel ride = new RideModel(
-        id: firebaseId,
-        departureLocation: Place.fromJSON(json['departureLocation']),
-        destinationLocation: Place.fromJSON(json['destinationLocation']),
-        departureDate: Utils.timestampToDateTime(json['departureDate']),
-        returnDate: Utils.timestampToDateTime(json['returnDate']),
-        rideDurationInDays: json['rideDurationInDays'],
-        timeStarted: json['timeStarted'] != null ? Utils.timestampToDateTime(json['timeStarted']) : null,
-        timeEnded: json['timeEnded'] != null ? Utils.timestampToDateTime(json['timeEnded']) : null,
-        driver: UserModel.driverFromMapOld(json['driver']),
-        client: UserModel.clientFromFirebase(json['client']),
-        clientEmail: json['clientEmail']
+      id: firebaseId,
+      departureLocation: Place.fromJSON(json['departureLocation']),
+      destinationLocation: Place.fromJSON(json['destinationLocation']),
+      departureDate: Utils.timestampToDateTime(json['departureDate']),
+      returnDate: Utils.timestampToDateTime(json['returnDate']),
+      rideDurationInDays: json['rideDurationInDays'],
+      timeStarted: json['timeStarted'] != null ? Utils.timestampToDateTime(json['timeStarted']) : null,
+      timeEnded: json['timeEnded'] != null ? Utils.timestampToDateTime(json['timeEnded']) : null,
+      driver: UserModel.driverFromMapOld(json['driver']),
+      client: UserModel.clientFromFirebase(json['client']),
+      clientEmail: json['clientEmail'],
+      rideState: json['rideState'] == 'pending' ? ERideState.pending : json['rideState'] == 'running' ? ERideState.running : ERideState.done
     );
     return ride;
   }
@@ -59,9 +68,10 @@ class RideModel {
       'rideDurationInDays' : this.rideDurationInDays,
       'timeStarted' : this.timeStarted,
       'timeEnded' : this.timeEnded,
-      'driver': this.driver.toMap(userType: EUserType.driver),
-      'client': this.client.toMap(userType: EUserType.client),
-      'clientEmail': this.clientEmail
+      'driver': this.driver != null ? this.driver.toMap(userType: EUserType.driver) : null,
+      'client': this.client != null ? this.client.toMap(userType: EUserType.client) : null,
+      'clientEmail': this.clientEmail,
+      'rideState' : this.rideState == ERideState.pending ? "pending" : this.rideState == ERideState.running ? "running" : "done"
     };
   }
 
