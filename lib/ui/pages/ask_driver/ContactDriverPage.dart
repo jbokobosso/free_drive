@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:free_drive/main.dart';
-import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/RideModel.dart';
-import 'package:free_drive/models/YourDriverArgument.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
