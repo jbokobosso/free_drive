@@ -10,9 +10,11 @@ import 'package:free_drive/models/ERideType.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/AskDriverService.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/IAuthService.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -21,6 +23,7 @@ class AskDriverViewModel extends BaseViewModel {
 
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   CoreService coreService = getIt.get<CoreService>();
+  IAuthService _authService = getIt.get<IAuthService>();
   AskDriverService askDriverService = getIt.get<AskDriverService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
   Artboard eyeArtboard;
@@ -28,7 +31,7 @@ class AskDriverViewModel extends BaseViewModel {
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
 
-  Future<UserModel> get loggedUser async => await coreService.loggedUser;
+  UserModel loggedUser;
 
   TextEditingController smsMessageCtrl = new TextEditingController();
   ERideType chosenRide = ERideType.ride;
@@ -61,8 +64,17 @@ class AskDriverViewModel extends BaseViewModel {
   );
 
   initView() {
+    this.loadLoggedUser();
     this.smsFormKey = new GlobalKey<FormState>();
     this.initEyeAnimation();
+  }
+
+  Future<void> loadLoggedUser() async {
+    this.loggedUser = await this._authService.getLoggedUser();
+    if(loggedUser != null)
+      this.coreService.showToastMessage("Utilisateur chargé !");
+    else
+      this.coreService.showToastMessage("Erreur chargement utilisateur");
   }
 
   initEyeAnimation() {
@@ -152,7 +164,7 @@ class AskDriverViewModel extends BaseViewModel {
       rideDurationInDays: this.rideDurationInDays,
       timeStarted: null,
       timeEnded: null,
-      client: await this.loggedUser,
+      client: this.loggedUser,
       clientEmail: this._firebaseAuth.currentUser.email,
       rideState: ERideState.pending
     );
