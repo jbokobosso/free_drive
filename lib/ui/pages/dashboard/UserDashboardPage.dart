@@ -89,7 +89,7 @@ class UserDashboardPage extends StatelessWidget {
               ),
             ),
             AppBanner(),
-            UserDashboardCard(),
+            UserDashboardCard(activeRideExists: model.activeRide != null, pendingRideExists: model.pendingRide != null),
             model.isBusy ? Loading() : Container(height: 0, width: 0),
           ],
         ),

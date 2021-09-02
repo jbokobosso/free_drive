@@ -6,7 +6,9 @@ class UserDashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
   final double cardHeight = 0.35;
-  UserDashboardCard({Key key}) : super(key: key);
+  bool pendingRideExists;
+  bool activeRideExists;
+  UserDashboardCard({this.pendingRideExists, this.activeRideExists, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class UserDashboardCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -40,10 +43,27 @@ class UserDashboardCard extends StatelessWidget {
                         IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
                       ],
                     ),
-                    Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    Text('\nCourse en attente: ${model.coreService.userDashboardState.pendingRideExists ? 1 : 0}'),
-                    Text('\nCourse en cours: ${model.coreService.userDashboardState.activeRideExists ? 1 : 0}'),
-                    Text('\nCourse en terminée: ${model.coreService.userDashboardState.completedRidesCount}'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.history),
+                        Text('${model.coreService.userDashboardState.completedRidesCount} courses total')
+                      ],
+                    ),
+                    this.pendingRideExists ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.motorcycle, color: Colors.yellow,),
+                        Text('Vous avez une course en attente...', style: TextStyle(color: Colors.yellow))
+                      ],
+                    ) : Container(),
+                    this.activeRideExists ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.motorcycle, color: Colors.blue,),
+                        Text('Course en cours...', style: TextStyle(color: Colors.blue))
+                      ],
+                    ) : Container(),
                   ],
                 ),
               ),

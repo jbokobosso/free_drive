@@ -23,7 +23,8 @@ class DashboardViewModel extends BaseViewModel {
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
 
-  RideModel _activeRide;
+  RideModel activeRide;
+  RideModel pendingRide;
 
   initView() {
     this.initEyeAnimation();
@@ -55,7 +56,7 @@ class DashboardViewModel extends BaseViewModel {
     setBusy(true);
     bool activeRideExists = await this._dashboardService.activeRideExists();
     if(activeRideExists) {
-      this._activeRide = await this.loadActiveRide();
+      this.activeRide = await this.loadActiveRide();
       var state = new UserDashboardModel(
           balance: 0,
           activeRideExists: activeRideExists,
