@@ -112,7 +112,7 @@ class NotifTile extends StatelessWidget {
                 ),
                 content: Text(this.notif.content),
                 actions: [
-                  TextButton(child: Text('Ok'), onPressed: () => model.cancelActiveRide()),
+                  TextButton(child: Text('Ok'), onPressed: () => navigatorKey.currentState.pop()),
                 ],
               )
           ),

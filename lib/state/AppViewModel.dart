@@ -156,11 +156,6 @@ class AppViewModel extends BaseViewModel {
     navigatorKey.currentState.pop();
     navigatorKey.currentState.pushNamedAndRemoveUntil("/driverDashboard", (route) => false);
   }
-  cancelActiveRide() {
-    this.coreService.userDashboardState.activeRideExists = false;
-    navigatorKey.currentState.pop();
-    notifyListeners();
-  }
   extendRide(extendRideFormKey, extendRideDaysCountController) {
     bool isValid = extendRideFormKey.currentState.validate();
     if(isValid) {

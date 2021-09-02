@@ -19,7 +19,7 @@ class CoreService {
 
   UserModel loggedUser;
 
-  DashboardModel userDashboardState = new DashboardModel(
+  UserDashboardModel userDashboardState = new UserDashboardModel(
     balance: 25000,
     activeRideExists: false,
     pendingRideExists: false,

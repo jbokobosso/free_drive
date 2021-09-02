@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:free_drive/models/ERideType.dart';
 
-class DashboardModel {
+class UserDashboardModel {
   ERideType activeRideType;
   double balance;
   bool activeRideExists;
   bool pendingRideExists;
   int completedRidesCount;
 
-  DashboardModel({
+  UserDashboardModel({
     @required balance,
     @required this.activeRideExists,
     @required this.pendingRideExists,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/extend_ride_dialog.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
@@ -18,8 +19,8 @@ class UserDashboardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
-      onModelReady: (model) => model.initEyeAnimation(),
+    return ViewModelBuilder<DashboardViewModel>.reactive(
+      onModelReady: (model) => model.initView(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Tableau de bord'),
         extendBodyBehindAppBar: true,
@@ -93,7 +94,7 @@ class UserDashboardPage extends StatelessWidget {
           ],
         ),
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => DashboardViewModel(),
     );
   }
 }

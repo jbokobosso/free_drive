@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:free_drive/models/DriverModel.dart';
-import 'package:mapbox_search/mapbox_search.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/utils/Utils.dart';
 
 class RideModel {
   String id;
@@ -14,6 +15,8 @@ class RideModel {
   DateTime timeStarted;
   DateTime timeEnded;
   DriverModel driver;
+  UserModel client;
+  String clientEmail;
 
   RideModel({
     @required this.id,
@@ -24,21 +27,26 @@ class RideModel {
     @required this.rideDurationInDays,
     @required this.timeStarted,
     @required this.timeEnded,
-    @required this.driver
+    @required this.driver,
+    @required this.client,
+    @required this.clientEmail
   });
 
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
-    return new RideModel(
+    RideModel ride = new RideModel(
         id: firebaseId,
         departureLocation: Place.fromJSON(json['departureLocation']),
         destinationLocation: Place.fromJSON(json['destinationLocation']),
-        departureDate: DateTime.tryParse(json['departureDate']),
-        returnDate: DateTime.tryParse(json['returnDate']),
+        departureDate: Utils.timestampToDateTime(json['departureDate']),
+        returnDate: Utils.timestampToDateTime(json['returnDate']),
         rideDurationInDays: json['rideDurationInDays'],
-        timeStarted: json['timeStarted'] != null ? DateTime.tryParse(json['timeStarted']) : null,
-        timeEnded: json['timeEnded'] != null ? DateTime.tryParse(json['timeEnded']) : null,
-        driver: UserModel.driverFromMapOld(json['driver'])
+        timeStarted: json['timeStarted'] != null ? Utils.timestampToDateTime(json['timeStarted']) : null,
+        timeEnded: json['timeEnded'] != null ? Utils.timestampToDateTime(json['timeEnded']) : null,
+        driver: UserModel.driverFromMapOld(json['driver']),
+        client: UserModel.clientFromFirebase(json['client']),
+        clientEmail: json['clientEmail']
     );
+    return ride;
   }
 
   Map<String, dynamic> toJSON() {
@@ -51,7 +59,9 @@ class RideModel {
       'rideDurationInDays' : this.rideDurationInDays,
       'timeStarted' : this.timeStarted,
       'timeEnded' : this.timeEnded,
-      'driver': this.driver.toMap(userType: EUserType.driver)
+      'driver': this.driver.toMap(userType: EUserType.driver),
+      'client': this.client.toMap(userType: EUserType.client),
+      'clientEmail': this.clientEmail
     };
   }
 

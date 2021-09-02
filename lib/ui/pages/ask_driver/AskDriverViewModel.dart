@@ -1,4 +1,5 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/constants/constants.dart';
@@ -17,6 +18,7 @@ import 'package:stacked/stacked.dart';
 
 class AskDriverViewModel extends BaseViewModel {
 
+  FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   CoreService coreService = getIt.get<CoreService>();
   AskDriverService askDriverService = getIt.get<AskDriverService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
@@ -147,7 +149,9 @@ class AskDriverViewModel extends BaseViewModel {
       returnDate: this.returnDate,
       rideDurationInDays: this.rideDurationInDays,
       timeStarted: null,
-      timeEnded: null
+      timeEnded: null,
+      client: this.coreService.loggedUser,
+      clientEmail: this._firebaseAuth.currentUser.email
     );
     return ride;
   }

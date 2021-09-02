@@ -2,6 +2,7 @@ import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
+import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ExceptionService.dart';
 import 'package:free_drive/services/IAuthService.dart';
 import 'package:get_it/get_it.dart';
@@ -14,4 +15,5 @@ setupServiceLocator() {
   getIt.registerSingleton<IAuthService>(AuthService());
   getIt.registerLazySingleton(() => AskDriverService());
   getIt.registerLazySingleton(() => ExceptionService());
+  getIt.registerLazySingleton(() => DashboardService());
 }
