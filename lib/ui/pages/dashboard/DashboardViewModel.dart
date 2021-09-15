@@ -29,9 +29,15 @@ class DashboardViewModel extends BaseViewModel {
   RideModel activeRide;
   RideModel pendingRide;
 
-  initView() {
+  initUserViewPage() {
     this.initEyeAnimation();
-    this.checkActiveRide();
+    this.checkUserActiveRide();
+    this.initNotification();
+  }
+
+  initDriverViewPage() {
+    this.initEyeAnimation();
+    this.checkDriverActiveRide();
     this.initNotification();
   }
 
@@ -63,13 +69,13 @@ class DashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> checkActiveRide() async {
+  Future<void> checkUserActiveRide() async {
     if(this.coreService.alreadyLoadedActiveRideStream) return;
     setBusy(true);
-    bool activeRideExists = await this._dashboardService.activeRideExists();
+    bool activeRideExists = await this._dashboardService.userActiveRideExists();
     setBusy(false);
     if(activeRideExists) {
-      this.loadActiveRide();
+      this.loadUserActiveRide();
       var state = new UserDashboardModel(
           balance: 0,
           activeRideExists: activeRideExists,
@@ -83,8 +89,38 @@ class DashboardViewModel extends BaseViewModel {
     }
   }
 
-  void loadActiveRide() {
+  void loadUserActiveRide() {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getActiveRide();
+    querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+      notifyListeners();
+    });
+  }
+
+  Future<void> checkDriverActiveRide() async {
+    {
+      if(this.coreService.alreadyLoadedActiveRideStream) return;
+      setBusy(true);
+      bool activeRideExists = await this._dashboardService.driverActiveRideExists();
+      setBusy(false);
+      if(activeRideExists) {
+        this.loadDriverActiveRide();
+        var state = new DriverDashboardModel(
+            balance: 0,
+            activeRideExists: activeRideExists,
+            pendingRideExists: !activeRideExists,
+            completedRidesCount: 0
+        );
+        this.coreService.driverDashboardState = state;
+        notifyListeners();
+        setBusy(false);
+        this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
+      }
+    }
+  }
+
+  void loadDriverActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
       notifyListeners();

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
+import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverDashboardCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
+  RideModel ride;
   TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
   DriverDashboardCard({Key key}) : super(key: key);
 
@@ -33,41 +35,42 @@ class DriverDashboardCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("${model.coreService.driverDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
+                    Text("${model.coreService.userDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
                     IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
                   ],
                 ),
-                Text('Gain', style: TextStyle(color: Theme.of(context).primaryColor)),
-                GestureDetector(
-                  onTap: () => navigatorKey.currentState.pushNamed("/rideDetails"),
-                  child: Text(
-                    '\nCourse en attente: ${model.coreService.driverDashboardState.pendingRideExists ? 1 : 0}',
-                    style: model.coreService.driverDashboardState.pendingRideExists ? this.hightlightStyle : TextStyle(),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => navigatorKey.currentState.pushNamed("/rideDetails"),
-                  child: Text(
-                    '\nCourse en cours: ${model.coreService.driverDashboardState.activeRideExists ? 1 : 0}',
-                    style: model.coreService.driverDashboardState.activeRideExists ? this.hightlightStyle : TextStyle(),
-                  ),
-                ),
-                Text('\nCourses terminée: ${model.coreService.driverDashboardState.completedRidesCount}'),
-                Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount == null ? "Non actif" : "Actif"}'),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text("\nAvis: "),
-                    Icon(Icons.star, color: Colors.grey),
-                    Icon(Icons.star, color: Colors.grey),
-                    Icon(Icons.star, color: Colors.grey),
-                    Icon(Icons.star, color: Colors.grey),
-                    Icon(Icons.star, color: Colors.grey),
+                    Icon(Icons.history),
+                    Text('${model.coreService.userDashboardState.completedRidesCount} courses total')
                   ],
-                )
+                ),
+                this.ride != null && this.ride.rideState == ERideState.pending ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.motorcycle, color: Colors.yellow,),
+                    Text('Vous avez une course en attente...', style: TextStyle(color: Colors.yellow))
+                  ],
+                ) : Container(),
+                this.ride != null && this.ride.rideState == ERideState.running ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.motorcycle, color: Colors.blue,),
+                    Text('Course en cours...', style: TextStyle(color: Colors.blue))
+                  ],
+                ) : Container(),
+                this.ride != null && this.ride.rideState == ERideState.pending ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.motorcycle, color: Colors.yellow,),
+                    Text('Vous avez une course en attente', style: TextStyle(color: Colors.yellow))
+                  ],
+                ) : Container(),
               ],
             ),
           ),

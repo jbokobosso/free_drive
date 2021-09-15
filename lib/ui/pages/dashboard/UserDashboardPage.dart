@@ -20,7 +20,7 @@ class UserDashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DashboardViewModel>.reactive(
-      onModelReady: (model) => model.initView(),
+      onModelReady: (model) => model.initUserViewPage(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Tableau de bord'),
         extendBodyBehindAppBar: true,

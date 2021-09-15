@@ -17,10 +17,27 @@ class DashboardService {
       return querySnapshotStream;
   }
 
-  Future<bool> activeRideExists() async {
+  Future<bool> userActiveRideExists() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firebase.collection(FCN_rides)
         .where("clientEmail", isEqualTo: this._firebaseAuth.currentUser.email)
         .where("timeEnded", isNull: true)
+        .get();
+    return querySnapshot.docs.isNotEmpty;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getDriverActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = _firebase.collection(FCN_rides)
+        .where("timeEnded", isNull: true)
+        .firestore.collection("driver")
+        .where("email", isEqualTo: this._firebaseAuth.currentUser.email)
+        .snapshots();
+    return querySnapshotStream;
+  }
+
+  Future<bool> driverActiveRideExists() async {
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firebase.collection(FCN_rides)
+        .where("timeEnded", isNull: true)
+        .where("driver", )
         .get();
     return querySnapshot.docs.isNotEmpty;
   }
