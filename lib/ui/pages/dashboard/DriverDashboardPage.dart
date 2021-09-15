@@ -5,6 +5,7 @@ import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/DriverDashboardCard.dart';
+import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverDashboardPage extends StatelessWidget {
@@ -43,7 +44,8 @@ class DriverDashboardPage extends StatelessWidget {
               ),
             ),
             AppBanner(),
-            DriverDashboardCard()
+            model.activeRide != null ? DriverDashboardCard(ride: model.activeRide) : DriverDashboardCard(),
+            model.isBusy ? Loading() : Container(height: 0, width: 0)
           ],
         ),
       ),

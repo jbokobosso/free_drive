@@ -9,7 +9,7 @@ class DriverDashboardCard extends StatelessWidget {
   final double cardWidth = 0.8;
   RideModel ride;
   TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
-  DriverDashboardCard({Key key}) : super(key: key);
+  DriverDashboardCard({this.ride, Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,14 +63,7 @@ class DriverDashboardCard extends StatelessWidget {
                     Icon(Icons.motorcycle, color: Colors.blue,),
                     Text('Course en cours...', style: TextStyle(color: Colors.blue))
                   ],
-                ) : Container(),
-                this.ride != null && this.ride.rideState == ERideState.pending ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(Icons.motorcycle, color: Colors.yellow,),
-                    Text('Vous avez une course en attente', style: TextStyle(color: Colors.yellow))
-                  ],
-                ) : Container(),
+                ) : Container()
               ],
             ),
           ),

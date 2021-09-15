@@ -123,6 +123,7 @@ class DashboardViewModel extends BaseViewModel {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+      this.coreService.showToastMessage("New incoming data");
       notifyListeners();
     });
   }
