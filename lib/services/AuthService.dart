@@ -160,6 +160,25 @@ class AuthService extends IAuthService {
   }
 
   @override
+  Future<bool> storeDriverProfileStatus(bool profileActiveOrNot) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool written = await prefs.setBool(S_driverProfileActieOrNot, profileActiveOrNot);
+    if(written)
+      return true;
+    else
+      return false;
+  }
+
+  @override
+  Future<bool> getDriverProfileStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    dynamic profileActiveOrNot = prefs.getBool(S_driverProfileActieOrNot);
+    if(profileActiveOrNot == null || profileActiveOrNot == false)
+      return false;
+    return true;
+  }
+
+  @override
   Future<bool> markUserLoggedOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool cleared = await prefs.clear();

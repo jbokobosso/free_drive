@@ -18,6 +18,8 @@ abstract class IAuthService {
 
   Future<bool> storeLoggedUser(UserModel user);
   Future<UserModel> getLoggedUser();
+  Future<bool> storeDriverProfileStatus(bool profileActiveOrNot);
+  Future<bool> getDriverProfileStatus();
   Future<bool> checkUserIsLogged();
   Future<bool> markUserLoggedOut();
 }

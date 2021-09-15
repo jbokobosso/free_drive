@@ -65,9 +65,9 @@ class DriverDashboardPage extends StatelessWidget {
                           ],
                         )
                       : Container(),
-                  Center(child: Text("Votre inscription a été bien efffectuée et est en attente de validation.", style: Theme.of(context).textTheme.headline1)),
-                  SizedBox(height: model.deviceHeight*0.05),
-                  Text("Vous serez invité à passer un test.", style: TextStyle(color: Theme.of(context).primaryColor),)
+                  model.driverProfileIsActive == false ? Center(child: Text("Votre inscription a été bien efffectuée et est en attente de validation.", style: Theme.of(context).textTheme.headline1)) : Container(),
+                  model.driverProfileIsActive == false ? SizedBox(height: model.deviceHeight*0.05) : Container(),
+                  model.driverProfileIsActive == false ? Text("Vous serez invité à passer un test.", style: TextStyle(color: Theme.of(context).primaryColor)) : Container()
                 ],
               ),
             ),

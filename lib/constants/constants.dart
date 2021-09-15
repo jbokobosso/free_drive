@@ -1,6 +1,7 @@
 // Local Shared preferences keys
 const String S_introPassed = "passedIntro";
 const String S_userIsLogged = "isAuth";
+const String S_driverProfileActieOrNot = "driverProfileActieOrNot";
 const String S_loggedUserType = "loggedUserType";
 const String S_loggedUser = "loggedUser";
 const String S_profilePictureUrl = "profilePictureUrl";

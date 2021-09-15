@@ -30,6 +30,7 @@ class DashboardViewModel extends BaseViewModel {
   RideModel pendingRide;
 
   bool driverShowPendingRideDetails = false;
+  bool driverProfileIsActive = false;
 
   initUserViewPage() {
     this.initEyeAnimation();
@@ -41,6 +42,7 @@ class DashboardViewModel extends BaseViewModel {
     this.initEyeAnimation();
     this.checkDriverActiveRide();
     this.initNotification();
+    this.checkDriverProfileIsActive();
   }
 
   Future<void> initNotification() async {
@@ -134,6 +136,11 @@ class DashboardViewModel extends BaseViewModel {
     this.driverShowPendingRideDetails = !this.driverShowPendingRideDetails;
     this.coreService.showToastMessage(this.driverShowPendingRideDetails.toString());
     notifyListeners();
+  }
+
+  Future<void> checkDriverProfileIsActive() async {
+    bool profileActivOrNot = await this.authService.getDriverProfileStatus();
+    this.driverProfileIsActive = profileActivOrNot;
   }
 
 }
