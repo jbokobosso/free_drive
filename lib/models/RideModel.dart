@@ -7,6 +7,7 @@ import 'package:free_drive/utils/Utils.dart';
 
 enum ERideState {
   pending,
+  accepted,
   running,
   done
 }
@@ -56,7 +57,10 @@ class RideModel {
       client: UserModel.clientFromFirebase(json['client']),
       clientEmail: json['clientEmail'],
       driverEmail: json['driverEmail'],
-      rideState: json['rideState'] == 'pending' ? ERideState.pending : json['rideState'] == 'running' ? ERideState.running : ERideState.done
+      rideState: json['rideState'] == 'pending' ? ERideState.pending
+          : json['rideState'] == 'running' ? ERideState.running
+          : json['rideState'] == 'accepted' ? ERideState.accepted
+          : ERideState.done
     );
     return ride;
   }

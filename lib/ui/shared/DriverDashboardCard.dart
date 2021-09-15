@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:stacked/stacked.dart';
 
 class DriverDashboardCard extends StatelessWidget {
@@ -13,7 +14,7 @@ class DriverDashboardCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AppViewModel>.reactive(
+    return ViewModelBuilder<DashboardViewModel>.reactive(
       builder: (context, model, child) => Positioned(
         top: model.deviceHeight*this.cardTopSpacingScale,
         child: Container(
@@ -54,7 +55,10 @@ class DriverDashboardCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Icon(Icons.motorcycle, color: Colors.yellow,),
-                    Text('Vous avez une course en attente...', style: TextStyle(color: Colors.yellow))
+                    GestureDetector(
+                      onTap: () => model.showOrHideDriverActiveRideDetails(),
+                      child: Text('Vous avez une course en attente...', style: TextStyle(color: Colors.yellow))
+                    )
                   ],
                 ) : Container(),
                 this.ride != null && this.ride.rideState == ERideState.running ? Row(
@@ -63,13 +67,20 @@ class DriverDashboardCard extends StatelessWidget {
                     Icon(Icons.motorcycle, color: Colors.blue,),
                     Text('Course en cours...', style: TextStyle(color: Colors.blue))
                   ],
+                ) : Container(),
+                this.ride != null && this.ride.rideState == ERideState.accepted ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(Icons.motorcycle, color: Colors.blue,),
+                    Text('Vous avez accepté une course', style: TextStyle(color: Colors.blue))
+                  ],
                 ) : Container()
               ],
             ),
           ),
         ),
       ),
-      viewModelBuilder: () => AppViewModel(),
+      viewModelBuilder: () => DashboardViewModel(),
     );
   }
 }

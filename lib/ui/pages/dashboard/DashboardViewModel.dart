@@ -29,6 +29,8 @@ class DashboardViewModel extends BaseViewModel {
   RideModel activeRide;
   RideModel pendingRide;
 
+  bool driverShowPendingRideDetails = false;
+
   initUserViewPage() {
     this.initEyeAnimation();
     this.checkUserActiveRide();
@@ -126,6 +128,12 @@ class DashboardViewModel extends BaseViewModel {
       this.coreService.showToastMessage("New incoming data");
       notifyListeners();
     });
+  }
+
+  void showOrHideDriverActiveRideDetails() {
+    this.driverShowPendingRideDetails = !this.driverShowPendingRideDetails;
+    this.coreService.showToastMessage(this.driverShowPendingRideDetails.toString());
+    notifyListeners();
   }
 
 }
