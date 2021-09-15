@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
@@ -14,6 +15,7 @@ class DashboardViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
   IAuthService authService = getIt.get<IAuthService>();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   DashboardService _dashboardService = getIt.get<DashboardService>();
 
   double get deviceWidth => this.coreService.deviceWidth;
@@ -30,6 +32,14 @@ class DashboardViewModel extends BaseViewModel {
   initView() {
     this.initEyeAnimation();
     this.checkActiveRide();
+    this.initNotification();
+  }
+
+  Future<void> initNotification() async {
+    if(this.coreService.alreadyRegisteredFCM) return;
+    String token = await FirebaseMessaging.instance.getToken();
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    this.coreService.alreadyRegisteredFCM = true;
   }
 
   initEyeAnimation() {

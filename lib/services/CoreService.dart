@@ -20,6 +20,7 @@ class CoreService {
   UserModel loggedUser;
 
   bool alreadyLoadedActiveRideStream = false;
+  bool alreadyRegisteredFCM = false;
 
   UserDashboardModel userDashboardState = new UserDashboardModel(
     balance: 25000,
