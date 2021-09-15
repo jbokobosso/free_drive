@@ -23,6 +23,7 @@ class RideModel {
   DriverModel driver;
   UserModel client;
   String clientEmail;
+  String driverEmail;
   ERideState rideState;
 
   RideModel({
@@ -37,6 +38,7 @@ class RideModel {
     @required this.driver,
     @required this.client,
     @required this.clientEmail,
+    @required this.driverEmail,
     @required this.rideState
   });
 
@@ -53,6 +55,7 @@ class RideModel {
       driver: UserModel.driverFromMapOld(json['driver']),
       client: UserModel.clientFromFirebase(json['client']),
       clientEmail: json['clientEmail'],
+      driverEmail: json['driverEmail'],
       rideState: json['rideState'] == 'pending' ? ERideState.pending : json['rideState'] == 'running' ? ERideState.running : ERideState.done
     );
     return ride;
@@ -71,6 +74,7 @@ class RideModel {
       'driver': this.driver != null ? this.driver.toMap(userType: EUserType.driver) : null,
       'client': this.client != null ? this.client.toMap(userType: EUserType.client) : null,
       'clientEmail': this.clientEmail,
+      'driverEmail': this.driverEmail,
       'rideState' : this.rideState == ERideState.pending ? "pending" : this.rideState == ERideState.running ? "running" : "done"
     };
   }

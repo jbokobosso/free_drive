@@ -130,6 +130,7 @@ class AskDriverViewModel extends BaseViewModel {
               itemBuilder: (context, index) => ListTile(
                 onTap: () {
                   ride.driver = drivers[index];
+                  ride.driverEmail = drivers[index].email;
                   navigatorKey.currentState.pushNamed("/yourDriver", arguments: ride);
                 },
                 title: Text(drivers[index].displayName),
