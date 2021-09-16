@@ -112,6 +112,34 @@ class CoreService {
     );
   }
 
+  showRichTextDialog(String title, RichText richText) {
+    showDialog(
+      barrierDismissible: false,
+      context: navigatorKey.currentContext,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+        ),
+        titlePadding: EdgeInsets.all(0.0),
+        title: Container(
+          decoration: BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+          ),
+          width: double.infinity,
+          height: 30.0,
+          child: Align(child: Text(title, style: TextStyle(color: Colors.white)), alignment: Alignment.center),
+        ),
+        content: SizedBox(
+          child: richText
+        ),
+        actions: [
+          TextButton(child: Text("D'accord"), onPressed: () => navigatorKey.currentState.pop()),
+        ],
+      )
+    );
+  }
+
   showDialogBox(String title, String content, {EDialogType dialogType}) {
     showDialog(
         barrierDismissible: false,

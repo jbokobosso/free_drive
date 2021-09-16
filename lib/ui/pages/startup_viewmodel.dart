@@ -2,7 +2,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
-import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
 import 'package:stacked/stacked.dart';
 

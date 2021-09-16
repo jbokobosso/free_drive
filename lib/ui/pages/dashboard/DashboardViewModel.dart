@@ -6,7 +6,7 @@ import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
-import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -97,6 +97,7 @@ class DashboardViewModel extends BaseViewModel {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getUserActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+      this.activeRide.id = querySnapshot.docs.first.id;
       notifyListeners();
     });
   }
@@ -127,7 +128,7 @@ class DashboardViewModel extends BaseViewModel {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-      this.coreService.showToastMessage("New incoming data");
+      this.activeRide.id = querySnapshot.docs.first.id;
       notifyListeners();
     });
   }
@@ -141,6 +142,36 @@ class DashboardViewModel extends BaseViewModel {
   Future<void> checkDriverProfileIsActive() async {
     bool profileActivOrNot = await this.authService.getDriverProfileStatus();
     this.driverProfileIsActive = profileActivOrNot;
+  }
+
+  Future<void> acceptRide() async {
+    setBusy(true);
+    bool success = await this._dashboardService.acceptRide(this.activeRide.id);
+    if(success)
+      this.coreService.showToastMessage("Course acceptée");
+    else
+      this.coreService.showToastMessage("Erreur, reéssayez");
+    setBusy(false);
+  }
+
+  Future<void> startRide() async {
+    setBusy(true);
+    bool success = await this._dashboardService.startRide(this.activeRide.id);
+    if(success)
+      this.coreService.showToastMessage("Course demarrée");
+    else
+      this.coreService.showToastMessage("Erreur, reéssayez");
+    setBusy(false);
+  }
+
+  Future<void> endRide() async {
+    setBusy(true);
+    bool success = await this._dashboardService.endRide(this.activeRide.id);
+    if(success)
+      this.coreService.showToastMessage("Course Terminée");
+    else
+      this.coreService.showToastMessage("Erreur, reéssayez");
+    setBusy(false);
   }
 
 }

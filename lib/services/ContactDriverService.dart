@@ -2,7 +2,7 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_sms/flutter_sms.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/services/CoreService.dart';
-import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactDriverService {

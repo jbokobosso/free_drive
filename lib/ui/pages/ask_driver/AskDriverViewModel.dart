@@ -13,7 +13,7 @@ import 'package:free_drive/services/AskDriverService.dart';
 import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
-import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:rive/rive.dart';

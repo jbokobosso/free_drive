@@ -8,7 +8,7 @@ import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ExceptionService.dart';
-import 'package:free_drive/services/GetIt.dart';
+import 'package:free_drive/services/ServiceLocator.dart';
 
 class AskDriverService {
 

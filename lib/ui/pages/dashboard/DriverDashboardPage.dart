@@ -53,13 +53,13 @@ class DriverDashboardPage extends StatelessWidget {
                             model.activeRide.rideState == ERideState.pending
                                 ? ElevatedButton(
                                     style: customButtonStyle(context),
-                                    onPressed: () => null,
+                                    onPressed: () => model.acceptRide(),
                                     child: Text('Accepter La course', style: TextStyle(fontWeight: FontWeight.bold))
                                   ) : Container(),
                             model.activeRide.rideState == ERideState.accepted
                                 ? ElevatedButton(
                                     style: customButtonStyle(context, isBlack: true),
-                                    onPressed: () => null,
+                                    onPressed: () => model.startRide(),
                                     child: Text('Démarrer la course', style: TextStyle(fontWeight: FontWeight.bold))
                                   ): Container()
                           ],
