@@ -73,7 +73,7 @@ class AuthService extends IAuthService {
       this._coreService.showErrorDialog(exception.code, exception.message);
     } catch (e) {
       if(e.toString() == "Bad state: No element")
-        this._coreService.showErrorDialog("Erreur", "Vous avez mal choisi qui vous êtes: client/chauffeur");
+        this._coreService.showErrorDialog("Erreur Profil", "Ce mail n'est pas inscrit. Sinon Vérifiez bien le profil choisi: client/chauffeur");
       else {
         this._coreService.showErrorDialog("Error", e.toString());
         throw e;

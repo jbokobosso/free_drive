@@ -9,14 +9,6 @@ class DashboardService {
   final FirebaseFirestore _firebase = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getActiveRide() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = _firebase.collection(FCN_rides)
-          .where("clientEmail", isEqualTo: this._firebaseAuth.currentUser.email)
-          .where("timeEnded", isNull: true)
-          .snapshots();
-      return querySnapshotStream;
-  }
-
   Future<bool> userActiveRideExists() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firebase.collection(FCN_rides)
         .where("clientEmail", isEqualTo: this._firebaseAuth.currentUser.email)
@@ -25,20 +17,28 @@ class DashboardService {
     return querySnapshot.docs.isNotEmpty;
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getDriverActiveRide() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = _firebase.collection(FCN_rides)
-        .where("timeEnded", isNull: true)
-        .where("driverEmail", isEqualTo: this._firebaseAuth.currentUser.email)
-        .snapshots();
-    return querySnapshotStream;
-  }
-
   Future<bool> driverActiveRideExists() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firebase.collection(FCN_rides)
         .where("timeEnded", isNull: true)
         .where("driverEmail", isEqualTo: this._firebaseAuth.currentUser.email)
         .get();
     return querySnapshot.docs.isNotEmpty;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getUserActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = _firebase.collection(FCN_rides)
+          .where("clientEmail", isEqualTo: this._firebaseAuth.currentUser.email)
+          .where("timeEnded", isNull: true)
+          .snapshots();
+      return querySnapshotStream;
+  }
+
+  Stream<QuerySnapshot<Map<String, dynamic>>> getDriverActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = _firebase.collection(FCN_rides)
+        .where("timeEnded", isNull: true)
+        .where("driverEmail", isEqualTo: this._firebaseAuth.currentUser.email)
+        .snapshots();
+    return querySnapshotStream;
   }
 
 }

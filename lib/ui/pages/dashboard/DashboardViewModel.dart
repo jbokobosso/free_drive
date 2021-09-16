@@ -94,7 +94,7 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   void loadUserActiveRide() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getActiveRide();
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getUserActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
       notifyListeners();
