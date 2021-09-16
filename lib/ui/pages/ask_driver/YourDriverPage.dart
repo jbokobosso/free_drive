@@ -58,7 +58,7 @@ class YourDriverPage extends StatelessWidget {
                 children: [
                   SizedBox(height: 0, width: 0,),
                   ElevatedButton(
-                      style: customButtonStyle(context, isBlack: true),
+                      style: customButtonStyle(context, isAction: true),
                       onPressed: () => navigatorKey.currentState.pushNamed("/contactDriver", arguments: this.ride),
                       child: Text('Contactez', style: TextStyle(fontWeight: FontWeight.bold))
                   ),

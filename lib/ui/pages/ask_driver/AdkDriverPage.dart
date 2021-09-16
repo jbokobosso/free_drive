@@ -65,6 +65,7 @@ class AskDriverPage extends StatelessWidget {
                           children: [
                             heightSpacing(),
                             TypeAheadField<MapBoxPlace>(
+                            debounceDuration: Duration(seconds: 1),
                             hideSuggestionsOnKeyboardHide: false,
                             textFieldConfiguration: TextFieldConfiguration(
                               controller: model.departureLocationCtrl,
@@ -90,6 +91,7 @@ class AskDriverPage extends StatelessWidget {
                           ),
                             heightSpacing(),
                             TypeAheadField<MapBoxPlace>(
+                              debounceDuration: Duration(seconds: 1),
                               hideSuggestionsOnKeyboardHide: false,
                               textFieldConfiguration: TextFieldConfiguration(
                                 controller: model.destinationLocationCtrl,

@@ -165,6 +165,7 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   Future<void> endRide() async {
+    navigatorKey.currentState.pop();
     setBusy(true);
     bool success = await this._dashboardService.endRide(this.activeRide.id);
     if(success)

@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:free_drive/main.dart';
 import 'package:free_drive/models/RideModel.dart';
-import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
@@ -41,7 +39,7 @@ class DriverDashboardPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   SizedBox(height: 0, width: 0),
-                  model.activeRide != null
+                  model.activeRide != null && model.activeRide.rideState != ERideState.done
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -58,13 +56,12 @@ class DriverDashboardPage extends StatelessWidget {
                                   ) : Container(),
                             model.activeRide.rideState == ERideState.accepted
                                 ? ElevatedButton(
-                                    style: customButtonStyle(context, isBlack: true),
+                                    style: customButtonStyle(context, isAction: true),
                                     onPressed: () => model.startRide(),
                                     child: Text('Démarrer la course', style: TextStyle(fontWeight: FontWeight.bold))
                                   ): Container()
                           ],
-                        )
-                      : Container(),
+                        ) : Container(),
                   model.driverProfileIsActive == false ? Center(child: Text("Votre inscription a été bien efffectuée et est en attente de validation.", style: Theme.of(context).textTheme.headline1)) : Container(),
                   model.driverProfileIsActive == false ? SizedBox(height: model.deviceHeight*0.05) : Container(),
                   model.driverProfileIsActive == false ? Text("Vous serez invité à passer un test.", style: TextStyle(color: Theme.of(context).primaryColor)) : Container()

@@ -65,6 +65,13 @@ class UserDashboardCard extends StatelessWidget {
                         Text('Course en cours...', style: TextStyle(color: Colors.blue))
                       ],
                     ) : Container(),
+                    this.ride != null && this.ride.rideState == ERideState.accepted ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(Icons.motorcycle, color: Colors.blue,),
+                        Text('Votre course a été accepté', style: TextStyle(color: Colors.blue))
+                      ],
+                    ) : Container(),
                   ],
                 ),
               ),
