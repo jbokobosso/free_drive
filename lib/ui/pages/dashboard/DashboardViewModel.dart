@@ -96,8 +96,13 @@ class DashboardViewModel extends BaseViewModel {
   void loadUserActiveRide() {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getUserActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-      this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-      this.activeRide.id = querySnapshot.docs.first.id;
+      this.coreService.showToastMessage("New Incoming message");
+      if(querySnapshot.docs.isEmpty) {
+        this.activeRide = null;
+      } else {
+        this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+        this.activeRide.id = querySnapshot.docs.first.id;
+      }
       notifyListeners();
     });
   }
@@ -127,8 +132,13 @@ class DashboardViewModel extends BaseViewModel {
   void loadDriverActiveRide() {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-      this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-      this.activeRide.id = querySnapshot.docs.first.id;
+      this.coreService.showToastMessage("New Incoming message");
+      if(querySnapshot.docs.isEmpty) {
+        this.activeRide = null;
+      } else {
+        this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+        this.activeRide.id = querySnapshot.docs.first.id;
+      }
       notifyListeners();
     });
   }

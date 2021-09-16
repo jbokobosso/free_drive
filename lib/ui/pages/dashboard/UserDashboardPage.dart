@@ -109,7 +109,7 @@ class UserDashboardPage extends StatelessWidget {
                           ),
                           child: Text('Annuler la course', style: TextStyle(fontWeight: FontWeight.bold))
                         ) : Container(),
-                  model.activeRide != null && model.activeRide.rideState == ERideState.accepted
+                  model.activeRide != null && (model.activeRide.rideState == ERideState.pending || model.activeRide.rideState == ERideState.accepted)
                       ? Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -117,13 +117,7 @@ class UserDashboardPage extends StatelessWidget {
                       Text('Retour - '+ Utils.formatDateToHuman(model.activeRide.departureDate)),
                       Text('Lieu de départ - '+ model.activeRide.departureLocation.shortName),
                       Text('Destination - '+ model.activeRide.destinationLocation.shortName),
-                      Text('Chauffeur - ' + model.activeRide.driver.displayName),
-                      model.activeRide.rideState == ERideState.pending
-                          ? ElevatedButton(
-                          style: customButtonStyle(context),
-                          onPressed: () => model.acceptRide(),
-                          child: Text('Accepter La course', style: TextStyle(fontWeight: FontWeight.bold))
-                      ) : Container()
+                      Text('Chauffeur - ' + model.activeRide.driver.displayName)
                     ],
                   ) : Container(),
                   model.activeRide == null || model.activeRide.rideState == ERideState.done ? ElevatedButton(
