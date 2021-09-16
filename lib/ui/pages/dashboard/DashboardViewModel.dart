@@ -74,7 +74,7 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   Future<void> checkUserActiveRide() async {
-    if(this.coreService.alreadyLoadedActiveRideStream) return;
+    // if(this.coreService.alreadyLoadedActiveRideStream) return;
     setBusy(true);
     bool activeRideExists = await this._dashboardService.userActiveRideExists();
     setBusy(false);
@@ -89,7 +89,7 @@ class DashboardViewModel extends BaseViewModel {
       this.coreService.userDashboardState = state;
       notifyListeners();
       setBusy(false);
-      this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
+      // this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
     }
   }
 
@@ -109,7 +109,7 @@ class DashboardViewModel extends BaseViewModel {
 
   Future<void> checkDriverActiveRide() async {
     {
-      if(this.coreService.alreadyLoadedActiveRideStream) return;
+      // if(this.coreService.alreadyLoadedActiveRideStream) return;
       setBusy(true);
       bool activeRideExists = await this._dashboardService.driverActiveRideExists();
       setBusy(false);
@@ -124,7 +124,7 @@ class DashboardViewModel extends BaseViewModel {
         this.coreService.driverDashboardState = state;
         notifyListeners();
         setBusy(false);
-        this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
+        // this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
       }
     }
   }

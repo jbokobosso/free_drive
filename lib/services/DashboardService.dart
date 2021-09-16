@@ -22,8 +22,8 @@ class DashboardService {
 
   Future<bool> driverActiveRideExists() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firestore.collection(FCN_rides)
-        .where("timeEnded", isNull: true)
         .where("driverEmail", isEqualTo: this._firebaseAuth.currentUser.email)
+        .where("timeEnded", isNull: true)
         .get();
     return querySnapshot.docs.isNotEmpty;
   }
