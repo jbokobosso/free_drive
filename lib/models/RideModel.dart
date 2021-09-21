@@ -9,7 +9,8 @@ enum ERideState {
   pending,
   accepted,
   running,
-  done
+  done,
+  canceled
 }
 
 class RideModel {
@@ -60,6 +61,7 @@ class RideModel {
       rideState: json['rideState'] == 'pending' ? ERideState.pending
           : json['rideState'] == 'running' ? ERideState.running
           : json['rideState'] == 'accepted' ? ERideState.accepted
+          : json['rideState'] == 'canceled' ? ERideState.canceled
           : ERideState.done
     );
     return ride;
@@ -79,7 +81,11 @@ class RideModel {
       'client': this.client != null ? this.client.toMap(userType: EUserType.client) : null,
       'clientEmail': this.clientEmail,
       'driverEmail': this.driverEmail,
-      'rideState' : this.rideState == ERideState.pending ? "pending" : this.rideState == ERideState.running ? "running" : "done"
+      'rideState' : this.rideState == ERideState.pending ? "pending"
+          : this.rideState == ERideState.running ? "running"
+          : this.rideState == ERideState.accepted ? "accepted"
+          : this.rideState == ERideState.canceled ? "canceled"
+          : "done"
     };
   }
 

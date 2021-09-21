@@ -9,6 +9,7 @@ import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -70,12 +71,6 @@ class DashboardViewModel extends BaseViewModel {
         notifyListeners();
       },
     );
-  }
-
-  cancelActiveRide() {
-    this.coreService.userDashboardState.activeRideExists = false;
-    navigatorKey.currentState.pop();
-    notifyListeners();
   }
 
   Future<void> checkUserActiveRide() async {
@@ -190,18 +185,35 @@ class DashboardViewModel extends BaseViewModel {
     setBusy(false);
   }
 
-  extendRide() {
+  Future<void> extendRide() async {
     bool isValid = this.extendRideFormKey.currentState.validate();
-    if(!isValid) return;
+    if(!isValid) return null;
     setBusy(true);
     DateTime newReturnBackDate = this.coreService.userDashboardState.activeRide.returnDate.add(Duration(days: this.extendRideDaysCount.toInt()));
-    this._dashboardService.extendRide(this.coreService.userDashboardState.activeRide.id, newReturnBackDate);
+    bool success = await this._dashboardService.extendRide(this.coreService.userDashboardState.activeRide.id, newReturnBackDate);
+    if(!success) {
+      this.coreService.showErrorDialog("Erreur", "Le processus n'a pas marché, veuillez reéssayer svp");
+      return;
+    }
     navigatorKey.currentState.pop();
     ScaffoldMessenger.of(navigatorKey.currentContext).showSnackBar(SnackBar(
         duration: Duration(seconds: 3),
         content: Text("Course prolongée de ${this.extendRideDaysCountController.text} jours")
     ));
     setBusy(false);
+  }
+
+  Future<void> cancelActiveRide() async {
+    setBusy(true);
+    bool success = await this._dashboardService.cancelRide(this.coreService.userDashboardState.activeRide.id);
+    if(!success) {
+      this.coreService.showErrorDialog("Erreur", "Le processus n'a pas marché, veuillez reéssayer svp");
+      return;
+    }
+    this.coreService.userDashboardState.activeRideExists = false;
+    navigatorKey.currentState.pop();
+    setBusy(false);
+    notifyListeners();
   }
 
 }

@@ -99,4 +99,17 @@ class DashboardService {
     return success;
   }
 
+  Future<bool> cancelRide(String rideId) async {
+    bool success = true;
+    try {
+      await this._firestore.collection(FCN_rides)
+          .doc(rideId)
+          .update({"rideState": "canceled"});
+    } catch (e) {
+      success = false;
+      this._exceptionService.manageExCeption(e);
+    }
+    return success;
+  }
+
 }
