@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
@@ -17,6 +18,10 @@ class DashboardViewModel extends BaseViewModel {
   IAuthService authService = getIt.get<IAuthService>();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   DashboardService _dashboardService = getIt.get<DashboardService>();
+
+  int extendRideDaysCount = 1 ;
+  final extendRideFormKey = GlobalKey<FormState>();
+  TextEditingController extendRideDaysCountController = new TextEditingController();
 
   double get deviceWidth => this.coreService.deviceWidth;
   double get deviceHeight => this.coreService.deviceHeight;
@@ -101,7 +106,7 @@ class DashboardViewModel extends BaseViewModel {
         this.activeRide = null;
       } else {
         this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-        this.activeRide.id = querySnapshot.docs.first.id;
+        this.coreService.userDashboardState.activeRide = this.activeRide;
       }
       notifyListeners();
     });
@@ -137,7 +142,7 @@ class DashboardViewModel extends BaseViewModel {
         this.activeRide = null;
       } else {
         this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-        this.activeRide.id = querySnapshot.docs.first.id;
+        this.coreService.driverDashboardState.activeRide = this.activeRide;
       }
       notifyListeners();
     });
@@ -182,6 +187,20 @@ class DashboardViewModel extends BaseViewModel {
       this.coreService.showToastMessage("Course Terminée");
     else
       this.coreService.showToastMessage("Erreur, reéssayez");
+    setBusy(false);
+  }
+
+  extendRide() {
+    bool isValid = this.extendRideFormKey.currentState.validate();
+    if(!isValid) return;
+    setBusy(true);
+    DateTime newReturnBackDate = this.coreService.userDashboardState.activeRide.returnDate.add(Duration(days: this.extendRideDaysCount.toInt()));
+    this._dashboardService.extendRide(this.coreService.userDashboardState.activeRide.id, newReturnBackDate);
+    navigatorKey.currentState.pop();
+    ScaffoldMessenger.of(navigatorKey.currentContext).showSnackBar(SnackBar(
+        duration: Duration(seconds: 3),
+        content: Text("Course prolongée de ${this.extendRideDaysCountController.text} jours")
+    ));
     setBusy(false);
   }
 

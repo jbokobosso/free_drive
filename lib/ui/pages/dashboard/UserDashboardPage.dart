@@ -78,7 +78,7 @@ class UserDashboardPage extends StatelessWidget {
                               context: context,
                               builder: (_) => ExtendRideDialog(cancelRideAlertTopRadius: cancelRideAlertTopRadius)
                           ),
-                          child: Text('Prolonger la course', style: TextStyle(fontWeight: FontWeight.bold))
+                          child: Text('Prolonger! la course', style: TextStyle(fontWeight: FontWeight.bold))
                         ) : Text(''),
                   model.activeRide != null && model.activeRide.rideState == ERideState.running
                       ? ElevatedButton(

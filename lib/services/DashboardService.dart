@@ -86,4 +86,17 @@ class DashboardService {
     return success;
   }
 
+  Future<bool> extendRide(String rideId, DateTime newReturnDate) async {
+    bool success = true;
+    try {
+      await this._firestore.collection(FCN_rides)
+          .doc(rideId)
+          .update({"returnDate": newReturnDate});
+    } catch (e) {
+      success = false;
+      this._exceptionService.manageExCeption(e);
+    }
+    return success;
+  }
+
 }

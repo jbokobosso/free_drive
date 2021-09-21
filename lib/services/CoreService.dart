@@ -24,6 +24,7 @@ class CoreService {
 
   UserDashboardModel userDashboardState = new UserDashboardModel(
     balance: 25000,
+    activeRide: null,
     activeRideExists: false,
     pendingRideExists: false,
     completedRidesCount: 0
@@ -31,6 +32,7 @@ class CoreService {
 
   DriverDashboardModel driverDashboardState = new DriverDashboardModel(
     balance: 25000,
+    activeRide: null,
     activeRideExists: false,
     pendingRideExists: true,
     completedRidesCount: 0,
