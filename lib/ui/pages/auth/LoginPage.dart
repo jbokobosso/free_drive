@@ -132,23 +132,37 @@ class LoginPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: model.deviceHeight*this.inputSpacingScale),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0)
-                                )
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                child: Text('Mot de passe oublié'),
+                                onPressed: () => navigatorKey.currentState.pushNamedAndRemoveUntil("/recoverPassword", (route) => false),
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    primary: Theme.of(context).primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(30.0)
+                                    )
+                                ),
+                                child: Text('Connexion', style: TextStyle(fontWeight: FontWeight.bold)),
+                                onPressed: () => model.login()
                             ),
-                            child: Text('Connexion', style: TextStyle(fontWeight: FontWeight.bold)),
-                            onPressed: () => model.login()
-                          ),
+                            ]),
                           SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                           Text('ou'),
                           SizedBox(height: model.deviceHeight*this.inputSpacingScale),
-                          TextButton(
-                            child: Text('Créer un compte'),
-                            onPressed: () => navigatorKey.currentState.pushNamedAndRemoveUntil("/signup", (route) => false),
-                          )
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0)
+                                  )
+                              ),
+                              child: Text('Créer un compte'),
+                              onPressed: () => navigatorKey.currentState.pushNamedAndRemoveUntil("/signup", (route) => false),
+                          ),
                         ],
                       ),
               )

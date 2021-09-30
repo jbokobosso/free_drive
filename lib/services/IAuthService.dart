@@ -9,6 +9,7 @@ abstract class IAuthService {
 
   Future<bool> registerByMail(UserModel user, List<File> files);
   Future<UserModel> authenticateByMail(UserModel user);
+  Future<void> recoverPassword(String email);
   Future<bool> logout();
 
   Future<bool> storeFirebaseUserInfos(UserModel userModel);

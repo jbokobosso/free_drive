@@ -211,4 +211,13 @@ class AuthService extends IAuthService {
     }
   }
 
+  @override
+  Future<void> recoverPassword(String email) async {
+    try {
+      this.firebaseAuth.sendPasswordResetEmail(email: email);
+    } catch(e) {
+      this._coreService.showErrorDialog("Erreur", e.toString());
+    }
+  }
+
 }

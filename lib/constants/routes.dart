@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/ui/pages/ask_driver/UploadDriverLicencePage.dart';
 import 'package:free_drive/ui/pages/auth/LoginPage.dart';
+import 'package:free_drive/ui/pages/auth/RecoverPasswordPage.dart';
 import 'package:free_drive/ui/pages/auth/SignupPage.dart';
 import 'package:free_drive/ui/pages/auth/ValidationPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/AdkDriverPage.dart';
@@ -33,4 +34,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/rideDetails': (BuildContext context) => RideDetailsPage(),
   '/profile': (BuildContext context) => ProfilePage(),
   '/startup': (BuildContext context) => StartupView(),
+  '/recoverPassword': (BuildContext context) => RecoverPasswordPage(),
 };

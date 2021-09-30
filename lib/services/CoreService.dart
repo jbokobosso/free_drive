@@ -161,7 +161,7 @@ class CoreService {
             child: Align(child: Text(title, style: TextStyle(color: Colors.white)), alignment: Alignment.center),
           ),
           content: SizedBox(
-              child: Text(content)
+              child: Text(content,  textAlign: TextAlign.justify,)
           ),
           actions: [
             TextButton(child: Text("D'accord"), onPressed: () => navigatorKey.currentState.pop()),
