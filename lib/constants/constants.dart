@@ -7,10 +7,10 @@ const String S_loggedUser = "loggedUser";
 const String S_profilePictureUrl = "profilePictureUrl";
 
 // Firebase Storage locations
-const String FS_driverLicencesLocation = "driver_licences";
-const String FS_clientIdCardLocation = "client_ids";
-const String FS_driverProfileLocation = "driver_profiles";
-const String FS_clientProfileLocation = "client_profiles";
+const String FS_driverLicencesLocation = "licenses";
+const String FS_clientIdCardLocation = "ids";
+const String FS_driverProfileLocation = "profiles/drivers";
+const String FS_clientProfileLocation = "profiles/clients";
 
 // Firebase collection names
 const String FCN_drivers = "drivers";

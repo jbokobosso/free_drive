@@ -4,13 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:free_drive/constants/constants.dart';
+import 'package:free_drive/main.dart';
+import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileCardViewModel extends BaseViewModel {
@@ -31,6 +35,8 @@ class ProfileCardViewModel extends BaseViewModel {
   double get deviceWidth => this.coreService.deviceWidth;
   double get deviceHeight => this.coreService.deviceHeight;
 
+  final picker = ImagePicker();
+
   initView() {
     setBusy(true);
     this.loadLocallyLoggedUser();
@@ -44,11 +50,27 @@ class ProfileCardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  Future<dynamic> buildShowDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Caméra ou Gallerie ?"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(onPressed: () => this.pickProfilePicture(true), icon: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor)),
+              IconButton(onPressed: () => this.pickProfilePicture(false), icon: Icon(Icons.photo, color: Theme.of(context).primaryColor)),
+            ],
+          ),
+        )
+    );
+  }
 
-  pickProfilePicture() async {
-    FilePickerResult result = await FilePicker.platform.pickFiles();
-    if(result != null) {
-      File file = File(result.files.single.path);
+  pickProfilePicture(bool isCamera) async {
+    navigatorKey.currentState.pop(); // close the modal for choosing picture from gallery or camera
+    PickedFile pickedFile = await picker.getImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
+    if(pickedFile != null) {
+      File file = File(pickedFile.path);
       if(this.coreService.fileIsImage(file))
         uploadProfilePicture(File(file.path), this.loggedUser.userType);
       else
@@ -57,7 +79,6 @@ class ProfileCardViewModel extends BaseViewModel {
       this.coreService.showToastMessage("Aucune image choisie");
     }
   }
-
 
   Future<bool> uploadProfilePicture(File file, EUserType userType) async {
     this.isUploading = true;
@@ -86,7 +107,7 @@ class ProfileCardViewModel extends BaseViewModel {
     } catch (e) {
       this.isUploading = false;
       notifyListeners();
-      this.coreService.showErrorDialog("Erreur Téléversement", e);
+      this.coreService.showErrorDialog("Erreur Téléversement", e.toString());
     }
     this.isUploading = false;
     notifyListeners();

@@ -244,7 +244,7 @@ class SignupPage extends StatelessWidget {
                           height: model.deviceHeight*inputHeightScale,
                           child: TextFormField(
                             controller: model.rectoPicture,
-                            onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                            onTap: () => model.buildShowDialog(context, ELicencePictureFace.recto),
                             validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
                             style: TextStyle(color: Colors.grey),
                             enabled: true,
@@ -267,7 +267,7 @@ class SignupPage extends StatelessWidget {
                           height: model.deviceHeight*inputHeightScale,
                           child: TextFormField(
                             controller: model.versoPicture,
-                            onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                            onTap: () => model.buildShowDialog(context, ELicencePictureFace.verso),
                             validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
                             style: TextStyle(color: Colors.grey),
                             enabled: true,
@@ -294,7 +294,7 @@ class SignupPage extends StatelessWidget {
                           height: model.deviceHeight*inputHeightScale,
                           child: TextFormField(
                             controller: model.rectoPicture,
-                            onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                            onTap: () => model.buildShowDialog(context, ELicencePictureFace.recto),
                             validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
                             style: TextStyle(color: Colors.grey),
                             enabled: true,
@@ -317,7 +317,7 @@ class SignupPage extends StatelessWidget {
                           height: model.deviceHeight*inputHeightScale,
                           child: TextFormField(
                             controller: model.versoPicture,
-                            onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                            onTap: () => model.buildShowDialog(context, ELicencePictureFace.verso),
                             validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
                             style: TextStyle(color: Colors.grey),
                             enabled: true,

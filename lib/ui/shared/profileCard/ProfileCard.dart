@@ -40,14 +40,26 @@ class ProfileCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 model.isUploading ? Lottie.asset("assets/lottie/uploading.json", width: model.deviceWidth*0.5) : GestureDetector(
-                  onTap: () => model.pickProfilePicture(),
+                  onTap: () => model.buildShowDialog(context),
                   // child: Center(child: Icon(Icons.person, size: model.deviceWidth*0.5))
                   child: Center(
                     child: model.profilePictureLoaded
-                        ? CircleAvatar(
-                            radius: model.deviceWidth*0.2,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: NetworkImage(model.profilePictureUrl)
+                        ? Stack(
+                            children: [
+                              CircleAvatar(
+                                  radius: model.deviceWidth*0.2,
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: NetworkImage(model.profilePictureUrl)
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: model.deviceWidth*0.03,
+                                child: CircleAvatar(
+                                  backgroundColor: Theme.of(context).primaryColor,
+                                  child: Icon(Icons.camera_alt, color: Colors.white),
+                                )
+                              )
+                            ],
                           )
                         : Icon(Icons.person, size: model.deviceWidth*0.5)
                   )

@@ -14,6 +14,7 @@ import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -47,6 +48,8 @@ class AppViewModel extends BaseViewModel {
   TextEditingController confirmPassCtrl = TextEditingController();
   EUserType get userType => coreService.loggedUser.userType;
   UserModel get loggedUser => coreService.loggedUser;
+  final picker = ImagePicker();
+  String assetImage;
 
   chooseUserTypeRadio(EUserType newChoice) {
     this.chosenUserType = newChoice;
@@ -91,6 +94,36 @@ class AppViewModel extends BaseViewModel {
     } else {
       return null;
     }
+  }
+
+  selectImageCameraOrAlbum(ELicencePictureFace licencePictureFace, {bool isCamera}) async {
+    PickedFile pickedFile = await picker.getImage(source: isCamera ? ImageSource.camera : ImageSource.gallery);
+    if(pickedFile != null){
+      this.licencePictureFiles.add(File(pickedFile.path));
+      licencePictureFace == ELicencePictureFace.recto
+          ? this.rectoPicture.text = pickedFile.path
+          : this.versoPicture.text = pickedFile.path;
+      this.notifyListeners();
+      navigatorKey.currentState.pop();
+    } else {
+      return null;
+    }
+  }
+
+  Future<dynamic> buildShowDialog(BuildContext context, ELicencePictureFace licencePictureFace) {
+    return showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Caméra ou Gallerie ?"),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(onPressed: () => this.selectImageCameraOrAlbum(licencePictureFace, isCamera: true), icon: Icon(Icons.camera_alt, color: Theme.of(context).primaryColor)),
+              IconButton(onPressed: () => this.selectImageCameraOrAlbum(licencePictureFace, isCamera: false), icon: Icon(Icons.photo, color: Theme.of(context).primaryColor)),
+            ],
+          ),
+        )
+    );
   }
 
   chooseUserType(EUserType choice) {

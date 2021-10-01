@@ -39,6 +39,7 @@ dependencies:
   flutter_phone_direct_caller: ^2.0.0
 
   # Media
+  image_picker: ^0.8.4+2
   file_picker: ^3.0.3
   rive: ^0.7.10
   lottie: ^1.0.1
