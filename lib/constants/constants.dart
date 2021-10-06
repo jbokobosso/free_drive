@@ -24,3 +24,6 @@ const List<String> S_ALLOWED_PROFILE_IMAGES_EXTENSIONS = [".jpg", ".JPG", ".jpeg
 // MapBox
 const MAPBOX_TOKEN = "sk.eyJ1Ijoic25vdmljaDExNyIsImEiOiJja3QwYjZwbXkwYmpjMm5xdDg2dmVzN2FnIn0.mkxhOPsC1kONuEaOu4hRww";
 const PLACES_SEARCH_RESULT_LIMIT = 5;
+
+// PayGate Global
+const PAYGATE_API_TOKEN = "ff9e6c66-c038-4862-aef3-69bc8af89b88";

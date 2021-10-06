@@ -41,7 +41,7 @@ class UserDashboardCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("${model.coreService.userDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
-                        IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => null,)
+                        IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => model.buildShowDialog(context),)
                       ],
                     ),
                     Row(

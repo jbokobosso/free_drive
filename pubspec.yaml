@@ -22,6 +22,9 @@ environment:
 
 dependencies:
   # Core functionality
+  http: ^0.13.3
+  enum_to_string: ^2.0.1
+  nanoid: ^1.0.0
 
   #  Firebase
   firebase_messaging: ^10.0.6

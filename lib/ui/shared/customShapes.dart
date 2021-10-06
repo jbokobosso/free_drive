@@ -19,3 +19,14 @@ customButtonStyle(BuildContext context, {bool isAction=false, bool isDanger=fals
       )
   );
 }
+
+InputDecoration customInputDecoration(BuildContext context, {String label, String hint}) {
+  return InputDecoration(
+    filled: true,
+    fillColor: Colors.white,
+    labelText: label,
+    hintText: hint,
+    enabledBorder: customInputBorder(context),
+    border: customInputBorder(context),
+  );
+}
