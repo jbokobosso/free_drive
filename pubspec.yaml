@@ -28,7 +28,7 @@ dependencies:
 
   #  Firebase
   firebase_messaging: ^10.0.6
-  firebase_storage: ^8.0.0
+  firebase_storage: ^10.0.4
   firebase_core: ^1.4.0
   cloud_firestore: ^2.4.0
   firebase_auth: ^3.0.1
@@ -36,14 +36,14 @@ dependencies:
   # Utils
   flutter_typeahead: ^3.2.0
   latlong2: ^0.8.0
-  mapbox_search: ^2.1.0+1
+  mapbox_search: ^3.0.1+1
   shared_preferences: ^2.0.6
   flutter_sms: ^2.3.1
   flutter_phone_direct_caller: ^2.0.0
 
   # Media
   image_picker: ^0.8.4+2
-  file_picker: ^3.0.3
+  file_picker: ^4.1.3
   rive: ^0.7.10
   lottie: ^1.0.1
   flutter_svg: ^0.22.0
@@ -55,7 +55,7 @@ dependencies:
 
   # Arch dependencies
   stacked: ^2.1.0
-  get_it: ^6.1.1
+  get_it: ^7.2.0
 
   # Default
   flutter:
