@@ -7,10 +7,10 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
 import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:free_drive/ui/shared/Button.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:free_drive/utils/Utils.dart';
@@ -20,7 +20,7 @@ import 'package:stacked/stacked.dart';
 class DashboardViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
-  IAuthService authService = getIt.get<IAuthService>();
+  AuthService authService = getIt.get<AuthService>();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   DashboardService _dashboardService = getIt.get<DashboardService>();
 

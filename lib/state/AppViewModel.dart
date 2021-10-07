@@ -10,10 +10,10 @@ import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -21,7 +21,7 @@ import 'package:stacked/stacked.dart';
 class AppViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
-  IAuthService authService = getIt.get<IAuthService>();
+  AuthService authService = getIt.get<AuthService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
   double get deviceWidth => this.coreService.deviceWidth;

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EDialogType.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:stacked/stacked.dart';
 
 class AuthViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
-  IAuthService authService = getIt.get<IAuthService>();
+  AuthService authService = getIt.get<AuthService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
 
   double get deviceWidth => this.coreService.deviceWidth;

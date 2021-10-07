@@ -1,14 +1,14 @@
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:stacked/stacked.dart';
 
 class StartupViewModel extends BaseViewModel {
 
-  final IAuthService _authService = getIt<IAuthService>();
+  final AuthService _authService = getIt<AuthService>();
   final CoreService _coreService = getIt<CoreService>();
 
   Future handleStartupLogic() async {

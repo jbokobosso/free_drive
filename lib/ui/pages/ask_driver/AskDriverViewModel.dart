@@ -14,7 +14,6 @@ import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -23,7 +22,7 @@ class AskDriverViewModel extends BaseViewModel {
 
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   CoreService coreService = getIt.get<CoreService>();
-  IAuthService _authService = getIt.get<IAuthService>();
+  AuthService _authService = getIt.get<AuthService>();
   AskDriverService askDriverService = getIt.get<AskDriverService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
   Artboard eyeArtboard;

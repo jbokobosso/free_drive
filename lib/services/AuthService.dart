@@ -11,17 +11,16 @@ import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthService extends IAuthService {
+class AuthService {
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
 
-  @override
+
   Future<bool> uploadLicencePictures(List<File> files, EUserType userType) async {
     String destinationFolder = userType == EUserType.driver ? FS_driverLicencesLocation : FS_clientIdCardLocation;
     try {
@@ -32,7 +31,6 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
   Future<bool> registerByMail(UserModel user, List<File> files) async {
     try{
       await this.firebaseAuth.createUserWithEmailAndPassword(email: user.email, password: user.password);
@@ -51,7 +49,7 @@ class AuthService extends IAuthService {
 
   }
 
-  @override
+
   Future<UserModel> authenticateByMail(UserModel userModel) async {
     UserModel firebaseUser;
     try{
@@ -81,7 +79,7 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
+
   Future<bool> logout() async {
     try {
       await this.firebaseAuth.signOut();
@@ -92,7 +90,7 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
+
   Future<bool> storeFirebaseUserInfos(UserModel userModel) async {
     this.firebaseAuth.currentUser.updateDisplayName(userModel.displayName);
     if(userModel.userType == EUserType.client) {
@@ -121,28 +119,28 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
+
   Future<bool> checkIntroPassed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool introPassed = prefs.getBool(S_introPassed);
     return introPassed;
   }
 
-  @override
+
   Future<bool> checkUserIsLogged() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isAuth = prefs.getBool(S_userIsLogged);
     return isAuth;
   }
 
-  @override
+
   Future<bool> markIntroPassed() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_introPassed, true);
     return written;
   }
 
-  @override
+
   Future<bool> storeLoggedUser(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
@@ -153,7 +151,7 @@ class AuthService extends IAuthService {
     else return false;
   }
 
-  @override
+
   Future<bool> storeDriverProfileStatus(bool profileActiveOrNot) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_driverProfileActieOrNot, profileActiveOrNot);
@@ -163,7 +161,7 @@ class AuthService extends IAuthService {
       return false;
   }
 
-  @override
+
   Future<bool> getDriverProfileStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic profileActiveOrNot = prefs.getBool(S_driverProfileActieOrNot);
@@ -172,7 +170,7 @@ class AuthService extends IAuthService {
     return true;
   }
 
-  @override
+
   Future<bool> markUserLoggedOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool cleared = await prefs.clear();
@@ -184,7 +182,7 @@ class AuthService extends IAuthService {
     else return false;
   }
 
-  @override
+
   Future<UserModel> getLoggedUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String stringUser = prefs.getString(S_loggedUser);
@@ -205,7 +203,7 @@ class AuthService extends IAuthService {
     }
   }
 
-  @override
+
   Future<void> recoverPassword(String email) async {
     try {
       this.firebaseAuth.sendPasswordResetEmail(email: email);

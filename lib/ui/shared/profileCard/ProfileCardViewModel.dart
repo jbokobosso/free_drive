@@ -1,21 +1,18 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
-import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
+import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ProfileService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:free_drive/services/IAuthService.dart';
-import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:free_drive/utils/Utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
@@ -28,7 +25,7 @@ enum EDestinationController {
 class ProfileCardViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
-  IAuthService authService = getIt.get<IAuthService>();
+  AuthService authService = getIt.get<AuthService>();
   ProfileService _profileService = getIt.get<ProfileService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
