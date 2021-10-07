@@ -147,6 +147,7 @@ class ProfileCardViewModel extends BaseViewModel {
     navigatorKey.currentState.pop();
     bool success = await this._profileService.updateDisplayName(this.displayNameCtrl.text);
     success ? Utils.showToast("Nom mis à jour") : Utils.showToast("Erreur, veuillez reéssayer");
+    this.loadLocallyLoggedUser();
     setIsUpdating(false);
   }
 
@@ -157,6 +158,7 @@ class ProfileCardViewModel extends BaseViewModel {
     navigatorKey.currentState.pop();
     bool success = await this._profileService.updatePhoneNumber(this.phoneNumberCtrl.text);
     success ? Utils.showToast("Téléhone mis à jour") : Utils.showToast("Erreur, veuillez reéssayer");
+    this.loadLocallyLoggedUser();
     setIsUpdating(false);
   }
 
@@ -180,7 +182,7 @@ class ProfileCardViewModel extends BaseViewModel {
         builder: (_) => SizedBox(
           height: Utils.deviceHeight*0.5,
           child: AlertDialog(
-              title: Text("Caméra ou Gallerie ?"),
+              title: Text("Changer ${destinationController == EDestinationController.displayNameCtrl ? 'nom' : 'numéro'}"),
               content: Form(
                 key: this.updateFormKey,
                 child: Padding(
