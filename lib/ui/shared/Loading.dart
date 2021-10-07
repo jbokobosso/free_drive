@@ -25,3 +25,15 @@ class Loading extends StatelessWidget {
     );
   }
 }
+
+class LoadingMini extends StatelessWidget {
+  const LoadingMini({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
+    );
+  }
+}
+

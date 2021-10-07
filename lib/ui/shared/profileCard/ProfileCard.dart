@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
+import 'package:free_drive/ui/shared/profileCard/InfoTile.dart';
 import 'package:free_drive/ui/shared/profileCard/ProfileCardViewModel.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
@@ -10,7 +11,7 @@ import 'package:stacked/stacked.dart';
 class ProfileCard extends StatelessWidget {
   final double cardTopSpacingScale = 0.2;
   final double cardWidth = 0.8;
-  TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
+  final TextStyle hightlightStyle = TextStyle(color: Theme.of(navigatorKey.currentContext).primaryColor, fontWeight: FontWeight.bold);
   ProfileCard();
 
   @override
@@ -34,45 +35,74 @@ class ProfileCard extends StatelessWidget {
               ]
           ),
           child: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(top: 15.0),
             child: model.loggedUser != null
                 ? Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                model.isUploading ? Lottie.asset("assets/lottie/uploading.json", width: model.deviceWidth*0.5) : GestureDetector(
-                  onTap: () => model.buildShowDialog(context),
-                  // child: Center(child: Icon(Icons.person, size: model.deviceWidth*0.5))
-                  child: Center(
-                    child: model.profilePictureLoaded
-                        ? Stack(
-                            children: [
-                              CircleAvatar(
-                                  radius: model.deviceWidth*0.2,
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage: NetworkImage(model.profilePictureUrl)
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: model.deviceWidth*0.03,
-                                child: CircleAvatar(
-                                  backgroundColor: Theme.of(context).primaryColor,
-                                  child: Icon(Icons.camera_alt, color: Colors.white),
+                model.isUploading
+                    ? Lottie.asset("assets/lottie/uploading.json", width: model.deviceWidth*0.5)
+                    : GestureDetector(
+                        onTap: () => model.buildShowDialog(context),
+                        // child: Center(child: Icon(Icons.person, size: model.deviceWidth*0.5))
+                        child: Center(
+                          child: model.profilePictureLoaded
+                              ? Stack(
+                                  children: [
+                                    CircleAvatar(
+                                        radius: model.deviceWidth*0.15,
+                                        backgroundColor: Colors.transparent,
+                                        backgroundImage: NetworkImage(model.profilePictureUrl)
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: model.deviceWidth*0.01,
+                                      child: CircleAvatar(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                        child: Icon(Icons.camera_alt, color: Colors.white),
+                                      )
+                                    )
+                                  ],
                                 )
-                              )
-                            ],
-                          )
-                        : Icon(Icons.person, size: model.deviceWidth*0.5)
-                  )
-                ),
+                              : Stack(
+                                  children: [
+                                    Icon(Icons.person, size: model.deviceWidth*0.25),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: model.deviceWidth*0.01,
+                                      child: CircleAvatar(
+                                        backgroundColor: Theme.of(context).primaryColor,
+                                        child: Icon(Icons.camera_alt, color: Colors.white),
+                                      )
+                                    )
+                                  ],
+                                )
+                      )
+                      ),
                 model.isUploading
                     ? Center(
                         child: Text("\n${model.uploadPercentage.toInt().toString()} %",
                         style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold))
                       )
                     : Container(height: 0, width: 0),
-                Text('\n ${model.loggedUser.displayName}'),
-                Text('\n ${model.loggedUser.phoneNumber}'),
-                Text('\n ${model.loggedUser.email}'),
+                !model.isUpdating ? Column(
+                  children: [
+                    InfoTile(
+                        Icon(Icons.person),
+                        'Nom', model.loggedUser.displayName,
+                        isEditable: true,
+                        onEditButtonTapped: () => model.showUpdateDialog(destinationController: EDestinationController.displayNameCtrl)
+                    ),
+                    InfoTile(
+                        Icon(Icons.phone),
+                        'Téléphone',
+                        model.loggedUser.phoneNumber,
+                        isEditable: true,
+                        onEditButtonTapped: () => model.showUpdateDialog(destinationController: EDestinationController.phoneNumberCtrl)
+                    )
+                  ],
+                ) : LoadingMini(),
+                InfoTile(Icon(Icons.email), 'E-mail', model.loggedUser.email),
                 model.coreService.loggedUser.userType == EUserType.driver // if user is driver, show account status. If not, show nothing (because client users are active by default)
                     ? Text('\nStatut: ${model.coreService.driverDashboardState.isActiveAccount != null ? "Activé" : "Non actif"}')
                     : Text(""),

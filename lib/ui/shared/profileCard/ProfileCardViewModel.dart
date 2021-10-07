@@ -12,20 +12,30 @@ import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
+import 'package:free_drive/services/ProfileService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/services/IAuthService.dart';
+import 'package:free_drive/ui/shared/customShapes.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stacked/stacked.dart';
+
+enum EDestinationController {
+  displayNameCtrl,
+  phoneNumberCtrl
+}
 
 class ProfileCardViewModel extends BaseViewModel {
 
   CoreService coreService = getIt.get<CoreService>();
   IAuthService authService = getIt.get<IAuthService>();
+  ProfileService _profileService = getIt.get<ProfileService>();
   ContactDriverService contactDriverService = getIt.get<ContactDriverService>();
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   bool isUploading = false;
+  bool isUpdating = false;
   double uploadPercentage = 0;
 
   UserModel get loggedUser => coreService.loggedUser;
@@ -35,12 +45,18 @@ class ProfileCardViewModel extends BaseViewModel {
   double get deviceWidth => this.coreService.deviceWidth;
   double get deviceHeight => this.coreService.deviceHeight;
 
+  final updateFormKey = GlobalKey<FormState>();
+  TextEditingController displayNameCtrl = new TextEditingController();
+  TextEditingController phoneNumberCtrl = new TextEditingController();
+
   final picker = ImagePicker();
 
   initView() {
     setBusy(true);
     this.loadLocallyLoggedUser();
     this.loadAndSetProfilePictureUrl();
+    this.displayNameCtrl.text = this.loggedUser.displayName;
+    this.phoneNumberCtrl.text = this.loggedUser.phoneNumber;
     setBusy(false);
   }
 
@@ -120,6 +136,90 @@ class ProfileCardViewModel extends BaseViewModel {
 
   void loadAndSetProfilePictureUrl() async {
     this.profilePictureUrl = await this.coreService.getProfilePictureUrl();
+  }
+
+  setIsUpdating(bool value) {
+    this.isUpdating = value;
+    this.notifyListeners();
+  }
+
+  updateName() async {
+    bool isValid = this.updateFormKey.currentState.validate();
+    if(!isValid) return;
+    setIsUpdating(true);
+    navigatorKey.currentState.pop();
+    bool success = await this._profileService.updateDisplayName(this.displayNameCtrl.text);
+    success ? Utils.showToast("Nom mis à jour") : Utils.showToast("Erreur, veuillez reéssayer");
+    setIsUpdating(false);
+  }
+
+  updatePhonenumber() async {
+    bool isValid = this.updateFormKey.currentState.validate();
+    if(!isValid) return;
+    setIsUpdating(true);
+    navigatorKey.currentState.pop();
+    bool success = await this._profileService.updatePhoneNumber(this.phoneNumberCtrl.text);
+    success ? Utils.showToast("Téléhone mis à jour") : Utils.showToast("Erreur, veuillez reéssayer");
+    setIsUpdating(false);
+  }
+
+  updateFormValidator(String value, EDestinationController destinationController) {
+    switch(destinationController) {
+      case EDestinationController.displayNameCtrl:
+        if(value.isEmpty) return "Saisir nouveau nom";
+      break;
+      case EDestinationController.phoneNumberCtrl:
+        if(value.isEmpty) return "Saisir nouveau numéro";
+      break;
+      default:
+        return null;
+      break;
+    }
+  }
+
+  showUpdateDialog({EDestinationController destinationController}) {
+    return showDialog(
+        context: navigatorKey.currentContext,
+        builder: (_) => SizedBox(
+          height: Utils.deviceHeight*0.5,
+          child: AlertDialog(
+              title: Text("Caméra ou Gallerie ?"),
+              content: Form(
+                key: this.updateFormKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: TextFormField(
+                    validator: (String value) => this.updateFormValidator(value, destinationController),
+                    controller: destinationController == EDestinationController.displayNameCtrl ? this.displayNameCtrl : this.phoneNumberCtrl,
+                    decoration: InputDecoration(
+                        label: Text(destinationController == EDestinationController.displayNameCtrl ? 'Entrez votre nom' : 'Numéro de téléphone')
+                    ),
+                    keyboardType: destinationController == EDestinationController.displayNameCtrl ? TextInputType.text : TextInputType.phone,
+                    autofocus: true
+                  ),
+                ),
+              ),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  primary: Colors.white
+                ),
+                child: Text('Annuler'),
+                onPressed: () => navigatorKey.currentState.pop(),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Theme.of(navigatorKey.currentContext).primaryColor,
+                  primary: Colors.white
+                ),
+                child: Text('Changer'),
+                onPressed: () => destinationController == EDestinationController.displayNameCtrl ? this.updateName() : this.updatePhonenumber(),
+              )
+            ],
+          ),
+        )
+    );
   }
 
 }

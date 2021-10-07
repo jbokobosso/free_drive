@@ -96,7 +96,7 @@ class AuthService extends IAuthService {
   Future<bool> storeFirebaseUserInfos(UserModel userModel) async {
     this.firebaseAuth.currentUser.updateDisplayName(userModel.displayName);
     if(userModel.userType == EUserType.client) {
-      var result = await this.firestore.collection("clients").add(
+      var result = await this.firestore.collection(FCN_clients).doc(this.firebaseAuth.currentUser.uid).set(
           new ClientModel(
             "${userModel.displayName.trim()}",
             userModel.email.trim(),
@@ -104,12 +104,9 @@ class AuthService extends IAuthService {
             userModel.address,
           ).toMap()
       );
-      if(result != null)
-        return true;
-      else
-        return false;
+      return true;
     } else if(userModel.userType == EUserType.driver) {
-      var result = await this.firestore.collection("drivers").add(
+      var result = await this.firestore.collection(FCN_drivers).doc(this.firebaseAuth.currentUser.uid).set(
           new DriverModel(
             "${userModel.displayName.trim()}",
             userModel.email.trim(),
@@ -118,10 +115,7 @@ class AuthService extends IAuthService {
             false
           ).toMap()
       );
-      if(result != null)
-        return true;
-      else
-        return false;
+      return true;
     } else {
       throw "Error in storeing user infos on firebase firestore. Reason: The provide user type is neither driver nor client.";
     }
