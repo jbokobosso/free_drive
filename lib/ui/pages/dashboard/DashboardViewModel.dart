@@ -53,21 +53,12 @@ class DashboardViewModel extends BaseViewModel {
   initUserViewPage() {
     this.initEyeAnimation();
     this.checkUserActiveRide();
-    this.initNotification();
   }
 
   initDriverViewPage() {
     this.initEyeAnimation();
     this.checkDriverActiveRide();
-    this.initNotification();
     this.checkDriverProfileIsActive();
-  }
-
-  Future<void> initNotification() async {
-    if(this.coreService.alreadyRegisteredFCM) return;
-    String token = await FirebaseMessaging.instance.getToken();
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    this.coreService.alreadyRegisteredFCM = true;
   }
 
   initEyeAnimation() {

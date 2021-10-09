@@ -7,21 +7,25 @@ import 'package:free_drive/services/ServiceLocator.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
-void selectNotification(String payload) async {
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
+}
+
+Future<void> initFirebaseCloudMessaging() async {
+  String token = await FirebaseMessaging.instance.getToken();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+}
+
+void onNotificationTapped(String payload) async {
   if (payload != null) debugPrint('notification payload: $payload');
   navigatorKey.currentState.pushNamed('/startup', arguments: payload);
 }
 
 prepareLocalNotification() async {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-// initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
   const AndroidInitializationSettings androidInitializationSettings = AndroidInitializationSettings('app_icon');
   final InitializationSettings initializationSettings = InitializationSettings(android: androidInitializationSettings);
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: selectNotification);
-}
-
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message: ${message.messageId}");
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onNotificationTapped);
 }
 
 void main() async {
@@ -29,6 +33,7 @@ void main() async {
   await Firebase.initializeApp();
   setupServiceLocator();
   await prepareLocalNotification();
+  // initFirebaseCloudMessaging();
   runApp(MyApp());
 }
 

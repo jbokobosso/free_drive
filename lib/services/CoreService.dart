@@ -23,7 +23,6 @@ class CoreService {
   UserModel loggedUser;
 
   ERideState alreadyShownNotification = ERideState.pending;
-  bool alreadyRegisteredFCM = false;
 
   UserDashboardModel userDashboardState = new UserDashboardModel(
     balance: 25000,
