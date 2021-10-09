@@ -22,7 +22,7 @@ class CoreService {
 
   UserModel loggedUser;
 
-  bool alreadyLoadedActiveRideStream = false;
+  ERideState alreadyShownNotification = ERideState.pending;
   bool alreadyRegisteredFCM = false;
 
   UserDashboardModel userDashboardState = new UserDashboardModel(
@@ -230,22 +230,25 @@ class CoreService {
 
   notifyForRideState({@required EUserType userType}) {
     RideModel activeRide = userType == EUserType.client ? this.userDashboardState.activeRide : this.driverDashboardState.activeRide;
-    switch(activeRide.rideState) {
-      case ERideState.accepted:
-        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course acceptée', payload: 'payload');
-        break;
-      case ERideState.running:
-        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Votre course vient de démarrer', payload: 'payload');
-        break;
-      case ERideState.canceled:
-        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course annulée', payload: 'payload');
-        break;
-      case ERideState.done:
-        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'La course est terminée', payload: 'payload');
-        break;
-      default:
-        break;
+    if(alreadyShownNotification != activeRide.rideState) { // prevent sending notif when notif is tapped
+      switch(activeRide.rideState) {
+        case ERideState.accepted:
+          Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course acceptée', payload: 'payload');
+          break;
+        case ERideState.running:
+          Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Votre course vient de démarrer', payload: 'payload');
+          break;
+        case ERideState.canceled:
+          Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course annulée', payload: 'payload');
+          break;
+        case ERideState.done:
+          Utils.showLocalNotification(title: 'Votre course', bodyContent: 'La course est terminée', payload: 'payload');
+          break;
+        default:
+          break;
+      }
     }
+    this.alreadyShownNotification = this.userDashboardState.activeRide.rideState; // update last notification triggered
   }
 
 }

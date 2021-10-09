@@ -85,8 +85,22 @@ class DashboardViewModel extends BaseViewModel {
     );
   }
 
+  void loadUserActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getUserActiveRide();
+    querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      this.coreService.showToastMessage("New Incoming message");
+      if(querySnapshot.docs.isEmpty) {
+        this.activeRide = null;
+      } else {
+        this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
+        this.coreService.userDashboardState.activeRide = this.activeRide;
+      }
+      this.coreService.notifyForRideState(userType: EUserType.client);
+      notifyListeners();
+    });
+  }
+
   Future<void> checkUserActiveRide() async {
-    // if(this.coreService.alreadyLoadedActiveRideStream) return;
     setBusy(true);
     bool activeRideExists = await this._dashboardService.userActiveRideExists();
     setBusy(false);
@@ -101,22 +115,20 @@ class DashboardViewModel extends BaseViewModel {
       this.coreService.userDashboardState = state;
       notifyListeners();
       setBusy(false);
-      // this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
     }
   }
 
-  void loadUserActiveRide() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getUserActiveRide();
+  void loadDriverActiveRide() {
+    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
     querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
       this.coreService.showToastMessage("New Incoming message");
       if(querySnapshot.docs.isEmpty) {
         this.activeRide = null;
       } else {
         this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-        this.coreService.userDashboardState.activeRide = this.activeRide;
+        this.coreService.driverDashboardState.activeRide = this.activeRide;
       }
-      // Manage local notification
-      this.coreService.notifyForRideState(userType: EUserType.client);
+      this.coreService.notifyForRideState(userType: EUserType.driver);
       notifyListeners();
     });
   }
@@ -141,20 +153,6 @@ class DashboardViewModel extends BaseViewModel {
         // this.coreService.alreadyLoadedActiveRideStream = true; // ceci empêche de refaire le requete qui récupère le stream écoutant sur la course active
       }
     }
-  }
-
-  void loadDriverActiveRide() {
-    Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream = this._dashboardService.getDriverActiveRide();
-    querySnapshotStream.listen((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-      this.coreService.showToastMessage("New Incoming message");
-      if(querySnapshot.docs.isEmpty) {
-        this.activeRide = null;
-      } else {
-        this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
-        this.coreService.driverDashboardState.activeRide = this.activeRide;
-      }
-      notifyListeners();
-    });
   }
 
   void showOrHideDriverActiveRideDetails() {
