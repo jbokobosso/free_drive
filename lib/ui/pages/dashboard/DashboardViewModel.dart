@@ -8,6 +8,7 @@ import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
+import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/CoreService.dart';
@@ -114,7 +115,8 @@ class DashboardViewModel extends BaseViewModel {
         this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
         this.coreService.userDashboardState.activeRide = this.activeRide;
       }
-      Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course acceptée !!!', payload: 'payload');
+      // Manage local notification
+      this.coreService.notifyForRideState(userType: EUserType.client);
       notifyListeners();
     });
   }

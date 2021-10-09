@@ -7,9 +7,12 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EDialogType.dart';
+import 'package:free_drive/models/EUserType.dart';
+import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CoreService {
@@ -223,6 +226,26 @@ class CoreService {
         result = true;
     });
     return result;
+  }
+
+  notifyForRideState({@required EUserType userType}) {
+    RideModel activeRide = userType == EUserType.client ? this.userDashboardState.activeRide : this.driverDashboardState.activeRide;
+    switch(activeRide.rideState) {
+      case ERideState.accepted:
+        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course acceptée', payload: 'payload');
+        break;
+      case ERideState.running:
+        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Votre course vient de démarrer', payload: 'payload');
+        break;
+      case ERideState.canceled:
+        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course annulée', payload: 'payload');
+        break;
+      case ERideState.done:
+        Utils.showLocalNotification(title: 'Votre course', bodyContent: 'La course est terminée', payload: 'payload');
+        break;
+      default:
+        break;
+    }
   }
 
 }
