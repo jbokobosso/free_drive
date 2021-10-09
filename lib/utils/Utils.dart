@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EDialogType.dart';
 import 'package:lottie/lottie.dart';
@@ -148,5 +150,17 @@ class Utils {
   static double deviceWidth = MediaQuery.of(navigatorKey.currentState.context).size.width;
 
   static double deviceHeight =MediaQuery.of(navigatorKey.currentState.context).size.height;
+
+  static showLocalNotification({@required String title, @required String bodyContent, @required payload}) {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+        NOTIFICATION_CHANNEL_ID, NOTIFICATION_MAIN_CHANNEL,
+        channelDescription: NOTIFICATION_CHANNEL_DESC,
+        importance: Importance.max,
+        priority: Priority.high,
+        ticker: 'ticker');
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
+    flutterLocalNotificationsPlugin.show(0, title, bodyContent, platformChannelSpecifics, payload: payload);
+  }
 
 }

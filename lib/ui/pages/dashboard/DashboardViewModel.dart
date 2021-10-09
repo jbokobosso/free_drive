@@ -3,6 +3,8 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
@@ -112,6 +114,7 @@ class DashboardViewModel extends BaseViewModel {
         this.activeRide = RideModel.fromJSON(querySnapshot.docs.first.data(), querySnapshot.docs.first.id);
         this.coreService.userDashboardState.activeRide = this.activeRide;
       }
+      Utils.showLocalNotification(title: 'Votre course', bodyContent: 'Course acceptée !!!', payload: 'payload');
       notifyListeners();
     });
   }

@@ -27,3 +27,8 @@ const PLACES_SEARCH_RESULT_LIMIT = 5;
 
 // PayGate Global
 const PAYGATE_API_TOKEN = "ff9e6c66-c038-4862-aef3-69bc8af89b88";
+
+// Local notifications
+const NOTIFICATION_CHANNEL_ID = '117';
+const NOTIFICATION_MAIN_CHANNEL = 'main_channel';
+const NOTIFICATION_CHANNEL_DESC = 'your channel description';

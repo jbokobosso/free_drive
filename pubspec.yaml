@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   # Core functionality
+  flutter_local_notifications: ^9.0.0
   http: ^0.13.3
   enum_to_string: ^2.0.1
   nanoid: ^1.0.0
