@@ -15,8 +15,8 @@ enum ERideState {
 
 class RideModel {
   String id;
-  Place departureLocation;
-  Place destinationLocation;
+  Places departureLocation;
+  Places destinationLocation;
   DateTime departureDate;
   DateTime returnDate;
   int rideDurationInDays;
@@ -47,8 +47,8 @@ class RideModel {
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
     RideModel ride = new RideModel(
       id: firebaseId,
-      departureLocation: Place.fromJSON(json['departureLocation']),
-      destinationLocation: Place.fromJSON(json['destinationLocation']),
+      departureLocation: Places.fromJSON(json['departureLocation']),
+      destinationLocation: Places.fromJSON(json['destinationLocation']),
       departureDate: Utils.timestampToDateTime(json['departureDate']),
       returnDate: Utils.timestampToDateTime(json['returnDate']),
       rideDurationInDays: json['rideDurationInDays'],
@@ -91,13 +91,13 @@ class RideModel {
 
 }
 
-class Place {
+class Places {
   double latitude;
   double longitude;
   String shortName;
   String longName;
 
-  Place({@required this.latitude, @required this.longitude, @required this.shortName, @required this.longName});
+  Places({@required this.latitude, @required this.longitude, @required this.shortName, @required this.longName});
 
   Map<String, dynamic> toJSON() {
     return {
@@ -109,7 +109,7 @@ class Place {
   }
 
   static fromJSON(Map<String, dynamic> json) {
-    return new Place(latitude: json['latitude'], longitude: json['longitude'], shortName: json['shortName'], longName: json['longName']);
+    return new Places(latitude: json['latitude'], longitude: json['longitude'], shortName: json['shortName'], longName: json['longName']);
   }
 
 

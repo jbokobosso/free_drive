@@ -14,7 +14,11 @@ import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
+import 'package:google_places_picker/google_places_picker.dart';
 import 'package:mapbox_search/mapbox_search.dart';
+// import 'package:place_picker/entities/location_result.dart';
+// import 'package:place_picker/place_picker.dart';
+// import 'package:place_picker/widgets/place_picker.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -56,6 +60,9 @@ class AskDriverViewModel extends BaseViewModel {
   bool contactedDriver = false;
 
   List<MapBoxPlace> places = [];
+  var locationRestriction = LocationRestriction()
+    ..northEastLat = 6.1824878
+    ..northEastLng = 1.1764786;
 
   var placesSearch = PlacesSearch(
     apiKey: MAPBOX_TOKEN,
@@ -153,8 +160,8 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   Future<RideModel> buildRideModel() async {
-    Place departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
-    Place destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
+    Places departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
+    Places destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
     RideModel ride = new RideModel(
       id: null,
       departureLocation: departureLocation,
@@ -187,9 +194,30 @@ class AskDriverViewModel extends BaseViewModel {
     return await placesSearch.getPlaces(searchText);
   }
 
-  Future<Place> getOnePlace(String searchText) async {
+  pickPlace() async {
+    var place = await PluginGooglePlacePicker.showAutocomplete(
+        mode: PlaceAutocompleteMode.MODE_OVERLAY,
+        countryCode: 'TG',
+        restriction: locationRestriction,
+        typeFilter: TypeFilter.ESTABLISHMENT);
+    print(place);
+  }
+
+  // void showPlacePicker(BuildContext context) async {
+  //   LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) =>
+  //           PlacePicker(
+  //             GMAPS_API_KEY,
+  //             displayLocation: LatLng(6.1824878, 1.1766506),
+  //           )));
+  //
+  //   // Handle the result in your way
+  //   print(result);
+  // }
+
+  Future<Places> getOnePlace(String searchText) async {
     List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
-    return new Place(
+    return new Places(
       latitude: foundPlaces.first.center.first,
       longitude: foundPlaces.first.center.first,
       shortName: foundPlaces.first.text,

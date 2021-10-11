@@ -64,10 +64,8 @@ class AskDriverPage extends StatelessWidget {
                         child: Column(
                           children: [
                             heightSpacing(),
-                            TypeAheadField<MapBoxPlace>(
-                            debounceDuration: Duration(seconds: 1),
-                            hideSuggestionsOnKeyboardHide: false,
-                            textFieldConfiguration: TextFieldConfiguration(
+                            TextFormField(
+                              onTap: () => model.pickPlace(),
                               controller: model.departureLocationCtrl,
                               autofocus: false,
                               decoration: InputDecoration(
@@ -80,15 +78,31 @@ class AskDriverPage extends StatelessWidget {
                                 disabledBorder: customInputBorder(context),
                               ),
                             ),
-                            suggestionsCallback: model.getPlaces,
-                            itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
-                              title: Text(suggestion.text),
-                              subtitle: Text(suggestion.placeName),
-                            ),
-                            onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
-                              model.handleDepartureLocationInput(selectedSuggestion);
-                            },
-                          ),
+                          //   TypeAheadField<MapBoxPlace>(
+                          //   debounceDuration: Duration(seconds: 1),
+                          //   hideSuggestionsOnKeyboardHide: false,
+                          //   textFieldConfiguration: TextFieldConfiguration(
+                          //     controller: model.departureLocationCtrl,
+                          //     autofocus: false,
+                          //     decoration: InputDecoration(
+                          //       labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
+                          //       labelText: "Lieu de départ",
+                          //       prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
+                          //       contentPadding: EdgeInsets.all(0),
+                          //       enabledBorder: customInputBorder(context),
+                          //       border: customInputBorder(context),
+                          //       disabledBorder: customInputBorder(context),
+                          //     ),
+                          //   ),
+                          //   suggestionsCallback: model.getPlaces,
+                          //   itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
+                          //     title: Text(suggestion.text),
+                          //     subtitle: Text(suggestion.placeName),
+                          //   ),
+                          //   onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
+                          //     model.handleDepartureLocationInput(selectedSuggestion);
+                          //   },
+                          // ),
                             heightSpacing(),
                             TypeAheadField<MapBoxPlace>(
                               debounceDuration: Duration(seconds: 1),

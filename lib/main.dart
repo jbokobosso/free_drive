@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/constants/routes.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
+import 'package:google_places_picker/google_places_picker.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -28,8 +30,11 @@ prepareLocalNotification() async {
   await flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onNotificationTapped);
 }
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  PluginGooglePlacePicker.initialize(androidApiKey: GMAPS_API_KEY);
   await Firebase.initializeApp();
   setupServiceLocator();
   await prepareLocalNotification();
@@ -48,6 +53,11 @@ class MyApp extends StatelessWidget {
         primaryColor: Color(0xffE67925),
         accentColor: Color(0xffFFF4EB),
         textTheme: TextTheme(
+            bodyText1: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+                fontSize: 12.0
+            ),
             headline1: TextStyle(
               fontWeight: FontWeight.bold,
               color: Color(0xff7C7D7E),
