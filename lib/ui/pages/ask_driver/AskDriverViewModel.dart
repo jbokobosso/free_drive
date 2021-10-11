@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +16,9 @@ import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:google_places_picker/google_places_picker.dart';
 import 'package:mapbox_search/mapbox_search.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import 'package:place_picker/entities/location_result.dart';
 // import 'package:place_picker/place_picker.dart';
 // import 'package:place_picker/widgets/place_picker.dart';
@@ -59,21 +62,32 @@ class AskDriverViewModel extends BaseViewModel {
 
   bool contactedDriver = false;
 
-  List<MapBoxPlace> places = [];
-  var locationRestriction = LocationRestriction()
-    ..northEastLat = 6.1824878
-    ..northEastLng = 1.1764786;
+  // List<MapBoxPlace> places = [];
+  // var locationRestriction = LocationRestriction()
+  //   ..northEastLat = 6.1824878
+  //   ..northEastLng = 1.1764786;
+
+  CameraPosition defaultLocation;
+  var markers;
+  Completer<GoogleMapController> controller = Completer();
+
+  initView() {
+    defaultLocation = CameraPosition(
+      target: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+      zoom: 14.4746,
+    );
+    this.setMarker();
+    this.loadLoggedUser();
+    this.smsFormKey = new GlobalKey<FormState>();
+    this.initEyeAnimation();
+    this.requestLocationPermission();
+    notifyListeners();
+  }
 
   var placesSearch = PlacesSearch(
     apiKey: MAPBOX_TOKEN,
     limit: PLACES_SEARCH_RESULT_LIMIT,
   );
-
-  initView() {
-    this.loadLoggedUser();
-    this.smsFormKey = new GlobalKey<FormState>();
-    this.initEyeAnimation();
-  }
 
   Future<void> loadLoggedUser() async {
     this.loggedUser = await this._authService.getLoggedUser();
@@ -194,14 +208,14 @@ class AskDriverViewModel extends BaseViewModel {
     return await placesSearch.getPlaces(searchText);
   }
 
-  pickPlace() async {
-    var place = await PluginGooglePlacePicker.showAutocomplete(
-        mode: PlaceAutocompleteMode.MODE_OVERLAY,
-        countryCode: 'TG',
-        restriction: locationRestriction,
-        typeFilter: TypeFilter.ESTABLISHMENT);
-    print(place);
-  }
+  // pickPlace() async {
+  //   var place = await PluginGooglePlacePicker.showAutocomplete(
+  //       mode: PlaceAutocompleteMode.MODE_OVERLAY,
+  //       countryCode: 'TG',
+  //       restriction: locationRestriction,
+  //       typeFilter: TypeFilter.ESTABLISHMENT);
+  //   print(place);
+  // }
 
   // void showPlacePicker(BuildContext context) async {
   //   LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
@@ -286,6 +300,29 @@ class AskDriverViewModel extends BaseViewModel {
     setBusy(false);
     if(success)
       navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false);
+  }
+
+  Future<bool> requestLocationPermission() async {
+    bool isOk = false;
+    PermissionStatus permissionStatus = await Permission.location.request();
+    if(permissionStatus == PermissionStatus.granted)
+      isOk = true;
+    return isOk;
+  }
+
+  setMarker() async {
+    markers = <Marker>{
+      Marker(
+          icon: BitmapDescriptor.defaultMarker,
+          position: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+          onTap: () {
+            navigatorKey.currentState.pop();
+            this.departureLocationCtrl.text = "${this.coreService.locationData.latitude},${this.coreService.locationData.longitude}";
+          },
+          markerId: MarkerId("117"),
+          visible: true
+      )
+    };
   }
 
 }

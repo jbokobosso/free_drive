@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/constants/routes.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:google_places_picker/google_places_picker.dart';
+// import 'package:google_places_picker/google_places_picker.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
 
@@ -34,7 +34,7 @@ prepareLocalNotification() async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  PluginGooglePlacePicker.initialize(androidApiKey: GMAPS_API_KEY);
+  // PluginGooglePlacePicker.initialize(androidApiKey: GMAPS_API_KEY);
   await Firebase.initializeApp();
   setupServiceLocator();
   await prepareLocalNotification();

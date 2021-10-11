@@ -13,12 +13,16 @@ import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
 import 'package:free_drive/utils/Utils.dart';
+import 'package:location/location.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CoreService {
 
   double get deviceHeight => this._getDeviceHeight();
   double get deviceWidth => this._getDeviceWidth();
+  LocationData get locationData => this._locationData;
+
+  LocationData _locationData;
 
   UserModel loggedUser;
 
@@ -42,6 +46,10 @@ class CoreService {
   );
 
   List<Widget> navigationPages = [new DriverDashboardPage(), new UserDashboardPage(), new DriverDashboardPage()];
+
+  setLocationData(LocationData locationData) {
+    this._locationData = locationData;
+  }
 
   setUserState(UserModel user) {
 

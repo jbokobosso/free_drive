@@ -17,6 +17,7 @@ import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/ui/shared/Button.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:free_drive/utils/Utils.dart';
+import 'package:location/location.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -53,6 +54,7 @@ class DashboardViewModel extends BaseViewModel {
   initUserViewPage() {
     this.initEyeAnimation();
     this.checkUserActiveRide();
+    this.requestUserLocation();
   }
 
   initDriverViewPage() {
@@ -291,6 +293,37 @@ class DashboardViewModel extends BaseViewModel {
         ),
       )
     );
+  }
+
+  requestUserLocation() async {
+    setBusy(true);
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        setBusy(false);
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        setBusy(false);
+        return;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    this.coreService.setLocationData(_locationData);
+    setBusy(false);
   }
 
 }

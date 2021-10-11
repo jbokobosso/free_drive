@@ -7,6 +7,7 @@ import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AskDriverPage extends StatelessWidget {
   AskDriverPage({Key key}) : super(key: key);
@@ -65,7 +66,18 @@ class AskDriverPage extends StatelessWidget {
                           children: [
                             heightSpacing(),
                             TextFormField(
-                              onTap: () => model.pickPlace(),
+                              onTap: () => showDialog(context: context, builder: (_) => GoogleMap(
+                                mapType: MapType.hybrid,
+                                initialCameraPosition: model.defaultLocation,
+                                onMapCreated: (GoogleMapController controller) {
+                                  model.controller.complete(controller);
+                                },
+                                compassEnabled: true,
+                                mapToolbarEnabled: true,
+                                myLocationButtonEnabled: true,
+                                myLocationEnabled: true,
+                                markers: model.markers,
+                              )),
                               controller: model.departureLocationCtrl,
                               autofocus: false,
                               decoration: InputDecoration(

@@ -23,7 +23,9 @@ environment:
 dependencies:
 
   # Core functionality
-  google_places_picker: ^3.0.2
+  location: ^4.3.0
+  permission_handler: ^8.2.2
+  google_maps_flutter: ^2.0.11
   flutter_local_notifications: ^9.0.0
   http: ^0.13.3
   enum_to_string: ^2.0.1
