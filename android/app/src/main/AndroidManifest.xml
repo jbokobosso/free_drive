@@ -1,8 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.updateconcept.free_drive">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
    <application
         android:label="Free Drive"
         android:icon="@mipmap/launcher_icon">
+
+       <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCprqOJ8Zw0bTcL3xLna6SsG_UlwACX1jA"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

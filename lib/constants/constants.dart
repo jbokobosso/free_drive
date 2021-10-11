@@ -32,3 +32,6 @@ const PAYGATE_API_TOKEN = "ff9e6c66-c038-4862-aef3-69bc8af89b88";
 const NOTIFICATION_CHANNEL_ID = '117';
 const NOTIFICATION_MAIN_CHANNEL = 'main_channel';
 const NOTIFICATION_CHANNEL_DESC = 'your channel description';
+
+// Google Maps api key
+const GMAPS_API_KEY = "AIzaSyCprqOJ8Zw0bTcL3xLna6SsG_UlwACX1jA";
