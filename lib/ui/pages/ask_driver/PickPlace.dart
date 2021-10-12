@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:free_drive/models/PlacesQueryResponse.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:stacked/stacked.dart';
@@ -14,18 +16,36 @@ class PickPlace extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
           body: Column(
             children: [
-              TextFormField(
-                decoration: InputDecoration(
-                    label: Text('Rechercher un lieu'),
-                    icon: Icon(Icons.place)
+                TypeAheadField<PlacesQueryResponse>(
+                debounceDuration: Duration(seconds: 1),
+                hideSuggestionsOnKeyboardHide: false,
+                textFieldConfiguration: TextFieldConfiguration(
+                  controller: model.departureLocationCtrl,
+                  autofocus: false,
+                  decoration: InputDecoration(
+                    labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
+                    labelText: "Ville, Quartier, Lieu",
+                    prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
+                    contentPadding: EdgeInsets.all(0),
+                    prefix: Icon(Icons.place),
+                    suffixIcon: Icon(Icons.search)
+                  ),
                 ),
+                suggestionsCallback: model.getGooglePlaces,
+                itemBuilder: (context, PlacesQueryResponse suggestion) => ListTile(
+                  title: Text(suggestion.description),
+                  subtitle: Text(suggestion.placeId),
+                ),
+                onSuggestionSelected: (PlacesQueryResponse selectedSuggestion) {
+                  model.onSuggestionSelected(selectedSuggestion);
+                },
               ),
               Expanded(
                 child: GoogleMap(
                   mapType: MapType.hybrid,
                   initialCameraPosition: model.defaultLocation,
                   onMapCreated: (GoogleMapController controller) {
-                    model.controller.complete(controller);
+                    model.googleMapController.complete(controller);
                   },
                   compassEnabled: true,
                   mapToolbarEnabled: true,
@@ -39,7 +59,7 @@ class PickPlace extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ElevatedButton(
-                    onPressed: () => model.controllMap(LatLng(7.1232521,0.7204892)),
+                    onPressed: () => null,
                     child: Text('Action'),
                   ),
                   ElevatedButton(

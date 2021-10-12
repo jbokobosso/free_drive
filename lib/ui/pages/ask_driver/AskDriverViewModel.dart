@@ -9,6 +9,7 @@ import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EDialogType.dart';
 import 'package:free_drive/models/ERideType.dart';
+import 'package:free_drive/models/PlacesQueryResponse.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/AskDriverService.dart';
@@ -65,7 +66,7 @@ class AskDriverViewModel extends BaseViewModel {
 
   CameraPosition defaultLocation;
   var markers;
-  Completer<GoogleMapController> controller = Completer();
+  Completer<GoogleMapController> googleMapController = Completer();
 
   initView() {
     defaultLocation = CameraPosition(
@@ -285,10 +286,6 @@ class AskDriverViewModel extends BaseViewModel {
     this.computeAndSetRideDuration();
   }
 
-  handleDepartureLocationInput(MapBoxPlace selectedSuggestion) {
-    this.departureLocationCtrl.text = selectedSuggestion.placeName;
-  }
-
   handleDestinationLocationInput(MapBoxPlace selectedSuggestion) {
     this.destinationLocationCtrl.text = selectedSuggestion.placeName;
   }
@@ -310,7 +307,7 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   setMarker(LatLng latLng, String markerId) async {
-    markers = <Marker>{
+    this.markers = <Marker>{
       Marker(
           icon: BitmapDescriptor.defaultMarker,
           position: latLng,
@@ -324,16 +321,9 @@ class AskDriverViewModel extends BaseViewModel {
     };
   }
 
-  controllMap(LatLng latLng) async {
-    GoogleMapController googleMapController = await this.controller.future;
-    googleMapController.animateCamera(CameraUpdate.newLatLng(latLng));
-    this.setMarker(latLng, "2");
-    notifyListeners();
-  }
-
   onTappedMapLocation(LatLng latLng) async {
     this.askDriverService.setPickedLocation(latLng);
-    GoogleMapController googleMapController = await this.controller.future;
+    GoogleMapController googleMapController = await this.googleMapController.future;
     googleMapController.animateCamera(CameraUpdate.newLatLng(latLng));
     this.setMarker(latLng, "2");
     notifyListeners();
@@ -342,8 +332,23 @@ class AskDriverViewModel extends BaseViewModel {
 
   storePickedLocation() {
     navigatorKey.currentState.pop();
-    Utils.showToast(this.askDriverService.pickedLocation.latitude.toString());
     this.destinationLocationCtrl.text = "${this.askDriverService.pickedLocation.latitude},${this.askDriverService.pickedLocation.longitude}";
+    notifyListeners();
+  }
+
+  Future<List<PlacesQueryResponse>> getGooglePlaces(String searchTerm) async {
+    if(searchTerm.isNotEmpty) {
+      return await this.askDriverService.queryGooglePlaces(searchTerm);
+    }
+  }
+
+  onSuggestionSelected(PlacesQueryResponse selectedSuggestion) async {
+    PlaceDetailQueryResponse place = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
+    Utils.showToast(place.longName);
+    var _gmapsController = await this.googleMapController.future;
+    _gmapsController.animateCamera(CameraUpdate.newLatLng(place.location)); // animate map
+    this.setMarker(place.location, "1"); // set marker
+    this.askDriverService.setPickedLocation(place.location); // make accessible picked location from service
     notifyListeners();
   }
 

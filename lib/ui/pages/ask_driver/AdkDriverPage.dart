@@ -71,7 +71,7 @@ class AskDriverPage extends StatelessWidget {
                                 mapType: MapType.hybrid,
                                 initialCameraPosition: model.defaultLocation,
                                 onMapCreated: (GoogleMapController controller) {
-                                  model.controller.complete(controller);
+                                  model.googleMapController.complete(controller);
                                 },
                                 compassEnabled: true,
                                 mapToolbarEnabled: true,
@@ -94,31 +94,6 @@ class AskDriverPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          //   TypeAheadField<MapBoxPlace>(
-                          //   debounceDuration: Duration(seconds: 1),
-                          //   hideSuggestionsOnKeyboardHide: false,
-                          //   textFieldConfiguration: TextFieldConfiguration(
-                          //     controller: model.departureLocationCtrl,
-                          //     autofocus: false,
-                          //     decoration: InputDecoration(
-                          //       labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
-                          //       labelText: "Lieu de départ",
-                          //       prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
-                          //       contentPadding: EdgeInsets.all(0),
-                          //       enabledBorder: customInputBorder(context),
-                          //       border: customInputBorder(context),
-                          //       disabledBorder: customInputBorder(context),
-                          //     ),
-                          //   ),
-                          //   suggestionsCallback: model.getPlaces,
-                          //   itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
-                          //     title: Text(suggestion.text),
-                          //     subtitle: Text(suggestion.placeName),
-                          //   ),
-                          //   onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
-                          //     model.handleDepartureLocationInput(selectedSuggestion);
-                          //   },
-                          // ),
                             heightSpacing(),
                             GestureDetector(
                               onTap: () => showDialog(context: context, builder: (_) => PickPlace(model.storePickedLocation)),
