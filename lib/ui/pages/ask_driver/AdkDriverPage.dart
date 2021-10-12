@@ -67,17 +67,35 @@ class AskDriverPage extends StatelessWidget {
                           children: [
                             heightSpacing(),
                             GestureDetector(
-                              onTap: () => showDialog(context: context, builder: (_) => GoogleMap(
-                                mapType: MapType.hybrid,
-                                initialCameraPosition: model.defaultLocation,
-                                onMapCreated: (GoogleMapController controller) {
-                                  model.googleMapController.complete(controller);
-                                },
-                                compassEnabled: true,
-                                mapToolbarEnabled: true,
-                                myLocationButtonEnabled: true,
-                                myLocationEnabled: true,
-                                markers: model.markers,
+                              onTap: () => showDialog(context: context, builder: (_) => Scaffold(
+                                appBar: CustomAppBar(title: 'Lieu de départ'),
+                                body: Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(8.0),
+                                      width: double.infinity,
+                                      color: Colors.green,
+                                      child: Text(
+                                          'Confirmez Votre Position Géographique\nen tapant sur le point rouge',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
+                                    ),
+                                    Expanded(
+                                      child: GoogleMap(
+                                        mapType: MapType.hybrid,
+                                        initialCameraPosition: model.defaultLocation,
+                                        onMapCreated: (GoogleMapController controller) {
+                                          model.googleMapController.complete(controller);
+                                        },
+                                        compassEnabled: true,
+                                        mapToolbarEnabled: true,
+                                        myLocationButtonEnabled: true,
+                                        myLocationEnabled: true,
+                                        markers: model.markers,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               )),
                               child: TextFormField(
                                 enabled: false,
