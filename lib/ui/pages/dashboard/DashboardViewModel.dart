@@ -286,7 +286,7 @@ class DashboardViewModel extends BaseViewModel {
                     return null;
                   },
                 ) : Container(),
-                Button(loadBalance)
+                Button(loadBalance, 'Procéder')
               ],
             ),
           ),

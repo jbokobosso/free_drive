@@ -7,13 +7,14 @@ class Button extends StatelessWidget {
   bool isAction;
   bool isDanger;
   bool isSuccess;
-  Button(this.callback, {bool isAction=false, bool isDanger=false, bool isSuccess=false});
+  String text;
+  Button(this.callback, this.text, {bool isAction=false, bool isDanger=false, bool isSuccess=false});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: callback,
-      child: Text('Procéder'),
+      child: Text(this.text),
       style: ElevatedButton.styleFrom(
           primary: Theme.of(context).primaryColor,
           shape: RoundedRectangleBorder(
