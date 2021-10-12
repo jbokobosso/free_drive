@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
+import 'package:free_drive/ui/pages/ask_driver/PickPlace.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
@@ -65,7 +66,7 @@ class AskDriverPage extends StatelessWidget {
                         child: Column(
                           children: [
                             heightSpacing(),
-                            TextFormField(
+                            GestureDetector(
                               onTap: () => showDialog(context: context, builder: (_) => GoogleMap(
                                 mapType: MapType.hybrid,
                                 initialCameraPosition: model.defaultLocation,
@@ -78,16 +79,19 @@ class AskDriverPage extends StatelessWidget {
                                 myLocationEnabled: true,
                                 markers: model.markers,
                               )),
-                              controller: model.departureLocationCtrl,
-                              autofocus: false,
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
-                                labelText: "Lieu de départ",
-                                prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
-                                contentPadding: EdgeInsets.all(0),
-                                enabledBorder: customInputBorder(context),
-                                border: customInputBorder(context),
-                                disabledBorder: customInputBorder(context),
+                              child: TextFormField(
+                                enabled: false,
+                                controller: model.departureLocationCtrl,
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(fontSize: model.deviceWidth*0.045, color: Colors.grey),
+                                  labelText: "Lieu de départ",
+                                  prefixIcon: Icon(Icons.place, color: Theme.of(context).primaryColor),
+                                  contentPadding: EdgeInsets.all(0),
+                                  enabledBorder: customInputBorder(context),
+                                  border: customInputBorder(context),
+                                  disabledBorder: customInputBorder(context),
+                                ),
                               ),
                             ),
                           //   TypeAheadField<MapBoxPlace>(
@@ -116,10 +120,10 @@ class AskDriverPage extends StatelessWidget {
                           //   },
                           // ),
                             heightSpacing(),
-                            TypeAheadField<MapBoxPlace>(
-                              debounceDuration: Duration(seconds: 1),
-                              hideSuggestionsOnKeyboardHide: false,
-                              textFieldConfiguration: TextFieldConfiguration(
+                            GestureDetector(
+                              onTap: () => showDialog(context: context, builder: (_) => PickPlace(model.storePickedLocation)),
+                              child: TextFormField(
+                                enabled: false,
                                 controller: model.destinationLocationCtrl,
                                 autofocus: false,
                                 decoration: InputDecoration(
@@ -132,14 +136,6 @@ class AskDriverPage extends StatelessWidget {
                                   disabledBorder: customInputBorder(context),
                                 ),
                               ),
-                              suggestionsCallback: model.getPlaces,
-                              itemBuilder: (context, MapBoxPlace suggestion) => ListTile(
-                                title: Text(suggestion.text),
-                                subtitle: Text(suggestion.placeName),
-                              ),
-                              onSuggestionSelected: (MapBoxPlace selectedSuggestion) {
-                                model.handleDestinationLocationInput(selectedSuggestion);
-                              },
                             ),
                           ],
                         ),

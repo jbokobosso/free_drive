@@ -9,6 +9,7 @@ import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ExceptionService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class AskDriverService {
 
@@ -17,6 +18,13 @@ class AskDriverService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
   ExceptionService _exceptionService = getIt.get<ExceptionService>();
+
+  LatLng _pickedLocation;
+  get pickedLocation => _pickedLocation;
+
+  setPickedLocation(LatLng latLng) {
+    _pickedLocation = latLng;
+  }
 
   Future<bool> newRide(RideModel ride) async {
     bool result = false;

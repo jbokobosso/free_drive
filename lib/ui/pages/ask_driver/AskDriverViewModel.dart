@@ -16,8 +16,9 @@ import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
-import 'package:mapbox_search/mapbox_search.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapbox_search/mapbox_search.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:place_picker/entities/location_result.dart';
 // import 'package:place_picker/place_picker.dart';
@@ -62,11 +63,6 @@ class AskDriverViewModel extends BaseViewModel {
 
   bool contactedDriver = false;
 
-  // List<MapBoxPlace> places = [];
-  // var locationRestriction = LocationRestriction()
-  //   ..northEastLat = 6.1824878
-  //   ..northEastLng = 1.1764786;
-
   CameraPosition defaultLocation;
   var markers;
   Completer<GoogleMapController> controller = Completer();
@@ -76,7 +72,10 @@ class AskDriverViewModel extends BaseViewModel {
       target: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
       zoom: 14.4746,
     );
-    this.setMarker();
+    this.setMarker(
+      LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+      "1"
+    );
     this.loadLoggedUser();
     this.smsFormKey = new GlobalKey<FormState>();
     this.initEyeAnimation();
@@ -204,9 +203,9 @@ class AskDriverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<List<MapBoxPlace>> getPlaces(String searchText) async {
-    return await placesSearch.getPlaces(searchText);
-  }
+  // Future<List<MapBoxPlace>> getPlaces(String searchText) async {
+  //   return await placesSearch.getPlaces(searchText);
+  // }
 
   // pickPlace() async {
   //   var place = await PluginGooglePlacePicker.showAutocomplete(
@@ -310,19 +309,42 @@ class AskDriverViewModel extends BaseViewModel {
     return isOk;
   }
 
-  setMarker() async {
+  setMarker(LatLng latLng, String markerId) async {
     markers = <Marker>{
       Marker(
           icon: BitmapDescriptor.defaultMarker,
-          position: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+          position: latLng,
           onTap: () {
             navigatorKey.currentState.pop();
-            this.departureLocationCtrl.text = "${this.coreService.locationData.latitude},${this.coreService.locationData.longitude}";
+            this.departureLocationCtrl.text = "${latLng.latitude},${latLng.longitude}";
           },
-          markerId: MarkerId("117"),
+          markerId: MarkerId(markerId),
           visible: true
       )
     };
+  }
+
+  controllMap(LatLng latLng) async {
+    GoogleMapController googleMapController = await this.controller.future;
+    googleMapController.animateCamera(CameraUpdate.newLatLng(latLng));
+    this.setMarker(latLng, "2");
+    notifyListeners();
+  }
+
+  onTappedMapLocation(LatLng latLng) async {
+    this.askDriverService.setPickedLocation(latLng);
+    GoogleMapController googleMapController = await this.controller.future;
+    googleMapController.animateCamera(CameraUpdate.newLatLng(latLng));
+    this.setMarker(latLng, "2");
+    notifyListeners();
+    Utils.showToast(latLng.latitude.toString() + "," + latLng.longitude.toString());
+  }
+
+  storePickedLocation() {
+    navigatorKey.currentState.pop();
+    Utils.showToast(this.askDriverService.pickedLocation.latitude.toString());
+    this.destinationLocationCtrl.text = "${this.askDriverService.pickedLocation.latitude},${this.askDriverService.pickedLocation.longitude}";
+    notifyListeners();
   }
 
 }
