@@ -29,9 +29,6 @@ class AskDriverService {
   GooglePlace get departureLocation => _departureLocation;
   GooglePlace get destinationLocation => _destinationLocation;
 
-  setDepartureLocation(GooglePlace newGooglePlace) {
-    _departureLocation = newGooglePlace;
-  }
   setDestinationLocation(GooglePlace newGooglePlace) {
     _destinationLocation = newGooglePlace;
   }
@@ -76,8 +73,8 @@ class AskDriverService {
 
   queryGooglePlacesAutoComplete(String searchTerm) async {
     String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"
-        "json?input=$searchTerm&location=8.6093407,-1.4116933&language=fr"
-        "&types=establishment&key=$GMAPS_API_KEY";
+        "json?input=$searchTerm&location=8.6093407,-1.4116933&radius=500000"
+        "&strictbounds=true&types=establishment&key=$GMAPS_API_KEY&language=fr";
     var response = await http.get(Uri.tryParse(url));
     if(response.statusCode == 200) {
       var json = convert.jsonDecode(response.body);
@@ -88,7 +85,7 @@ class AskDriverService {
 
   queryGooglePlaceDetails(String placeId) async {
     String url = "https://maps.googleapis.com/maps/api/place/details/"
-        "json?fields=place_id,address_component,geometry"
+        "json?fields=name,formatted_address,geometry"
         "&place_id=$placeId&key=$GMAPS_API_KEY";
     var response = await http.get(Uri.tryParse(url));
     if(response.statusCode == 200) {

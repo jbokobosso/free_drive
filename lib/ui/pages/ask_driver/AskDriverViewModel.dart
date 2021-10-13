@@ -322,7 +322,7 @@ class AskDriverViewModel extends BaseViewModel {
 
   setDestinationTextField() {
     navigatorKey.currentState.pop(); // close gmaps modal
-    this.destinationLocationCtrl.text = this.askDriverService.destinationLocation.name;
+    this.destinationLocationCtrl.text = this.askDriverService.destinationLocation.desc;
     notifyListeners();
   }
 
@@ -343,10 +343,12 @@ class AskDriverViewModel extends BaseViewModel {
   // }
 
   onSuggestionSelected(PlacesAutoComplete selectedSuggestion) async {
+    GooglePlace newGooglePlace = GooglePlace(placeId: selectedSuggestion.placeId, desc: selectedSuggestion.description);
+    this.askDriverService.setDestinationLocation(newGooglePlace);
     PlaceDetails placeDetails = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
     var _gmapsController = await this.googleMapController.future;
     _gmapsController.animateCamera(CameraUpdate.newLatLng(placeDetails.latLng)); // animate map
-    this.setMarker(placeDetails.latLng, "1"); // set marker
+    this.setMarker(placeDetails.latLng, placeDetails.latLng.toString()); // set marker
     this.askDriverService.updateDestinationLocationFromPlaceDetails(placeDetails.name, placeDetails.address, placeDetails.latLng);
     notifyListeners();
   }

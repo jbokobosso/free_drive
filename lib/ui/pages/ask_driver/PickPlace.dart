@@ -20,7 +20,7 @@ class PickPlace extends StatelessWidget {
           body: Column(
             children: [
               TypeAheadField<PlacesAutoComplete>(
-                debounceDuration: Duration(seconds: 1),
+                debounceDuration: Duration(milliseconds: 500),
                 hideSuggestionsOnKeyboardHide: false,
                 textFieldConfiguration: TextFieldConfiguration(
                   controller: model.departureLocationCtrl,
@@ -37,7 +37,7 @@ class PickPlace extends StatelessWidget {
                 suggestionsCallback: model.getAutoCompletePlacesSuggestions,
                 itemBuilder: (context, PlacesAutoComplete suggestion) => ListTile(
                   title: Text(suggestion.description),
-                  subtitle: Text(suggestion.placeId),
+                  // subtitle: Text(suggestion.placeId),
                 ),
                 onSuggestionSelected: (PlacesAutoComplete selectedSuggestion) {
                   model.onSuggestionSelected(selectedSuggestion);
@@ -60,7 +60,7 @@ class PickPlace extends StatelessWidget {
                       markers: model.markers,
                       onTap: (LatLng latLng) => model.onTappedMapLocation(latLng),
                     ),
-                    Button(this.storeCallback, 'Confirmer Ma Position', isAction: true),
+                    Button(this.storeCallback, 'Confirmer Ma Destination', isAction: true),
                   ],
                 ),
               )
