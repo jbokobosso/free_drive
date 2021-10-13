@@ -14,7 +14,7 @@ class PickPlace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AskDriverViewModel>.reactive(
-      onModelReady: (model) => model.initView(),
+      onModelReady: (model) => model.initPickPlaceView(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: "Choisissez votre destination"),
           body: Column(
@@ -42,6 +42,15 @@ class PickPlace extends StatelessWidget {
                 onSuggestionSelected: (PlacesAutoComplete selectedSuggestion) {
                   model.onSuggestionSelected(selectedSuggestion);
                 },
+              ),
+              Container(
+                  padding: EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  color: Colors.green,
+                  child: Text(
+                      'Recherchez ou tapez un lieu sur la carte\npuis cliquez sur Confirmer Ma Destination',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
               ),
               Expanded(
                 child: Stack(

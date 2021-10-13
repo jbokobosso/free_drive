@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/pages/ask_driver/PickPlace.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
+import 'package:free_drive/ui/shared/Button.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
@@ -22,7 +23,7 @@ class AskDriverPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<AskDriverViewModel>.reactive(
-      onModelReady: (model) => model.initView(),
+      onModelReady: (model) => model.initAskDriverView(),
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: 'Demander un chauffeur'),
         extendBodyBehindAppBar: true,
@@ -74,22 +75,28 @@ class AskDriverPage extends StatelessWidget {
                                       width: double.infinity,
                                       color: Colors.green,
                                       child: Text(
-                                          'Confirmez Votre Position Géographique\nen tapant sur le point rouge',
+                                          'Confirmez Votre Position Géographique\nen tapant sur Confirmer Ma Position',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))
                                     ),
                                     Expanded(
-                                      child: GoogleMap(
-                                        mapType: MapType.hybrid,
-                                        initialCameraPosition: model.defaultLocation,
-                                        onMapCreated: (GoogleMapController controller) {
-                                          model.googleMapController.complete(controller);
-                                        },
-                                        compassEnabled: true,
-                                        mapToolbarEnabled: true,
-                                        myLocationButtonEnabled: true,
-                                        myLocationEnabled: true,
-                                        markers: model.markers,
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          GoogleMap(
+                                            mapType: MapType.hybrid,
+                                            initialCameraPosition: model.defaultLocation,
+                                            onMapCreated: (GoogleMapController controller) {
+                                              model.googleMapController.complete(controller);
+                                            },
+                                            compassEnabled: true,
+                                            mapToolbarEnabled: true,
+                                            myLocationButtonEnabled: true,
+                                            myLocationEnabled: true,
+                                            markers: model.markers,
+                                          ),
+                                          Button(model.setDepartureTextField, 'Confirmer Ma Position', isAction: true),
+                                        ],
                                       ),
                                     ),
                                   ],

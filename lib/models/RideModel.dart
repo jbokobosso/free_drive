@@ -16,7 +16,7 @@ enum ERideState {
 
 class RideModel {
   String id;
-  GooglePlace departureLocation;
+  LatLng departureLocation;
   GooglePlace destinationLocation;
   DateTime departureDate;
   DateTime returnDate;
@@ -48,7 +48,7 @@ class RideModel {
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
     RideModel ride = new RideModel(
       id: firebaseId,
-      departureLocation: GooglePlace.fromJSON(json['departureLocation']),
+      departureLocation: LatLng.fromJson(json),
       destinationLocation: GooglePlace.fromJSON(json['destinationLocation']),
       departureDate: Utils.timestampToDateTime(json['departureDate']),
       returnDate: Utils.timestampToDateTime(json['returnDate']),
@@ -71,7 +71,7 @@ class RideModel {
   Map<String, dynamic> toJSON() {
     return {
       'id' : this.id,
-      'departureLocation' : this.departureLocation.toJSON(),
+      'departureLocation' : GeoPoint(this.departureLocation.latitude, this.departureLocation.longitude),
       'destinationLocation' : this.destinationLocation.toJSON(),
       'departureDate' : this.departureDate,
       'returnDate' : this.returnDate,

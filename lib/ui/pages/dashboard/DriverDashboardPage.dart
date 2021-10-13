@@ -45,7 +45,7 @@ class DriverDashboardPage extends StatelessWidget {
                           children: [
                             Text('Départ - '+ Utils.formatDateToHuman(model.activeRide.departureDate)),
                             Text('Retour - '+ Utils.formatDateToHuman(model.activeRide.departureDate)),
-                            Text('Lieu de départ - '+ model.activeRide.departureLocation.name),
+                            Text('Lieu de départ - '+ model.activeRide.departureLocation.toString()),
                             Text('Destination - '+ model.activeRide.destinationLocation.name),
                             Text('Client - ' + model.activeRide.client.displayName),
                             model.activeRide.rideState == ERideState.pending

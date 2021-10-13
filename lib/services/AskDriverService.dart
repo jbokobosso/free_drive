@@ -24,11 +24,14 @@ class AskDriverService {
   CoreService _coreService = getIt.get<CoreService>();
   ExceptionService _exceptionService = getIt.get<ExceptionService>();
 
-  GooglePlace _departureLocation;
+  LatLng _departureLocation;
   GooglePlace _destinationLocation;
-  GooglePlace get departureLocation => _departureLocation;
+  LatLng get departureLocation => _departureLocation;
   GooglePlace get destinationLocation => _destinationLocation;
 
+  setDepartureLocation(LatLng newLatLng) {
+    _departureLocation = newLatLng;
+  }
   setDestinationLocation(GooglePlace newGooglePlace) {
     _destinationLocation = newGooglePlace;
   }
@@ -46,7 +49,8 @@ class AskDriverService {
   Future<bool> newRide(RideModel ride) async {
     bool result = false;
     try {
-      DocumentReference newRide = await this.firestore.collection(FCN_rides).add(ride.toJSON());
+      var data = ride.toJSON();
+      DocumentReference newRide = await this.firestore.collection(FCN_rides).add(data);
       if(newRide != null)
         result = true;
       else

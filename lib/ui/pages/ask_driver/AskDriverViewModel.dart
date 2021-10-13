@@ -68,14 +68,24 @@ class AskDriverViewModel extends BaseViewModel {
   var markers;
   Completer<GoogleMapController> googleMapController = Completer();
 
-  initView() {
-    defaultLocation = CameraPosition(
-      target: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
-      zoom: 14.4746,
-    );
+  initAskDriverView() {
+    this.setDefaultLocation();
     this.setMarker(
-      LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
-      "1"
+      latLng: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+      markerId: "${this.coreService.locationData.latitude},${this.coreService.locationData.longitude}"
+    );
+    this.loadLoggedUser();
+    this.smsFormKey = new GlobalKey<FormState>();
+    this.initEyeAnimation();
+    this.requestLocationPermission();
+    notifyListeners();
+  }
+
+  initPickPlaceView() {
+    this.setDefaultLocation();
+    this.setMarker(
+      latLng: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+      markerId: "${this.coreService.locationData.latitude},${this.coreService.locationData.longitude}"
     );
     this.loadLoggedUser();
     this.smsFormKey = new GlobalKey<FormState>();
@@ -296,15 +306,19 @@ class AskDriverViewModel extends BaseViewModel {
     return isOk;
   }
 
-  setMarker(LatLng latLng, String markerId) async {
+  setDefaultLocation() {
+    defaultLocation = CameraPosition(
+      target: LatLng(this.coreService.locationData.latitude, this.coreService.locationData.longitude),
+      zoom: 14.4746,
+    );
+  }
+
+  setMarker({LatLng latLng, String markerId}) async {
+    this.askDriverService.setDepartureLocation(latLng);
     this.markers = <Marker>{
       Marker(
           icon: BitmapDescriptor.defaultMarker,
           position: latLng,
-          onTap: () {
-            navigatorKey.currentState.pop();
-            this.departureLocationCtrl.text = "${latLng.latitude},${latLng.longitude}";
-          },
           markerId: MarkerId(markerId),
           visible: true
       )
@@ -312,12 +326,18 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   onTappedMapLocation(LatLng newLatLng) async {
-    this.askDriverService.updateDestinationLocationOnMapTapped(newLatLng);
+    this.askDriverService.setDestinationLocation(GooglePlace(latLng: newLatLng, desc: "${newLatLng.latitude},${newLatLng.longitude}"));
     GoogleMapController googleMapController = await this.googleMapController.future;
     googleMapController.animateCamera(CameraUpdate.newLatLng(newLatLng));
-    this.setMarker(newLatLng, newLatLng.toString());
+    this.setMarker(latLng: newLatLng, markerId: newLatLng.toString());
     notifyListeners();
-    Utils.showToast(newLatLng.latitude.toString() + "," + newLatLng.longitude.toString());
+    Utils.showToast('Tappez Maintenant sur Confirmer Ma Destination');
+  }
+
+  setDepartureTextField() {
+    navigatorKey.currentState.pop(); // close gmaps modal
+    this.departureLocationCtrl.text = 'Ma Position';
+    notifyListeners();
   }
 
   setDestinationTextField() {
@@ -348,7 +368,7 @@ class AskDriverViewModel extends BaseViewModel {
     PlaceDetails placeDetails = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
     var _gmapsController = await this.googleMapController.future;
     _gmapsController.animateCamera(CameraUpdate.newLatLng(placeDetails.latLng)); // animate map
-    this.setMarker(placeDetails.latLng, placeDetails.latLng.toString()); // set marker
+    this.setMarker(latLng: placeDetails.latLng, markerId: placeDetails.latLng.toString()); // set marker
     this.askDriverService.updateDestinationLocationFromPlaceDetails(placeDetails.name, placeDetails.address, placeDetails.latLng);
     notifyListeners();
   }
