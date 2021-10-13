@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:free_drive/ui/pages/ask_driver/AskDriverViewModel.dart';
 import 'package:free_drive/ui/pages/ask_driver/PickPlace.dart';
 import 'package:free_drive/ui/shared/AppBanner.dart';
 import 'package:free_drive/ui/shared/CustomAppBar.dart';
 import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
-import 'package:mapbox_search/mapbox_search.dart';
 import 'package:stacked/stacked.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 

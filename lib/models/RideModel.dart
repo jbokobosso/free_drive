@@ -4,6 +4,7 @@ import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/UserModel.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/utils/Utils.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 enum ERideState {
   pending,
@@ -15,8 +16,8 @@ enum ERideState {
 
 class RideModel {
   String id;
-  Places departureLocation;
-  Places destinationLocation;
+  GooglePlace departureLocation;
+  GooglePlace destinationLocation;
   DateTime departureDate;
   DateTime returnDate;
   int rideDurationInDays;
@@ -47,8 +48,8 @@ class RideModel {
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
     RideModel ride = new RideModel(
       id: firebaseId,
-      departureLocation: Places.fromJSON(json['departureLocation']),
-      destinationLocation: Places.fromJSON(json['destinationLocation']),
+      departureLocation: GooglePlace.fromJSON(json['departureLocation']),
+      destinationLocation: GooglePlace.fromJSON(json['destinationLocation']),
       departureDate: Utils.timestampToDateTime(json['departureDate']),
       returnDate: Utils.timestampToDateTime(json['returnDate']),
       rideDurationInDays: json['rideDurationInDays'],
@@ -91,25 +92,39 @@ class RideModel {
 
 }
 
-class Places {
-  double latitude;
-  double longitude;
-  String shortName;
-  String longName;
+class GooglePlace {
+  String placeId;
+  String name;
+  String desc;
+  String address;
+  LatLng latLng;
 
-  Places({@required this.latitude, @required this.longitude, @required this.shortName, @required this.longName});
+  GooglePlace({
+    @required this.placeId,
+    @required this.name,
+    @required this.desc,
+    @required this.address,
+    @required this.latLng
+  });
 
   Map<String, dynamic> toJSON() {
     return {
-      "latitude": this.latitude,
-      "longitude": this.longitude,
-      "shortName": this.shortName,
-      "longName": this.longName
+      "placeId": this.placeId,
+      "name": this.name,
+      "desc": this.desc,
+      "address": this.address,
+      "latLng": this.latLng
     };
   }
 
   static fromJSON(Map<String, dynamic> json) {
-    return new Places(latitude: json['latitude'], longitude: json['longitude'], shortName: json['shortName'], longName: json['longName']);
+    return new GooglePlace(
+        placeId: json['placeId'],
+        name: json['name'],
+        desc: json['desc'],
+        address: json['address'],
+        latLng: json['latLng'],
+    );
   }
 
 

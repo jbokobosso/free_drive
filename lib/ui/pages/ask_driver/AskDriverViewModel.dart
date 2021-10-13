@@ -174,8 +174,8 @@ class AskDriverViewModel extends BaseViewModel {
   }
 
   Future<RideModel> buildRideModel() async {
-    Places departureLocation = await this.getOnePlace(this.departureLocationCtrl.text);
-    Places destinationLocation = await this.getOnePlace(this.destinationLocationCtrl.text);
+    var departureLocation = this.departureLocationCtrl.text.split(',').map((e) => double.parse(e));
+    var destinationLocation = this.destinationLocationCtrl.text.split(',').map((e) => double.parse(e));
     RideModel ride = new RideModel(
       id: null,
       departureLocation: departureLocation,
@@ -229,9 +229,9 @@ class AskDriverViewModel extends BaseViewModel {
   //   print(result);
   // }
 
-  Future<Places> getOnePlace(String searchText) async {
+  Future<GooglePlace> getOnePlace(String searchText) async {
     List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
-    return new Places(
+    return new GooglePlace(
       latitude: foundPlaces.first.center.first,
       longitude: foundPlaces.first.center.first,
       shortName: foundPlaces.first.text,
@@ -336,19 +336,26 @@ class AskDriverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<List<PlacesQueryResponse>> getGooglePlaces(String searchTerm) async {
+  Future<List<PlacesAutoComplete>> getGooglePlaces(String searchTerm) async {
     if(searchTerm.isNotEmpty) {
       return await this.askDriverService.queryGooglePlaces(searchTerm);
     }
   }
 
-  onSuggestionSelected(PlacesQueryResponse selectedSuggestion) async {
-    PlaceDetailQueryResponse place = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
+  onSuggestionSelected(PlacesAutoComplete selectedSuggestion) async {
+    PlaceDetails place = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
     Utils.showToast(place.longName);
     var _gmapsController = await this.googleMapController.future;
     _gmapsController.animateCamera(CameraUpdate.newLatLng(place.location)); // animate map
     this.setMarker(place.location, "1"); // set marker
-    this.askDriverService.setPickedLocation(place.location); // make accessible picked location from service
+    GooglePlace googlePlace = GooglePlace(
+      placeId: place.placeId,
+      desc: '',
+      shortName: place.shortName,
+      longName: place.longName,
+      latLng: place.location
+    )
+    this.askDriverService.setPickedLocation(place); // make accessible picked location from service
     notifyListeners();
   }
 

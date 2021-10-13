@@ -24,11 +24,11 @@ class AskDriverService {
   CoreService _coreService = getIt.get<CoreService>();
   ExceptionService _exceptionService = getIt.get<ExceptionService>();
 
-  LatLng _pickedLocation;
+  GooglePlace _pickedLocation;
   get pickedLocation => _pickedLocation;
 
-  setPickedLocation(LatLng latLng) {
-    _pickedLocation = latLng;
+  setPickedLocation(GooglePlace placeLocation) {
+    _pickedLocation = placeLocation;
   }
 
   Future<bool> newRide(RideModel ride) async {
@@ -67,7 +67,7 @@ class AskDriverService {
     if(response.statusCode == 200) {
       var json = convert.jsonDecode(response.body);
       var predictions = json['predictions'] as List;
-      return predictions.map((place) => PlacesQueryResponse.fromJson(place)).toList();
+      return predictions.map((place) => PlacesAutoComplete.fromJson(place)).toList();
     }
   }
 
@@ -79,7 +79,7 @@ class AskDriverService {
     if(response.statusCode == 200) {
       var json = convert.jsonDecode(response.body);
       Map<String, dynamic> result = json['result'];
-      return PlaceDetailQueryResponse.fromJson(result);
+      return PlaceDetails.fromJson(result);
     }
   }
 }

@@ -1,18 +1,16 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class PlaceDetailQueryResponse {
-  String placeId;
-  String longName;
-  String shortName;
-  LatLng location;
+class PlaceDetails {
+  String name;
+  String address;
+  LatLng latLng;
 
-  PlaceDetailQueryResponse(this.placeId, this.longName, this.shortName, this.location);
+  PlaceDetails(this.name, this.address, this.latLng);
   
   static fromJson(Map<String, dynamic> json) {
-    return PlaceDetailQueryResponse(
-        json['place_id'],
-        json['address_components'][0]['long_name'],
-        json['address_components'][0]['long_name'],
+    return PlaceDetails(
+        json['name'],
+        json['formatted_address'],
         LatLng(
             json['geometry']['location']['lat'],
             json['geometry']['location']['lng']
@@ -22,13 +20,13 @@ class PlaceDetailQueryResponse {
 
 }
 
-class PlacesQueryResponse {
-   String description;
+class PlacesAutoComplete {
    String placeId;
+   String description;
 
-   PlacesQueryResponse(this.placeId, this.description);
+   PlacesAutoComplete(this.placeId, this.description);
 
-   static PlacesQueryResponse fromJson(Map<dynamic, dynamic> parsedJson) {
-     return PlacesQueryResponse(parsedJson['place_id'], parsedJson['description']);
+   static PlacesAutoComplete fromJson(Map<dynamic, dynamic> parsedJson) {
+     return PlacesAutoComplete(parsedJson['place_id'], parsedJson['description']);
    }
 }

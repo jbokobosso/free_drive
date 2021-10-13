@@ -19,7 +19,7 @@ class PickPlace extends StatelessWidget {
         appBar: CustomAppBar(title: "Choisissez votre destination"),
           body: Column(
             children: [
-              TypeAheadField<PlacesQueryResponse>(
+              TypeAheadField<PlacesAutoComplete>(
                 debounceDuration: Duration(seconds: 1),
                 hideSuggestionsOnKeyboardHide: false,
                 textFieldConfiguration: TextFieldConfiguration(
@@ -35,11 +35,11 @@ class PickPlace extends StatelessWidget {
                   ),
                 ),
                 suggestionsCallback: model.getGooglePlaces,
-                itemBuilder: (context, PlacesQueryResponse suggestion) => ListTile(
+                itemBuilder: (context, PlacesAutoComplete suggestion) => ListTile(
                   title: Text(suggestion.description),
                   subtitle: Text(suggestion.placeId),
                 ),
-                onSuggestionSelected: (PlacesQueryResponse selectedSuggestion) {
+                onSuggestionSelected: (PlacesAutoComplete selectedSuggestion) {
                   model.onSuggestionSelected(selectedSuggestion);
                 },
               ),
