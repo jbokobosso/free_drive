@@ -71,7 +71,7 @@ class RideModel {
   Map<String, dynamic> toJSON() {
     return {
       'id' : this.id,
-      'departureLocation' : GeoPoint(this.departureLocation.latitude, this.departureLocation.longitude),
+      'departureLocation' : this.departureLocation.toJson(),
       'destinationLocation' : this.destinationLocation.toJSON(),
       'departureDate' : this.departureDate,
       'returnDate' : this.returnDate,
@@ -113,7 +113,7 @@ class GooglePlace {
       "name": this.name,
       "desc": this.desc,
       "address": this.address,
-      "latLng": this.latLng
+      "latLng": this.latLng.toJson()
     };
   }
 
@@ -123,7 +123,7 @@ class GooglePlace {
         name: json['name'],
         desc: json['desc'],
         address: json['address'],
-        latLng: json['latLng'],
+        latLng: LatLng.fromJson(json['latLng']),
     );
   }
 
