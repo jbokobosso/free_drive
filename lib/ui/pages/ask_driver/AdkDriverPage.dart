@@ -112,7 +112,7 @@ class AskDriverPage extends StatelessWidget {
                             ),
                             heightSpacing(),
                             GestureDetector(
-                              onTap: () => showDialog(context: context, builder: (_) => PickPlace(model.storePickedLocation)),
+                              onTap: () => showDialog(context: context, builder: (_) => PickPlace(model.setDestinationTextField)),
                               child: TextFormField(
                                 enabled: false,
                                 controller: model.destinationLocationCtrl,

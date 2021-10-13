@@ -24,11 +24,26 @@ class AskDriverService {
   CoreService _coreService = getIt.get<CoreService>();
   ExceptionService _exceptionService = getIt.get<ExceptionService>();
 
-  GooglePlace _pickedLocation;
-  get pickedLocation => _pickedLocation;
+  GooglePlace _departureLocation;
+  GooglePlace _destinationLocation;
+  GooglePlace get departureLocation => _departureLocation;
+  GooglePlace get destinationLocation => _destinationLocation;
 
-  setPickedLocation(GooglePlace placeLocation) {
-    _pickedLocation = placeLocation;
+  setDepartureLocation(GooglePlace newGooglePlace) {
+    _departureLocation = newGooglePlace;
+  }
+  setDestinationLocation(GooglePlace newGooglePlace) {
+    _destinationLocation = newGooglePlace;
+  }
+
+  updateDestinationLocationFromPlaceDetails(String name, String address, LatLng latLng) {
+    _destinationLocation.name = name;
+    _destinationLocation.address = address;
+    _destinationLocation.latLng = latLng;
+  }
+
+  updateDestinationLocationOnMapTapped(LatLng newLatLng) {
+    _destinationLocation.latLng = newLatLng;
   }
 
   Future<bool> newRide(RideModel ride) async {
@@ -59,7 +74,7 @@ class AskDriverService {
     return drivers;
   }
 
-  queryGooglePlaces(String searchTerm) async {
+  queryGooglePlacesAutoComplete(String searchTerm) async {
     String url = "https://maps.googleapis.com/maps/api/place/autocomplete/"
         "json?input=$searchTerm&location=8.6093407,-1.4116933&language=fr"
         "&types=establishment&key=$GMAPS_API_KEY";

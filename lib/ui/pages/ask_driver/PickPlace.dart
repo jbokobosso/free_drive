@@ -34,7 +34,7 @@ class PickPlace extends StatelessWidget {
                       suffixIcon: Icon(Icons.search)
                   ),
                 ),
-                suggestionsCallback: model.getGooglePlaces,
+                suggestionsCallback: model.getAutoCompletePlacesSuggestions,
                 itemBuilder: (context, PlacesAutoComplete suggestion) => ListTile(
                   title: Text(suggestion.description),
                   subtitle: Text(suggestion.placeId),

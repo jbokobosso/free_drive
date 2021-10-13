@@ -162,24 +162,24 @@ class AskDriverViewModel extends BaseViewModel {
             ),
             actions: [
               TextButton(
-                child: Text("Fermer"),
+                child: Text("Annuler"),
                 onPressed: () => navigatorKey.currentState.pop(),
               )
             ],
           ));
     } else {
-      this.coreService.showToastMessage("Base de données vide. Revenez plus tard...");
+      setBusy(false);
+      notifyListeners();
+      this.coreService.showDialogBox("Aucun Chauffeur", "Base de données vide, nous n'avons pas de chauffeur pour le moment. Revenez plus tard...");
     }
 
   }
 
   Future<RideModel> buildRideModel() async {
-    var departureLocation = this.departureLocationCtrl.text.split(',').map((e) => double.parse(e));
-    var destinationLocation = this.destinationLocationCtrl.text.split(',').map((e) => double.parse(e));
     RideModel ride = new RideModel(
       id: null,
-      departureLocation: departureLocation,
-      destinationLocation: destinationLocation,
+      departureLocation: this.askDriverService.departureLocation,
+      destinationLocation: this.askDriverService.destinationLocation,
       departureDate: this.departureDate,
       returnDate: this.returnDate,
       rideDurationInDays: this.rideDurationInDays,
@@ -228,16 +228,6 @@ class AskDriverViewModel extends BaseViewModel {
   //   // Handle the result in your way
   //   print(result);
   // }
-
-  Future<GooglePlace> getOnePlace(String searchText) async {
-    List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
-    return new GooglePlace(
-      latitude: foundPlaces.first.center.first,
-      longitude: foundPlaces.first.center.first,
-      shortName: foundPlaces.first.text,
-      longName: foundPlaces.first.placeName
-    );
-  }
 
   void computeAndSetRideDuration() {
     Duration rideDuration = this.returnDate.difference(this.departureDate);
@@ -321,41 +311,43 @@ class AskDriverViewModel extends BaseViewModel {
     };
   }
 
-  onTappedMapLocation(LatLng latLng) async {
-    this.askDriverService.setPickedLocation(latLng);
+  onTappedMapLocation(LatLng newLatLng) async {
+    this.askDriverService.updateDestinationLocationOnMapTapped(newLatLng);
     GoogleMapController googleMapController = await this.googleMapController.future;
-    googleMapController.animateCamera(CameraUpdate.newLatLng(latLng));
-    this.setMarker(latLng, "2");
+    googleMapController.animateCamera(CameraUpdate.newLatLng(newLatLng));
+    this.setMarker(newLatLng, newLatLng.toString());
     notifyListeners();
-    Utils.showToast(latLng.latitude.toString() + "," + latLng.longitude.toString());
+    Utils.showToast(newLatLng.latitude.toString() + "," + newLatLng.longitude.toString());
   }
 
-  storePickedLocation() {
-    navigatorKey.currentState.pop();
-    this.destinationLocationCtrl.text = "${this.askDriverService.pickedLocation.latitude},${this.askDriverService.pickedLocation.longitude}";
+  setDestinationTextField() {
+    navigatorKey.currentState.pop(); // close gmaps modal
+    this.destinationLocationCtrl.text = this.askDriverService.destinationLocation.name;
     notifyListeners();
   }
 
-  Future<List<PlacesAutoComplete>> getGooglePlaces(String searchTerm) async {
+  Future<List<PlacesAutoComplete>> getAutoCompletePlacesSuggestions(String searchTerm) async {
     if(searchTerm.isNotEmpty) {
-      return await this.askDriverService.queryGooglePlaces(searchTerm);
-    }
+      return await this.askDriverService.queryGooglePlacesAutoComplete(searchTerm);
+    } else return [];
   }
+
+  // Future<GooglePlace> getOnePlace(String searchText) async {
+  //   List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
+  //   return new GooglePlace(
+  //       latitude: foundPlaces.first.center.first,
+  //       longitude: foundPlaces.first.center.first,
+  //       shortName: foundPlaces.first.text,
+  //       longName: foundPlaces.first.placeName
+  //   );
+  // }
 
   onSuggestionSelected(PlacesAutoComplete selectedSuggestion) async {
-    PlaceDetails place = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
-    Utils.showToast(place.longName);
+    PlaceDetails placeDetails = await this.askDriverService.queryGooglePlaceDetails(selectedSuggestion.placeId);
     var _gmapsController = await this.googleMapController.future;
-    _gmapsController.animateCamera(CameraUpdate.newLatLng(place.location)); // animate map
-    this.setMarker(place.location, "1"); // set marker
-    GooglePlace googlePlace = GooglePlace(
-      placeId: place.placeId,
-      desc: '',
-      shortName: place.shortName,
-      longName: place.longName,
-      latLng: place.location
-    )
-    this.askDriverService.setPickedLocation(place); // make accessible picked location from service
+    _gmapsController.animateCamera(CameraUpdate.newLatLng(placeDetails.latLng)); // animate map
+    this.setMarker(placeDetails.latLng, "1"); // set marker
+    this.askDriverService.updateDestinationLocationFromPlaceDetails(placeDetails.name, placeDetails.address, placeDetails.latLng);
     notifyListeners();
   }
 
