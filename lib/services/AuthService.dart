@@ -56,10 +56,10 @@ class AuthService {
       await this.firebaseAuth.signInWithEmailAndPassword(email: userModel.email, password: userModel.password);
       if(userModel.userType == EUserType.client) {
         QuerySnapshot querysnapshot = await this.firestore.collection("clients").where("email", isEqualTo: userModel.email).get();
-        firebaseUser = UserModel.clientFromFirebase(querysnapshot.docs.first.data());
+        firebaseUser = UserModel.clientFromMap(querysnapshot.docs.first.data());
       } else if(userModel.userType == EUserType.driver) {
         QuerySnapshot querysnapshot = await this.firestore.collection("drivers").where("email", isEqualTo: userModel.email).get();
-        firebaseUser = UserModel.clientFromFirebase(querysnapshot.docs.first.data());
+        firebaseUser = UserModel.clientFromMap(querysnapshot.docs.first.data());
       } else {
         throw "Recognition error: the app could not determine if the user is a driver or a client. Verify that you gave it in the form of authentication";
       }
@@ -100,6 +100,7 @@ class AuthService {
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
+            userModel.wallet
           ).toMap()
       );
       return true;
@@ -110,6 +111,7 @@ class AuthService {
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
+            userModel.wallet,
             false
           ).toMap()
       );
@@ -189,10 +191,10 @@ class AuthService {
     var userAsMapObject = jsonDecode(stringUser);
     UserModel user;
     if(userAsMapObject["userType"] == "driver") {
-      user = UserModel.driverFromMapOld(userAsMapObject);
+      user = UserModel.driverFromMap(userAsMapObject);
       user.userType = EUserType.driver;
     } else if(userAsMapObject["userType"] == "client") {
-      user = UserModel.clientFromMap(userAsMapObject["displayName"], userAsMapObject["email"], userAsMapObject["phoneNumber"], userAsMapObject["address"], userAsMapObject["userType"]);
+      user = UserModel.clientFromMap(userAsMapObject);
       user.userType = EUserType.client;
     }
     if(user.runtimeType == DriverModel || user.runtimeType == ClientModel)

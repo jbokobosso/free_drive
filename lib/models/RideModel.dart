@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/UserModel.dart';
@@ -55,8 +54,8 @@ class RideModel {
       rideDurationInDays: json['rideDurationInDays'],
       timeStarted: json['timeStarted'] != null ? Utils.timestampToDateTime(json['timeStarted']) : null,
       timeEnded: json['timeEnded'] != null ? Utils.timestampToDateTime(json['timeEnded']) : null,
-      driver: UserModel.driverFromMapOld(json['driver']),
-      client: UserModel.clientFromFirebase(json['client']),
+      driver: UserModel.driverFromMap(json['driver']),
+      client: UserModel.clientFromMap(json['client']),
       clientEmail: json['clientEmail'],
       driverEmail: json['driverEmail'],
       rideState: json['rideState'] == 'pending' ? ERideState.pending

@@ -133,8 +133,36 @@ class Utils {
     );
   }
 
-  static bool validatePhoneNumber(String phoneNumber) {
-    if(phoneNumber.characters.length != 12)
+  static showErrorDialog(String title, String content) {
+    showDialog(
+        barrierDismissible: false,
+        context: navigatorKey.currentContext,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+          ),
+          titlePadding: EdgeInsets.all(0.0),
+          title: Container(
+            decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))
+            ),
+            width: double.infinity,
+            height: 30.0,
+            child: Align(child: Text(title, style: TextStyle(color: Colors.white)), alignment: Alignment.center),
+          ),
+          content: SizedBox(
+              child: Text(content, textAlign: TextAlign.center)
+          ),
+          actions: [
+            TextButton(child: Text("D'accord"), onPressed: () => navigatorKey.currentState.pop()),
+          ],
+        )
+    );
+  }
+
+  static bool validatePaymentNumber(String phoneNumber) {
+    if(phoneNumber.characters.length != 8)
       return false;
     else
       return true;

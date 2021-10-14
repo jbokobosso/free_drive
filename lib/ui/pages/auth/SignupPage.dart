@@ -242,22 +242,24 @@ class SignupPage extends StatelessWidget {
                         Center(child: Text("Photo du Permis de conduire")),
                         SizedBox(
                           height: model.deviceHeight*inputHeightScale,
-                          child: TextFormField(
-                            controller: model.rectoPicture,
+                          child: GestureDetector(
                             onTap: () => model.buildShowDialog(context, ELicencePictureFace.recto),
-                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
-                            style: TextStyle(color: Colors.grey),
-                            enabled: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon: GestureDetector(
-                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
-                                  child: LicenceSufixIcons()
-                              ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                            child: TextFormField(
+                              controller: model.rectoPicture,
+                              validator: (fieldValue) => fieldValue.isEmpty ? "Photo recto de la carte" : null,
+                              style: TextStyle(color: Colors.grey),
+                              enabled: false,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                suffixIcon: GestureDetector(
+                                  // onTap: () => model.pickLicencePictures(ELicencePictureFace.recto),
+                                    child: LicenceSufixIcons()
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                                ),
                               ),
                             ),
                           ),
@@ -265,22 +267,24 @@ class SignupPage extends StatelessWidget {
                         SizedBox(height: model.deviceHeight*this.inputSpacingScale),
                         SizedBox(
                           height: model.deviceHeight*inputHeightScale,
-                          child: TextFormField(
-                            controller: model.versoPicture,
+                          child: GestureDetector(
                             onTap: () => model.buildShowDialog(context, ELicencePictureFace.verso),
-                            validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
-                            style: TextStyle(color: Colors.grey),
-                            enabled: true,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon: GestureDetector(
-                                // onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
-                                  child: LicenceSufixIcons()
-                              ),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                            child: TextFormField(
+                              controller: model.versoPicture,
+                              validator: (fieldValue) => fieldValue.isEmpty ? "Photo verso de la carte" : null,
+                              style: TextStyle(color: Colors.grey),
+                              enabled: false,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                suffixIcon: GestureDetector(
+                                  // onTap: () => model.pickLicencePictures(ELicencePictureFace.verso),
+                                    child: LicenceSufixIcons()
+                                ),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30.0),
+                                    borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 10.0, style: BorderStyle.solid)
+                                ),
                               ),
                             ),
                           ),

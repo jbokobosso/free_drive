@@ -17,6 +17,7 @@ const String FCN_drivers = "drivers";
 const String FCN_clients = "clients";
 const String FCN_users = "users";
 const String FCN_rides = "rides";
+const String FCN_wallet_loads = "loads";
 
 // Allowed upload profile image extensions
 const List<String> S_ALLOWED_PROFILE_IMAGES_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"];
@@ -35,3 +36,8 @@ const NOTIFICATION_CHANNEL_DESC = 'your channel description';
 
 // Google Maps api key
 const GMAPS_API_KEY = "AIzaSyCprqOJ8Zw0bTcL3xLna6SsG_UlwACX1jA";
+
+// PayGate
+const MINIMUM_WALLET_LOAD_AMOUNT = 1;
+const LOAD_ID_SIZE = 8;
+const WALLET_ID_SIZE = 6;

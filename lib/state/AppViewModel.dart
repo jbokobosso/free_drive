@@ -1,20 +1,22 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/ClientModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/ELicencePictureFace.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
+import 'package:free_drive/models/payment/Wallet.dart';
 import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/ContactDriverService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:nanoid/async.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -63,9 +65,24 @@ class AppViewModel extends BaseViewModel {
     UserModel user;
 
     if(chosenUserType == EUserType.driver) {
-      user = new DriverModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim(), false);
+      String newDriverWalletId = await nanoid(WALLET_ID_SIZE);
+      user = new DriverModel(
+          this.displayNameCtrl.text.trim(),
+          this.emailCtrl.text.trim(),
+          this.phoneNumberCtrl.text.trim(),
+          this.addressCtrl.text.trim(),
+          new Wallet(id: newDriverWalletId, balance: 0),
+          false
+      );
     } else if(chosenUserType == EUserType.client) {
-      user = new ClientModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim());
+      String newClientWalletId = await nanoid(WALLET_ID_SIZE);
+      user = new ClientModel(
+        this.displayNameCtrl.text.trim(),
+        this.emailCtrl.text.trim(),
+        this.phoneNumberCtrl.text.trim(),
+        this.addressCtrl.text.trim(),
+        new Wallet(id: newClientWalletId, balance: 0)
+      );
     }
 
     user.userType = this.chosenUserType;
@@ -144,10 +161,17 @@ class AppViewModel extends BaseViewModel {
           this.emailCtrl.text.trim(),
           this.phoneNumberCtrl.text.trim(),
           this.addressCtrl.text.trim(),
+          new Wallet(id: "", balance: 0),
           false,
       );
     } else if(chosenUserType == EUserType.client) {
-      user = new ClientModel(this.displayNameCtrl.text.trim(), this.emailCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.addressCtrl.text.trim());
+      user = new ClientModel(
+        this.displayNameCtrl.text.trim(),
+        this.emailCtrl.text.trim(),
+        this.phoneNumberCtrl.text.trim(),
+        this.addressCtrl.text.trim(),
+        new Wallet(id: "", balance: 0)
+      );
     }
 
     user.userType = this.chosenUserType;

@@ -14,6 +14,7 @@ import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
+import 'package:free_drive/ui/pages/dashboard/LoadWalletModal.dart';
 import 'package:free_drive/ui/shared/Button.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:free_drive/utils/Utils.dart';
@@ -30,7 +31,6 @@ class DashboardViewModel extends BaseViewModel {
 
   int extendRideDaysCount = 1 ;
   final extendRideFormKey = GlobalKey<FormState>();
-  final loadWalletFormKey = GlobalKey<FormState>();
   TextEditingController extendRideDaysCountController = new TextEditingController();
 
   double get deviceWidth => this.coreService.deviceWidth;
@@ -40,9 +40,6 @@ class DashboardViewModel extends BaseViewModel {
   Artboard logoArtboard;
   RiveAnimationController eyeAnimationController;
   RiveAnimationController logoAnimationController;
-  TextEditingController amountCtrl = new TextEditingController();
-  TextEditingController phoneNumberCtrl = new TextEditingController();
-  EPaymentMethod chosenPaymentMethod;
 
   RideModel activeRide;
   RideModel pendingRide;
@@ -221,77 +218,10 @@ class DashboardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  choosePaymentMethod(EPaymentMethod method) {
-    this.chosenPaymentMethod = method;
-    notifyListeners();
-  }
-
-  loadBalance() {
-    bool isValid = this.loadWalletFormKey.currentState.validate();
-    if(!isValid) return;
-    Utils.showToast("En cours de conception...");
-    // this._dashboardService.loadWallet(this.amountCtrl.text.trim(), this.phoneNumberCtrl.text.trim(), this.chosenPaymentMethod);
-  }
-
   buildShowDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text("Charger Portefeuille"),
-        content: SizedBox(
-          height: Utils.deviceHeight*0.5,
-          child: Form(
-            key: this.loadWalletFormKey,
-            child: ListView(
-              children: [
-                TextFormField(
-                  controller: this.amountCtrl,
-                  decoration: customInputDecoration(context, label: 'Montant'),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if(value.isEmpty) return "Montant requis";
-                    return null;
-                  },
-                ),
-                ListTile(
-                  horizontalTitleGap: 0,
-                  title: const Text('Flooz', style: TextStyle(fontSize: 12.0)),
-                  leading: Radio<EPaymentMethod>(
-                    activeColor: Theme.of(context).primaryColor,
-                    value: EPaymentMethod.FLOOZ,
-                    groupValue: this.chosenPaymentMethod,
-                    onChanged: (EPaymentMethod value) => this.choosePaymentMethod(value),
-                  ),
-                ),
-                ListTile(
-                  horizontalTitleGap: 0,
-                  title: const Text('TMoney', style: TextStyle(fontSize: 12.0)),
-                  leading: Radio<EPaymentMethod>(
-                    activeColor: Theme.of(context).primaryColor,
-                    value: EPaymentMethod.TMONEY,
-                    groupValue: this.chosenPaymentMethod,
-                    onChanged: (EPaymentMethod value) => this.choosePaymentMethod(value),
-                  ),
-                ),
-                this.chosenPaymentMethod != null ? TextFormField(
-                  controller: this.phoneNumberCtrl,
-                  decoration: customInputDecoration(
-                    context,
-                    label: 'Numéro ${EnumToString.convertToString(chosenPaymentMethod)}',
-                    hint: 'Sans indicatif'
-                  ),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if(value.isEmpty) return "Votre numéro ${EnumToString.convertToString(chosenPaymentMethod)} svp";
-                    return null;
-                  },
-                ) : Container(),
-                Button(loadBalance, 'Procéder')
-              ],
-            ),
-          ),
-        ),
-      )
+      builder: (_) => LoadWalletModal()
     );
   }
 
