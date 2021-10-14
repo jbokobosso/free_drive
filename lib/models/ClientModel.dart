@@ -5,7 +5,7 @@ import 'UserModel.dart';
 
 class ClientModel extends UserModel {
 
-  ClientModel(String displayName, String email, String phoneNumber, String address, Wallet wallet) : super(displayName, email, phoneNumber, address, wallet);
+  ClientModel(String displayName, String email, String phoneNumber, String address) : super(displayName, email, phoneNumber, address);
 
   @override
   toMap({EUserType userType}) {
@@ -14,7 +14,6 @@ class ClientModel extends UserModel {
     "email": this.email,
     "phoneNumber": this.phoneNumber,
     "address": this.address,
-    "wallet": this.wallet.toJson(),
     "userType": userType == EUserType.client ? "client" : userType == EUserType.driver ? "driver" : null
     };
   }

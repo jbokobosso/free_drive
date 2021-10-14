@@ -119,13 +119,17 @@ class DashboardService {
     return success;
   }
 
-  Future<void> loadWallet(double amount, String phoneNumber, EPaymentMethod paymentMethod, String clientWalletId) async {
+  Future<void> loadWallet(
+      {double amount,
+      String phoneNumber,
+      EPaymentMethod paymentMethod,
+      String clientWalletId}) async {
     var url = Uri.parse('https://paygateglobal.com/api/v1/pay');
     var identifier = await nanoid();
     var response = await http.post(url, body: {
       "auth_token": PAYGATE_API_TOKEN,
       "phone_number": phoneNumber,
-      "amount": amount,
+      "amount": amount.toString(),
       "description": "Wallet load",
       "identifier": identifier,
       "network": EnumToString.convertToString(paymentMethod)
@@ -140,7 +144,7 @@ class DashboardService {
           var loadId = await nanoid(LOAD_ID_SIZE);
           var load = Load(
               id: loadId,
-              clientWalletId: clientWalletId,
+              clientId: clientWalletId,
               amount: amount,
               loadStatus: EWalletLoadStatus.pending,
               loadDatetime: DateTime.now(),

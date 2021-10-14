@@ -12,9 +12,8 @@ abstract class UserModel {
   String phoneNumber;
   String address;
   EUserType userType;
-  Wallet wallet;
 
-  UserModel(this.displayName, this.email,this.phoneNumber, this.address, this.wallet, {this.password, this.id, this.userType});
+  UserModel(this.displayName, this.email,this.phoneNumber, this.address, {this.password, this.id, this.userType});
 
   toMap({@required EUserType userType});
 
@@ -23,8 +22,7 @@ abstract class UserModel {
       jsonClient["displayName"],
       jsonClient["email"],
       jsonClient["phoneNumber"],
-      jsonClient["address"],
-      Wallet.fromJson(jsonClient["wallet"])
+      jsonClient["address"]
     );
   }
 
@@ -34,7 +32,6 @@ abstract class UserModel {
         jsonDriver["email"],
         jsonDriver["phoneNumber"],
         jsonDriver["address"],
-        Wallet.fromJson(jsonDriver["wallet"]),
         jsonDriver["isActive"],
     );
     return driverObject;

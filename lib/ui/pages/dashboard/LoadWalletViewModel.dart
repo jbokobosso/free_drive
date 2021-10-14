@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:enum_to_string/enum_to_string.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,9 +32,6 @@ class LoadWalletViewModel extends BaseViewModel {
   DashboardService _dashboardService = getIt.get<DashboardService>();
   CoreService _coreService = getIt.get<CoreService>();
 
-  validateForm() {
-  }
-
   loadBalance() {
     bool isValid = this.loadWalletFormKey.currentState.validate();
     if(!isValid) return;
@@ -45,12 +43,12 @@ class LoadWalletViewModel extends BaseViewModel {
       Utils.showToast("Format numéro ${EnumToString.convertToString(this.chosenPaymentMethod)} invalide");
       return;
     }
-    Utils.showToast("En cours de conception...");
+    // Utils.showToast("En cours de conception...");
     this._dashboardService.loadWallet(
-      double.tryParse(this.amountCtrl.text.trim()),
-      this.phoneNumberCtrl.text.trim(),
-      this.chosenPaymentMethod,
-      this._coreService.loggedUser.wallet.id
+      amount: double.tryParse(this.amountCtrl.text.trim()),
+      phoneNumber: this.phoneNumberCtrl.text.trim(),
+      paymentMethod: this.chosenPaymentMethod,
+      clientWalletId:  FirebaseAuth.instance.currentUser.uid
     );
   }
 

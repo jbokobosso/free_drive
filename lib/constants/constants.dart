@@ -18,6 +18,7 @@ const String FCN_clients = "clients";
 const String FCN_users = "users";
 const String FCN_rides = "rides";
 const String FCN_wallet_loads = "loads";
+const String FCN_wallets = "wallets";
 
 // Allowed upload profile image extensions
 const List<String> S_ALLOWED_PROFILE_IMAGES_EXTENSIONS = [".jpg", ".JPG", ".jpeg", ".JPEG"];

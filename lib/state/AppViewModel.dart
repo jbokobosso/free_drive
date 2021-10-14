@@ -71,7 +71,6 @@ class AppViewModel extends BaseViewModel {
           this.emailCtrl.text.trim(),
           this.phoneNumberCtrl.text.trim(),
           this.addressCtrl.text.trim(),
-          new Wallet(id: newDriverWalletId, balance: 0),
           false
       );
     } else if(chosenUserType == EUserType.client) {
@@ -80,8 +79,7 @@ class AppViewModel extends BaseViewModel {
         this.displayNameCtrl.text.trim(),
         this.emailCtrl.text.trim(),
         this.phoneNumberCtrl.text.trim(),
-        this.addressCtrl.text.trim(),
-        new Wallet(id: newClientWalletId, balance: 0)
+        this.addressCtrl.text.trim()
       );
     }
 
@@ -161,7 +159,6 @@ class AppViewModel extends BaseViewModel {
           this.emailCtrl.text.trim(),
           this.phoneNumberCtrl.text.trim(),
           this.addressCtrl.text.trim(),
-          new Wallet(id: "", balance: 0),
           false,
       );
     } else if(chosenUserType == EUserType.client) {
@@ -170,7 +167,6 @@ class AppViewModel extends BaseViewModel {
         this.emailCtrl.text.trim(),
         this.phoneNumberCtrl.text.trim(),
         this.addressCtrl.text.trim(),
-        new Wallet(id: "", balance: 0)
       );
     }
 

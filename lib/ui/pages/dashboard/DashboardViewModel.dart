@@ -152,7 +152,7 @@ class DashboardViewModel extends BaseViewModel {
   }
 
   Future<void> checkDriverProfileIsActive() async {
-    bool profileActivOrNot = await this.authService.getDriverProfileStatus();
+    bool profileActivOrNot = await this.authService.getDriverProfileStatusInLocal();
     this.driverProfileIsActive = profileActivOrNot;
   }
 

@@ -27,7 +27,7 @@ class ProfileService {
       Utils.showToast("Mis à jour en ligne");
       UserModel newUserModel = await this._authService.getLoggedUser();
       newUserModel.displayName = newName;
-      await this._authService.storeLoggedUser(newUserModel);
+      await this._authService.storeLoggedUserInLocal(newUserModel);
       Utils.showToast("Mis à jour en local");
       response = true;
     } catch(e) {
@@ -47,7 +47,7 @@ class ProfileService {
       Utils.showToast("Mis à jour en ligne");
       UserModel newUserModel = await this._authService.getLoggedUser();
       newUserModel.phoneNumber = newPhoneNumber;
-      await this._authService.storeLoggedUser(newUserModel);
+      await this._authService.storeLoggedUserInLocal(newUserModel);
       Utils.showToast("Mis à jour en local");
       response = true;
     } catch(e) {

@@ -9,6 +9,7 @@ import 'package:free_drive/models/ClientModel.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/UserModel.dart';
+import 'package:free_drive/models/payment/Wallet.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -37,8 +38,9 @@ class AuthService {
       await this.firebaseAuth.currentUser.updateDisplayName(user.displayName);
       await this.uploadLicencePictures(files, user.userType);
       bool storedFirebase = await this.storeFirebaseUserInfos(user);
-      bool storedLocal = await this.storeLoggedUser(user);
-      return storedFirebase && storedLocal;
+      bool walletCreated = await this.createWallet(user);
+      bool storedLocal = await this.storeLoggedUserInLocal(user);
+      return storedFirebase && storedLocal && walletCreated;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
       return false;
@@ -65,7 +67,7 @@ class AuthService {
       }
       firebaseUser.userType = userModel.userType;
       firebaseUser.password = userModel.password;
-      await this.storeLoggedUser(firebaseUser);
+      await this.storeLoggedUserInLocal(firebaseUser);
       return firebaseUser;
     } on FirebaseAuthException catch (exception) {
       this._coreService.showErrorDialog(exception.code, exception.message);
@@ -100,7 +102,6 @@ class AuthService {
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
-            userModel.wallet
           ).toMap()
       );
       return true;
@@ -111,13 +112,24 @@ class AuthService {
             userModel.email.trim(),
             userModel.phoneNumber.trim(),
             userModel.address,
-            userModel.wallet,
             false
           ).toMap()
       );
       return true;
     } else {
-      throw "Error in storeing user infos on firebase firestore. Reason: The provide user type is neither driver nor client.";
+      throw "Error in storing user infos on firebase firestore. Reason: The provide user type is neither driver nor client.";
+    }
+  }
+
+  Future<bool> createWallet(UserModel userModel) async {
+    if(userModel.userType == EUserType.client) {
+      var result = await this.firestore.collection(FCN_wallets).doc(this.firebaseAuth.currentUser.uid).set(Wallet(id: this.firebaseAuth.currentUser.uid, balance: 0).toJson());
+      return true;
+    } else if(userModel.userType == EUserType.driver) {
+      var result = await this.firestore.collection(FCN_wallets).doc(this.firebaseAuth.currentUser.uid).set(Wallet(id: this.firebaseAuth.currentUser.uid, balance: 0).toJson());
+      return true;
+    } else {
+      throw "Error creating wallet. Reason: The provide user type is neither driver nor client.";
     }
   }
 
@@ -143,7 +155,7 @@ class AuthService {
   }
 
 
-  Future<bool> storeLoggedUser(UserModel user) async {
+  Future<bool> storeLoggedUserInLocal(UserModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_userIsLogged, true);
     String toBeStoredString = jsonEncode(user.toMap(userType: user.userType));
@@ -154,7 +166,7 @@ class AuthService {
   }
 
 
-  Future<bool> storeDriverProfileStatus(bool profileActiveOrNot) async {
+  Future<bool> storeDriverProfileStatusInLocal(bool profileActiveOrNot) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool written = await prefs.setBool(S_driverProfileActieOrNot, profileActiveOrNot);
     if(written)
@@ -164,7 +176,7 @@ class AuthService {
   }
 
 
-  Future<bool> getDriverProfileStatus() async {
+  Future<bool> getDriverProfileStatusInLocal() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     dynamic profileActiveOrNot = prefs.getBool(S_driverProfileActieOrNot);
     if(profileActiveOrNot == null || profileActiveOrNot == false)

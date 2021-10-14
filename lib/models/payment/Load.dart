@@ -9,7 +9,7 @@ enum EWalletLoadStatus {
 
 class Load {
   String id;
-  String clientWalletId;
+  String clientId;
   double amount;
   EWalletLoadStatus loadStatus;
   DateTime loadDatetime;
@@ -18,7 +18,7 @@ class Load {
   Load(
       {
         @required this.id,
-        @required this.clientWalletId,
+        @required this.clientId,
         @required this.amount,
         @required this.loadStatus,
         @required this.loadDatetime,
@@ -28,7 +28,7 @@ class Load {
   Map<String, dynamic> toJson() {
     return {
       "id": this.id,
-      "clientWalletId": this.clientWalletId,
+      "clientWalletId": this.clientId,
       "amount": this.amount,
       "loadStatus": EnumToString.convertToString(this.loadStatus),
       "loadDatetime": this.loadDatetime,
@@ -39,7 +39,7 @@ class Load {
   Load fromJson(Map<String, dynamic> json) {
     return Load(
       id: json['id'],
-      clientWalletId: json['clientWalletId'],
+      clientId: json['clientWalletId'],
       amount: json['amount'],
       loadStatus: EnumToString.fromString([EWalletLoadStatus.done, EWalletLoadStatus.pending], json['loadStatus']),
       loadDatetime: Utils.timestampToDateTime(json['loadDatetime']),
