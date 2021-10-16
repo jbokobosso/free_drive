@@ -7,15 +7,15 @@ import 'package:free_drive/ui/shared/Loading.dart';
 import 'package:free_drive/utils/Utils.dart';
 import 'package:stacked/stacked.dart';
 
-class PendingPayment extends StatelessWidget {
-  PendingPayment({Key key}) : super(key: key);
+class LoadsHistoryPage extends StatelessWidget {
+  LoadsHistoryPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DashboardViewModel>.reactive(
       onModelReady: (model) => model.loadPendingPayments(),
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: 'Historique Paiements', refreshCallback: model.refreshPendingPayments),
+        appBar: CustomAppBar(title: 'Historique Portefeuille', refreshCallback: model.refreshPendingPayments),
         extendBodyBehindAppBar: true,
         body: Stack(
           alignment: Alignment.topCenter,

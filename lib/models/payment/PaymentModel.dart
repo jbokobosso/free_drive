@@ -1,14 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:free_drive/utils/Utils.dart';
 
-class Payment {
+class PaymentModel {
   String id;
   String clientWalletId;
   String driverWalletId;
   double amount;
   DateTime paymentDate;
 
-  Payment({
+  PaymentModel({
     @required this.id,
     @required this.clientWalletId,
     @required this.driverWalletId,
@@ -26,8 +26,8 @@ class Payment {
     };
   }
 
-  static Payment fromJson(Map<String, dynamic> json) {
-    return Payment(
+  static PaymentModel fromJson(Map<String, dynamic> json) {
+    return PaymentModel(
       id: json['id'],
       clientWalletId: json['clientWalletId'],
       driverWalletId: json['driverWalletId'],

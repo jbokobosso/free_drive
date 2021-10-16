@@ -1,6 +1,5 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
-import 'package:free_drive/models/EPaymentMethod.dart';
 
 class PendingPaymentModel {
   String tx_reference;

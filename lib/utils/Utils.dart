@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EDialogType.dart';
-import 'package:free_drive/models/payment/PendingPayment.dart';
+import 'package:free_drive/models/payment/PendingPaymentModel.dart';
 import 'package:lottie/lottie.dart';
 
 class Utils {
@@ -196,7 +196,7 @@ class Utils {
     String _convertedValue;
     switch(status) {
       case 0:
-        _convertedValue = "Paiement Réussi";
+        _convertedValue = "Chargement Réussi";
         break;
       case 2:
         _convertedValue = "En Attente";

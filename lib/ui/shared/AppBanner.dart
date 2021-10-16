@@ -25,17 +25,21 @@ class AppBanner extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             this.showProfileIcon ? IconButton(icon: Icon(Icons.person, color: Colors.white), onPressed: () => navigatorKey.currentState.pushNamed("/profile")) : Text(""),
-            this.showNotifIcon ? Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Badge(
-                badgeContent: Text("10", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
-                badgeColor: Colors.black,
-                child: IconButton(
-                  icon: Icon(Icons.notifications, color: Colors.white),
-                  onPressed: () => navigatorKey.currentState.pushNamed("/notifs")
-                )
-              ),
-            ) : Text(""),
+            // this.showNotifIcon ? Padding(
+            //   padding: const EdgeInsets.only(right: 15.0),
+            //   child: Badge(
+            //     badgeContent: Text("10", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+            //     badgeColor: Colors.black,
+            //     child: IconButton(
+            //       icon: Icon(Icons.notifications, color: Colors.white),
+            //       onPressed: () => navigatorKey.currentState.pushNamed("/pendingPayments")
+            //     )
+            //   ),
+            // ) : Text(""),
+            IconButton(
+              icon: Icon(Icons.account_balance_wallet, color: Colors.white),
+              onPressed: () => navigatorKey.currentState.pushNamed("/pendingPayments")
+            )
           ],
         ),
       ),

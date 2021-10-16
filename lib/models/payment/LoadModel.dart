@@ -8,7 +8,7 @@ enum EWalletLoadStatus {
   done
 }
 
-class Load {
+class LoadModel {
   String id;
   String clientId;
   double amount;
@@ -19,7 +19,7 @@ class Load {
   EPaymentMethod paymentMethod;
   String phoneNumber;
 
-  Load(
+  LoadModel(
       {
         @required this.id,
         @required this.clientId,
@@ -46,8 +46,8 @@ class Load {
     };
   }
 
-  Load fromJson(Map<String, dynamic> json) {
-    return Load(
+  LoadModel fromJson(Map<String, dynamic> json) {
+    return LoadModel(
       id: json['id'],
       clientId: json['clientWalletId'],
       amount: json['amount'],

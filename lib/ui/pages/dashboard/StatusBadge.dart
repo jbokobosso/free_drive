@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:free_drive/models/payment/PendingPayment.dart';
+import 'package:free_drive/models/payment/PendingPaymentModel.dart';
 import 'package:free_drive/utils/Utils.dart';
 
 class StatusBadge extends StatelessWidget {

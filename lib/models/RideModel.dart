@@ -47,7 +47,7 @@ class RideModel {
   static RideModel fromJSON(Map<String, dynamic> json, String firebaseId) {
     RideModel ride = new RideModel(
       id: firebaseId,
-      departureLocation: LatLng.fromJson(json),
+      departureLocation: LatLng.fromJson(json['departureLocation']),
       destinationLocation: GooglePlace.fromJSON(json['destinationLocation']),
       departureDate: Utils.timestampToDateTime(json['departureDate']),
       returnDate: Utils.timestampToDateTime(json['returnDate']),

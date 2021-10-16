@@ -5,8 +5,8 @@ import 'package:enum_to_string/enum_to_string.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
-import 'package:free_drive/models/payment/Load.dart';
-import 'package:free_drive/models/payment/PendingPayment.dart';
+import 'package:free_drive/models/payment/LoadModel.dart';
+import 'package:free_drive/models/payment/PendingPaymentModel.dart';
 import 'package:free_drive/utils/Utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:free_drive/services/CoreService.dart';
@@ -147,7 +147,7 @@ class DashboardService {
       switch(jsonResponse['status']) {
         case 0:
           Utils.showDialogBox("Etat Transaction", "Transaction enregistrée. Vous serez invités à confirmer.");
-          var load = Load(
+          var load = LoadModel(
             id: newLoadId,
             clientId: clientWalletId,
             amount: amount,

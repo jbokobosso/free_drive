@@ -7,7 +7,7 @@ import 'package:free_drive/ui/pages/auth/ValidationPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/AdkDriverPage.dart';
 import 'package:free_drive/ui/pages/ask_driver/ContactDriverPage.dart';
 import 'package:free_drive/ui/pages/dashboard/DriverDashboardPage.dart';
-import 'package:free_drive/ui/pages/dashboard/PendingPayments.dart';
+import 'package:free_drive/ui/pages/dashboard/LoadsHistoryPage.dart';
 import 'package:free_drive/ui/pages/dashboard/ProfilePage.dart';
 import 'package:free_drive/ui/pages/dashboard/RideDetailsPage.dart';
 import 'package:free_drive/ui/pages/dashboard/UserDashboardPage.dart';
@@ -36,5 +36,5 @@ Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder> {
   '/profile': (BuildContext context) => ProfilePage(),
   '/startup': (BuildContext context) => StartupView(),
   '/recoverPassword': (BuildContext context) => RecoverPasswordPage(),
-  '/pendingPayments': (BuildContext context) => PendingPayment(),
+  '/pendingPayments': (BuildContext context) => LoadsHistoryPage(),
 };
