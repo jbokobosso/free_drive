@@ -43,7 +43,6 @@ class LoadWalletViewModel extends BaseViewModel {
       Utils.showToast("Format numéro ${EnumToString.convertToString(this.chosenPaymentMethod)} invalide");
       return;
     }
-    // Utils.showToast("En cours de conception...");
     this._dashboardService.loadWallet(
       amount: double.tryParse(this.amountCtrl.text.trim()),
       phoneNumber: this.phoneNumberCtrl.text.trim(),

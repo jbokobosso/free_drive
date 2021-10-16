@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/EDialogType.dart';
+import 'package:free_drive/models/payment/PendingPayment.dart';
 import 'package:lottie/lottie.dart';
 
 class Utils {
@@ -189,6 +190,44 @@ class Utils {
         ticker: 'ticker');
     const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
     flutterLocalNotificationsPlugin.show(0, title, bodyContent, platformChannelSpecifics, payload: payload);
+  }
+
+  static String convertPaymentStatusToHumanReadableFormat(int status) {
+    String _convertedValue;
+    switch(status) {
+      case 0:
+        _convertedValue = "Paiement Réussi";
+        break;
+      case 2:
+        _convertedValue = "En Attente";
+        break;
+      case 4:
+        _convertedValue = "Expiré";
+        break;
+      case 6:
+        _convertedValue = "Annulé";
+        break;
+    }
+    return _convertedValue;
+  }
+
+  static getPendingPaymentBadgeColor(PendingPaymentModel pendingPayment) {
+    Color color;
+    switch(pendingPayment.status) {
+      case 0:
+        color = Colors.green;
+        break;
+      case 2:
+        color = Colors.amber;
+        break;
+      case 4:
+        color = Colors.red;
+        break;
+      case 6:
+        color = Colors.black;
+        break;
+    }
+    return color;
   }
 
 }

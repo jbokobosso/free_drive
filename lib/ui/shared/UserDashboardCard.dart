@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:free_drive/main.dart';
 import 'package:free_drive/models/RideModel.dart';
 import 'package:free_drive/state/AppViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
@@ -37,12 +38,15 @@ class UserDashboardCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Solde', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("${model.coreService.userDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
-                        IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => model.buildShowDialog(context),)
-                      ],
+                    GestureDetector(
+                      onTap: () => navigatorKey.currentState.pushNamed("/pendingPayments"),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${model.coreService.userDashboardState.balance ?? 00.0} FCFA", style: Theme.of(context).textTheme.headline6),
+                          IconButton(icon: Icon(Icons.add, color: Colors.grey), onPressed: () => model.buildShowDialog(context),)
+                        ],
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

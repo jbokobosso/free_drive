@@ -1,5 +1,6 @@
 import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/foundation.dart';
+import 'package:free_drive/models/EPaymentMethod.dart';
 import 'package:free_drive/utils/Utils.dart';
 
 enum EWalletLoadStatus {
@@ -14,6 +15,9 @@ class Load {
   EWalletLoadStatus loadStatus;
   DateTime loadDatetime;
   DateTime completedAt;
+  String txRef;
+  EPaymentMethod paymentMethod;
+  String phoneNumber;
 
   Load(
       {
@@ -22,7 +26,10 @@ class Load {
         @required this.amount,
         @required this.loadStatus,
         @required this.loadDatetime,
-        @required this.completedAt
+        @required this.completedAt,
+        @required this.txRef,
+        @required this.paymentMethod,
+        @required this.phoneNumber,
       });
 
   Map<String, dynamic> toJson() {
@@ -32,7 +39,10 @@ class Load {
       "amount": this.amount,
       "loadStatus": EnumToString.convertToString(this.loadStatus),
       "loadDatetime": this.loadDatetime,
-      "completedAt": this.completedAt
+      "completedAt": this.completedAt,
+      "tx_ref": this.txRef,
+      "paymentMethod": EnumToString.convertToString(this.paymentMethod),
+      "phoneNumber": this.phoneNumber,
     };
   }
 
@@ -43,7 +53,10 @@ class Load {
       amount: json['amount'],
       loadStatus: EnumToString.fromString([EWalletLoadStatus.done, EWalletLoadStatus.pending], json['loadStatus']),
       loadDatetime: Utils.timestampToDateTime(json['loadDatetime']),
-      completedAt: json['completedAt']
+      completedAt: json['completedAt'],
+      txRef: json['tx_ref'],
+      paymentMethod: EnumToString.fromString([EPaymentMethod.FLOOZ, EPaymentMethod.TMONEY], json['paymentMethod']),
+      phoneNumber: json['phoneNumber'],
     );
   }
 }

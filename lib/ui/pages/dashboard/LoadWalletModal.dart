@@ -32,7 +32,7 @@ class LoadWalletModal extends StatelessWidget {
                     keyboardType: TextInputType.phone,
                     validator: (value) {
                       if(value.isEmpty) return "Montant requis";
-                      if(double.parse(value) <= MINIMUM_WALLET_LOAD_AMOUNT) return "Montant invalide:\nminimum = $MINIMUM_WALLET_LOAD_AMOUNT FCFA";
+                      if(double.parse(value) < MINIMUM_WALLET_LOAD_AMOUNT) return "Montant invalide:\nminimum = $MINIMUM_WALLET_LOAD_AMOUNT FCFA";
                       if(model.chosenPaymentMethod == null) return "Choisir moyen de paiement";
                       return null;
                     },

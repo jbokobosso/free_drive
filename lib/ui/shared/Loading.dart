@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:free_drive/state/AppViewModel.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:lottie/lottie.dart';
 import 'package:stacked/stacked.dart';
 
@@ -31,9 +32,7 @@ class LoadingMini extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
-    );
+    return Center(child: Lottie.asset("assets/lottie/loading-tire.json", width: 150));
   }
 }
 

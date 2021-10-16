@@ -5,6 +5,8 @@ const String S_driverProfileActieOrNot = "driverProfileActieOrNot";
 const String S_loggedUserType = "loggedUserType";
 const String S_loggedUser = "loggedUser";
 const String S_profilePictureUrl = "profilePictureUrl";
+const String S_isPaymentPending = "isPaymentPending";
+const String S_pendingPaymentReference = "pendingPaymentReferences";
 
 // Firebase Storage locations
 const String FS_driverLicencesLocation = "licenses";

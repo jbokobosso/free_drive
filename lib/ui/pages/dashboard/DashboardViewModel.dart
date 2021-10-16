@@ -10,11 +10,14 @@ import 'package:free_drive/models/DashboardModel.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
 import 'package:free_drive/models/EUserType.dart';
 import 'package:free_drive/models/RideModel.dart';
+import 'package:free_drive/models/payment/Load.dart';
+import 'package:free_drive/models/payment/PendingPayment.dart';
 import 'package:free_drive/services/AuthService.dart';
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/ui/pages/dashboard/LoadWalletModal.dart';
+import 'package:free_drive/ui/pages/dashboard/PendingPayments.dart';
 import 'package:free_drive/ui/shared/Button.dart';
 import 'package:free_drive/ui/shared/customShapes.dart';
 import 'package:free_drive/utils/Utils.dart';
@@ -46,6 +49,8 @@ class DashboardViewModel extends BaseViewModel {
 
   bool driverShowPendingRideDetails = false;
   bool driverProfileIsActive = false;
+
+  List<PendingPaymentModel> pendingPayments = [];
 
 
   initUserViewPage() {
@@ -256,4 +261,29 @@ class DashboardViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+
+  Future<void> refreshPendingPayments() async {
+    await this.loadPendingPayments();
+  }
+
+  loadPendingPayments() async {
+    this.setBusy(true);
+    List<PendingPaymentModel> _pendingPayments = [];
+    List<String> _pendingPaymentsRefs = await this._dashboardService.getPendingPaymentReferences();
+    if(_pendingPaymentsRefs.isEmpty) return;
+    for(String ref in _pendingPaymentsRefs) {
+      PendingPaymentModel pendingPayment = await this._dashboardService.loadPendingPayment(ref);
+      if(pendingPayment != null) {
+        _pendingPayments.add(pendingPayment);
+      }
+    }
+    this.pendingPayments = _pendingPayments;
+    this.pendingPayments.sort((a, b) {
+      if(a.datetime != null && b.datetime != null) {
+        return a.datetime.compareTo(b.datetime);
+      } else return 0;
+    });
+    this.setBusy(false);
+    notifyListeners();
+  }
 }

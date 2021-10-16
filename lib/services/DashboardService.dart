@@ -6,18 +6,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/models/EPaymentMethod.dart';
 import 'package:free_drive/models/payment/Load.dart';
+import 'package:free_drive/models/payment/PendingPayment.dart';
 import 'package:free_drive/utils/Utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ExceptionService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:nanoid/async.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   CoreService _coreService = getIt.get<CoreService>();
   ExceptionService _exceptionService = getIt.get<ExceptionService>();
+
+  bool loadIsPending = false;
 
   Future<bool> userActiveRideExists() async {
     QuerySnapshot<Map<String, dynamic>> querySnapshot = await  _firestore.collection(FCN_rides)
@@ -123,15 +128,16 @@ class DashboardService {
       {double amount,
       String phoneNumber,
       EPaymentMethod paymentMethod,
-      String clientWalletId}) async {
+      String clientWalletId
+      }) async {
     var url = Uri.parse('https://paygateglobal.com/api/v1/pay');
-    var identifier = await nanoid();
+    var newLoadId = await nanoid();
     var response = await http.post(url, body: {
       "auth_token": PAYGATE_API_TOKEN,
       "phone_number": phoneNumber,
       "amount": amount.toString(),
       "description": "Wallet load",
-      "identifier": identifier,
+      "identifier": newLoadId,
       "network": EnumToString.convertToString(paymentMethod)
     });
     print('Response status: ${response.statusCode}');
@@ -141,17 +147,23 @@ class DashboardService {
       switch(jsonResponse['status']) {
         case 0:
           Utils.showDialogBox("Etat Transaction", "Transaction enregistrée. Vous serez invités à confirmer.");
-          var loadId = await nanoid(LOAD_ID_SIZE);
           var load = Load(
-              id: loadId,
-              clientId: clientWalletId,
-              amount: amount,
-              loadStatus: EWalletLoadStatus.pending,
-              loadDatetime: DateTime.now(),
-              completedAt: null
+            id: newLoadId,
+            clientId: clientWalletId,
+            amount: amount,
+            loadStatus: EWalletLoadStatus.pending,
+            loadDatetime: DateTime.now(),
+            completedAt: null,
+            txRef: jsonResponse['tx_reference'].toString(),
+            paymentMethod: paymentMethod,
+            phoneNumber: null
           );
           try {
-            await this._firestore.collection(FCN_wallet_loads).add(load.toJson());
+           var reference = jsonResponse['tx_reference'];
+           // store pending load transaction
+           await this._firestore.collection(FCN_wallet_loads).doc("$reference").set(load.toJson());
+           // locally store pending generated transaction for above load
+           await this.storeNewPendingPaymentReference(reference.toString());
           } catch (e) {
             rethrow;
           }
@@ -167,6 +179,44 @@ class DashboardService {
           break;
       }
     }
+  }
+
+  Future<PendingPaymentModel> loadPendingPayment(String txReference) async {
+    Uri url = Uri.tryParse("https://paygateglobal.com/api/v1/status");
+    try {
+      var requestResponse = await http.post(
+          url,
+          body: {"auth_token": PAYGATE_API_TOKEN, "tx_reference": txReference}
+      );
+      if(requestResponse.statusCode == 200) {
+        Map<String, dynamic> jsonPendingPayment = jsonDecode(requestResponse.body);
+        PendingPaymentModel pendingPayment = PendingPaymentModel.fromJson(jsonPendingPayment);
+        return pendingPayment;
+      }
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<bool> storeNewPendingPaymentReference(String txReference) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> refs = [];
+    refs.addAll(await getPendingPaymentReferences());
+    refs.add(txReference);
+    String dataToStore = jsonEncode(refs);
+    return await prefs.setString(S_pendingPaymentReference, dataToStore);
+  }
+
+  Future<List<String>> getPendingPaymentReferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> refs = [];
+    String storedRefs = prefs.getString(S_pendingPaymentReference);
+    if(storedRefs == null)
+      return []; // retourner un tableau vide s'il n'y a pas de réference
+    List<String> tempList = [];
+    List<dynamic> jsonData = jsonDecode(storedRefs);
+    tempList.addAll(jsonData.map((e) => e.toString()));
+    return tempList;
   }
 
 }
