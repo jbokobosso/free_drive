@@ -43,12 +43,21 @@ class LoadWalletViewModel extends BaseViewModel {
       Utils.showToast("Format numéro ${EnumToString.convertToString(this.chosenPaymentMethod)} invalide");
       return;
     }
-    this._dashboardService.loadWallet(
-      amount: double.tryParse(this.amountCtrl.text.trim()),
-      phoneNumber: this.phoneNumberCtrl.text.trim(),
-      paymentMethod: this.chosenPaymentMethod,
-      clientWalletId:  FirebaseAuth.instance.currentUser.uid
-    );
+    print(this.phoneNumberCtrl.text.trim());
+    try{
+      setBusy(true);
+      this._dashboardService.loadWallet(
+          amount: double.tryParse(this.amountCtrl.text.trim()),
+          phoneNumber: this.phoneNumberCtrl.text.trim(),
+          paymentMethod: this.chosenPaymentMethod,
+          clientWalletId:  FirebaseAuth.instance.currentUser.uid
+      );
+    } catch (e) {
+      throw e;
+    }
+    finally {
+      setBusy(false);
+    }
   }
 
   choosePaymentMethod(EPaymentMethod method) {

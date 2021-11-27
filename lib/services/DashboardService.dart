@@ -156,14 +156,12 @@ class DashboardService {
             completedAt: null,
             txRef: jsonResponse['tx_reference'].toString(),
             paymentMethod: paymentMethod,
-            phoneNumber: null
+            phoneNumber: phoneNumber
           );
           try {
            var reference = jsonResponse['tx_reference'];
            // store pending load transaction
            await this._firestore.collection(FCN_wallet_loads).doc("$reference").set(load.toJson());
-           // locally store pending generated transaction for above load
-           await this.storeNewPendingPaymentReference(reference.toString());
           } catch (e) {
             rethrow;
           }
@@ -198,25 +196,14 @@ class DashboardService {
     }
   }
 
-  Future<bool> storeNewPendingPaymentReference(String txReference) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> refs = [];
-    refs.addAll(await getPendingPaymentReferences());
-    refs.add(txReference);
-    String dataToStore = jsonEncode(refs);
-    return await prefs.setString(S_pendingPaymentReference, dataToStore);
-  }
-
   Future<List<String>> getPendingPaymentReferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> refs = [];
-    String storedRefs = prefs.getString(S_pendingPaymentReference);
-    if(storedRefs == null)
-      return []; // retourner un tableau vide s'il n'y a pas de réference
-    List<String> tempList = [];
-    List<dynamic> jsonData = jsonDecode(storedRefs);
-    tempList.addAll(jsonData.map((e) => e.toString()));
-    return tempList;
+    QuerySnapshot<Map<String, dynamic>> querySnapshot = await this._firestore.collection(FCN_wallet_loads)
+        .where("clientWalletId", isEqualTo: this._firebaseAuth.currentUser.uid)
+        .get();
+
+    List<LoadModel> loads = querySnapshot.docs.map((e) => LoadModel.fromJson(e.data())).toList();
+    List<String> loadRefs = loads.map((e) => e.txRef).toList();
+    return loadRefs;
   }
 
 }

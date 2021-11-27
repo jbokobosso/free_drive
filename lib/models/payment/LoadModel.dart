@@ -46,7 +46,7 @@ class LoadModel {
     };
   }
 
-  LoadModel fromJson(Map<String, dynamic> json) {
+  static LoadModel fromJson(Map<String, dynamic> json) {
     return LoadModel(
       id: json['id'],
       clientId: json['clientWalletId'],
