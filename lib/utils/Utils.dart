@@ -11,7 +11,10 @@ import 'package:lottie/lottie.dart';
 class Utils {
 
   static timestampToDateTime(Timestamp timestamp) {
-    return DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+    if(timestamp == null)
+      return null;
+    else
+      return DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
   }
 
   static showToast(String message) {

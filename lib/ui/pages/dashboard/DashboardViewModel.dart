@@ -12,6 +12,7 @@ import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/DashboardService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/ui/pages/dashboard/LoadWalletModal.dart';
+import 'package:free_drive/utils/Utils.dart';
 import 'package:location/location.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
@@ -47,6 +48,7 @@ class DashboardViewModel extends BaseViewModel {
   initUserViewPage() {
     this.initEyeAnimation();
     this.checkUserActiveRide();
+    this.loadBalance();
   }
 
   initDriverViewPage() {
@@ -68,6 +70,10 @@ class DashboardViewModel extends BaseViewModel {
         notifyListeners();
       },
     );
+  }
+
+  void loadBalance() async {
+    await this._dashboardService.loadBalance();
   }
 
   void loadUserActiveRide() {
@@ -280,5 +286,18 @@ class DashboardViewModel extends BaseViewModel {
   navigateToAskDriverPage() async {
     bool hasLocationPermission = await requestUserLocation();
     if(hasLocationPermission) navigatorKey.currentState.pushNamed('/askDriver');
+  }
+
+  confirmPayment(PendingPaymentModel pendingPayment) async {
+    try {
+      setBusy(true);
+      bool isOk = await this._dashboardService.confirmPayment(pendingPayment);
+      if(isOk) Utils.showToast("Portefeuille mis à jour !!!");
+      else Utils.showToast("Déjà mis à jour");
+    } catch (e) {
+      throw e;
+    } finally {
+      setBusy(false);
+    }
   }
 }

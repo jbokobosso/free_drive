@@ -1,4 +1,3 @@
-import 'package:enum_to_string/enum_to_string.dart';
 import 'package:flutter/material.dart';
 import 'package:free_drive/ui/pages/dashboard/DashboardViewModel.dart';
 import 'package:free_drive/ui/pages/dashboard/StatusBadge.dart';
@@ -34,6 +33,7 @@ class LoadsHistoryPage extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: model.pendingPayments.length,
                   itemBuilder: (context, index) => ListTile(
+                    onTap: () => model.confirmPayment(model.pendingPayments[index]),
                     title: Text(model.pendingPayments[index].payment_method),
                     subtitle: model.pendingPayments[index].datetime == null
                         ? Text('N/A')

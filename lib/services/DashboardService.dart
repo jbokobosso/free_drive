@@ -205,5 +205,36 @@ class DashboardService {
     List<String> loadRefs = loads.map((e) => e.txRef).toList();
     return loadRefs;
   }
+  
+  Future<bool> confirmPayment(PendingPaymentModel pendingPaymentModel) async {
+    var querySnapshot = await _firestore.collection((FCN_wallet_loads)).where("tx_ref", isEqualTo: pendingPaymentModel.tx_reference).get();
+    double amount = querySnapshot.docs.first.data()['amount'];
+    EWalletLoadStatus walletLoadStatus = EnumToString.fromString([EWalletLoadStatus.done, EWalletLoadStatus.pending], querySnapshot.docs.first.data()['loadStatus']);
+
+    if(walletLoadStatus == EWalletLoadStatus.pending) {
+      await this._firestore.collection(FCN_wallet_loads).doc(pendingPaymentModel.tx_reference)
+          .update({
+        "loadStatus": EnumToString.convertToString(EWalletLoadStatus.done),
+        "completedAt": DateTime.now()
+      });
+
+      this._firestore.collection(FCN_wallets)
+          .doc(this._firebaseAuth.currentUser.uid)
+          .update({"balance": FieldValue.increment(amount)});
+      return true;
+    }
+
+    return false;
+
+  }
+  
+  Future<void> loadBalance() async {
+    var snapshots = this._firestore.collection(FCN_wallets)
+        .where("id", isEqualTo: this._firebaseAuth.currentUser.uid)
+        .snapshots();
+    snapshots.listen((QuerySnapshot<Map<String, dynamic>> event) { 
+      this._coreService.userDashboardState.balance = double.tryParse(event.docs.first.data()['balance'].toString());
+    });
+  }
 
 }

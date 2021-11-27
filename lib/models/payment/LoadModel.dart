@@ -53,7 +53,7 @@ class LoadModel {
       amount: json['amount'],
       loadStatus: EnumToString.fromString([EWalletLoadStatus.done, EWalletLoadStatus.pending], json['loadStatus']),
       loadDatetime: Utils.timestampToDateTime(json['loadDatetime']),
-      completedAt: json['completedAt'],
+      completedAt: Utils.timestampToDateTime(json['completedAt']),
       txRef: json['tx_ref'],
       paymentMethod: EnumToString.fromString([EPaymentMethod.FLOOZ, EPaymentMethod.TMONEY], json['paymentMethod']),
       phoneNumber: json['phoneNumber'],
