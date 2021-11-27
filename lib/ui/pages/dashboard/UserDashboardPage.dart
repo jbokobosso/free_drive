@@ -122,7 +122,7 @@ class UserDashboardPage extends StatelessWidget {
                   ) : Container(),
                   model.activeRide == null || model.activeRide.rideState == ERideState.done ? ElevatedButton(
                       style: customButtonStyle(context),
-                      onPressed: () => navigatorKey.currentState.pushNamed('/askDriver'),
+                      onPressed: model.navigateToAskDriverPage,
                       child: Text('Demander un chauffeur', style: TextStyle(fontWeight: FontWeight.bold))
                   ) : Container(),
                 ],

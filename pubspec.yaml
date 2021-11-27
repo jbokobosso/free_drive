@@ -28,7 +28,6 @@ dependencies:
 
 
   # Core functionality
-  permission_handler: ^8.2.2
   flutter_local_notifications: ^9.0.0
   http: ^0.13.3
   enum_to_string: ^2.0.1
@@ -43,7 +42,6 @@ dependencies:
 
   # Utils
   flutter_typeahead: ^3.2.0
-  mapbox_search: ^3.0.1+1
   shared_preferences: ^2.0.6
   flutter_sms: ^2.3.1
   flutter_phone_direct_caller: ^2.0.0

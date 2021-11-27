@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:free_drive/constants/constants.dart';
 import 'package:free_drive/main.dart';
 import 'package:free_drive/models/DriverModel.dart';
 import 'package:free_drive/models/EDialogType.dart';
@@ -19,11 +18,7 @@ import 'package:free_drive/services/CoreService.dart';
 import 'package:free_drive/services/ServiceLocator.dart';
 import 'package:free_drive/utils/Utils.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:mapbox_search/mapbox_search.dart';
-import 'package:permission_handler/permission_handler.dart';
-// import 'package:place_picker/entities/location_result.dart';
-// import 'package:place_picker/place_picker.dart';
-// import 'package:place_picker/widgets/place_picker.dart';
+import 'package:location/location.dart';
 import 'package:rive/rive.dart';
 import 'package:stacked/stacked.dart';
 
@@ -77,7 +72,7 @@ class AskDriverViewModel extends BaseViewModel {
     this.loadLoggedUser();
     this.smsFormKey = new GlobalKey<FormState>();
     this.initEyeAnimation();
-    this.requestLocationPermission();
+    // this.requestUserLocation();
     notifyListeners();
   }
 
@@ -90,14 +85,9 @@ class AskDriverViewModel extends BaseViewModel {
     this.loadLoggedUser();
     this.smsFormKey = new GlobalKey<FormState>();
     this.initEyeAnimation();
-    this.requestLocationPermission();
+    // this.requestUserLocation();
     notifyListeners();
   }
-
-  var placesSearch = PlacesSearch(
-    apiKey: MAPBOX_TOKEN,
-    limit: PLACES_SEARCH_RESULT_LIMIT,
-  );
 
   Future<void> loadLoggedUser() async {
     this.loggedUser = await this._authService.getLoggedUser();
@@ -214,31 +204,6 @@ class AskDriverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // Future<List<MapBoxPlace>> getPlaces(String searchText) async {
-  //   return await placesSearch.getPlaces(searchText);
-  // }
-
-  // pickPlace() async {
-  //   var place = await PluginGooglePlacePicker.showAutocomplete(
-  //       mode: PlaceAutocompleteMode.MODE_OVERLAY,
-  //       countryCode: 'TG',
-  //       restriction: locationRestriction,
-  //       typeFilter: TypeFilter.ESTABLISHMENT);
-  //   print(place);
-  // }
-
-  // void showPlacePicker(BuildContext context) async {
-  //   LocationResult result = await Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (context) =>
-  //           PlacePicker(
-  //             GMAPS_API_KEY,
-  //             displayLocation: LatLng(6.1824878, 1.1766506),
-  //           )));
-  //
-  //   // Handle the result in your way
-  //   print(result);
-  // }
-
   void computeAndSetRideDuration() {
     Duration rideDuration = this.returnDate.difference(this.departureDate);
     this.rideDurationInDays = rideDuration.inDays;
@@ -286,24 +251,12 @@ class AskDriverViewModel extends BaseViewModel {
     this.computeAndSetRideDuration();
   }
 
-  handleDestinationLocationInput(MapBoxPlace selectedSuggestion) {
-    this.destinationLocationCtrl.text = selectedSuggestion.placeName;
-  }
-
   newRide(RideModel ride) async {
     setBusy(true);
     bool success = await this.askDriverService.newRide(ride);
     setBusy(false);
     if(success)
       navigatorKey.currentState.pushNamedAndRemoveUntil("/dashboard", (Route<dynamic> route) => false);
-  }
-
-  Future<bool> requestLocationPermission() async {
-    bool isOk = false;
-    PermissionStatus permissionStatus = await Permission.location.request();
-    if(permissionStatus == PermissionStatus.granted)
-      isOk = true;
-    return isOk;
   }
 
   setDefaultLocation() {
@@ -351,16 +304,6 @@ class AskDriverViewModel extends BaseViewModel {
       return await this.askDriverService.queryGooglePlacesAutoComplete(searchTerm);
     } else return [];
   }
-
-  // Future<GooglePlace> getOnePlace(String searchText) async {
-  //   List<MapBoxPlace> foundPlaces = await placesSearch.getPlaces(searchText);
-  //   return new GooglePlace(
-  //       latitude: foundPlaces.first.center.first,
-  //       longitude: foundPlaces.first.center.first,
-  //       shortName: foundPlaces.first.text,
-  //       longName: foundPlaces.first.placeName
-  //   );
-  // }
 
   onSuggestionSelected(PlacesAutoComplete selectedSuggestion) async {
     GooglePlace newGooglePlace = GooglePlace(placeId: selectedSuggestion.placeId, desc: selectedSuggestion.description);

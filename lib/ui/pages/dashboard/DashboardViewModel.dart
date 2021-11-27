@@ -56,7 +56,6 @@ class DashboardViewModel extends BaseViewModel {
   initUserViewPage() {
     this.initEyeAnimation();
     this.checkUserActiveRide();
-    this.requestUserLocation();
   }
 
   initDriverViewPage() {
@@ -230,38 +229,6 @@ class DashboardViewModel extends BaseViewModel {
     );
   }
 
-  requestUserLocation() async {
-    setBusy(true);
-    Location location = new Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        setBusy(false);
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        setBusy(false);
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-    this.coreService.setLocationData(_locationData);
-    setBusy(false);
-  }
-
-
   Future<void> refreshPendingPayments() async {
     await this.loadPendingPayments();
   }
@@ -285,5 +252,42 @@ class DashboardViewModel extends BaseViewModel {
     });
     this.setBusy(false);
     notifyListeners();
+  }
+
+  Future<bool> requestUserLocation() async {
+    setBusy(true);
+    Location location = new Location();
+
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        setBusy(false);
+        return false;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        setBusy(false);
+        return false;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    this.coreService.setLocationData(_locationData);
+    setBusy(false);
+    return true;
+  }
+
+  navigateToAskDriverPage() async {
+    bool hasLocationPermission = await requestUserLocation();
+    if(hasLocationPermission) navigatorKey.currentState.pushNamed('/askDriver');
   }
 }
