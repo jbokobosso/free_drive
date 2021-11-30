@@ -116,7 +116,7 @@ class UserDashboardPage extends StatelessWidget {
                       Text('Départ - '+ Utils.formatDateToHuman(model.activeRide.departureDate)),
                       Text('Retour - '+ Utils.formatDateToHuman(model.activeRide.departureDate)),
                       Text('Lieu de départ - '+ model.activeRide.departureLocation.toString()),
-                      Text('Destination - '+ model.activeRide.destinationLocation.name),
+                      Text('Destination - '+ model.activeRide.destinationLocation.desc),
                       Text('Chauffeur - ' + model.activeRide.driver.displayName)
                     ],
                   ) : Container(),
